@@ -7,9 +7,12 @@ spec:
     - name: postgresql-13
       image: 'dev-quay-registry.apps.k8sdevint.fzg.local/k8sdevint_corwiz-dev/rhel9/postgresql-13:1-124'
       env:
-        - name: POSTGRES_USER
+        - name: POSTGRESQL_USER
           value: test_user
-        - name: POSTGRES_PASSWORD
+        - name: POSTGRESQL_PASSWORD
           value: test_pw
+        - name: POSTGRESQL_DATABASE
+          value: test_db
+
       ports:
         - containerPort: 5432
