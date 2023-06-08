@@ -8,3 +8,6 @@ spec:
       image: 'dev-quay-registry.apps.k8sdevint.fzg.local/k8sdevint_corwiz-dev/library/elasticsearch:7.17.10'
       ports:
         - containerPort: 6377
+      env:
+        - name: discovery.type
+          value: single-node
