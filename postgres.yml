@@ -4,8 +4,8 @@ metadata:
   name: postgresql-pod
 spec:
   containers:
-    - name: postgresql-container
-      image: https://dev-quay-registry.apps.k8sdevint.fzg.local/k8sdevint_corwiz-dev/rhel9/postgresql-13:stable
+    - name: postgresql-13
+      image: 'dev-quay-registry.apps.k8sdevint.fzg.local/k8sdevint_corwiz-dev/rhel9/postgresql-13:stable'
       env:
         - name: POSTGRES_USER
           value: test_user
