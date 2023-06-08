@@ -5,6 +5,6 @@ metadata:
 spec:
   containers:
     - name: redis-6
-      image: 'dev-quay-registry.apps.k8sdevint.fzg.local/k8sdevint_corwiz-dev/rhel9/redis-6:stable'
+      image: 'dev-quay-registry.apps.k8sdevint.fzg.local/k8sdevint_corwiz-dev/rhel9/redis-6:1-124'
       ports:
         - containerPort: 6379
