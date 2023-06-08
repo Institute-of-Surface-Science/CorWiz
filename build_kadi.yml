@@ -1,0 +1,15 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: kadi4mat-build
+spec:
+  strategy:
+    dockerStrategy:
+      from:
+        kind: DockerImage
+        name: dev-quay-registry.apps.k8sdevint.fzg.local/k8sdevint_corwiz-dev/library/ubuntu:22.10
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: kadi4mat:latest
