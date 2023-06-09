@@ -4,7 +4,9 @@ metadata:
   name: kadi4mat-build
 spec:
   source:
-    contextDir: Kadi4mat
+    type: Git
+    git:
+      uri: 'https://github.com/openshift/ruby-hello-world.git'
   strategy:
     dockerStrategy:
       from:
