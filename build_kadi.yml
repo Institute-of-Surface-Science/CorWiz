@@ -6,7 +6,7 @@ spec:
   source:
     type: Git
     git:
-      uri: 'https://github.com/openshift/ruby-hello-world.git'
+      uri: 'https://github.com/Institute-of-Surface-Science/CorWiz.git'
   strategy:
     dockerStrategy:
       from:
