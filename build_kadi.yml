@@ -3,6 +3,8 @@ kind: BuildConfig
 metadata:
   name: kadi4mat-build
 spec:
+  source:
+    contextDir: Kadi4mat
   strategy:
     dockerStrategy:
       from:
