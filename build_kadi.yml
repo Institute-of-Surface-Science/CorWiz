@@ -4,7 +4,8 @@ metadata:
   name: kadi4mat-build
 spec:
   source:
-    contextDir: Kadi4mat
+    type: Dockerfile
+    dockerfilePath: Kadi4mat/Dockerfile
   strategy:
     dockerStrategy:
       from:
