@@ -1,0 +1,31 @@
+"",,Korrosionsgeschwindigkeiten von Metallen
+Korro-,,
+sivitäts-,,rcorr
+kategorie,,
+Einheiten,,unlegierter Stahl Zink Kupfer Aluminium
+C1 g/(m2 ⋅ a),,"rcorr ≤ 10 rcorr ≤ 0,7 rcorr ≤ 0,9 vernachlässigbar"
+"",μm/a,"rcorr ≤ 1,3 rcorr ≤ 0,1 rcorr ≤ 0,1 —"
+C2 g/(m2 ⋅ a),,"10 < rcorr ≤ 200 0,7 < rcorr ≤ 5 0,9 < rcorr ≤ 5 rcorr ≤ 0,6"
+"",μm/a,"1,3 < rcorr ≤ 25 0,1 < rcorr ≤ 0,7 0,1 < rcorr ≤ 0,6 —"
+C3 g/(m2 ⋅ a),,"200 < rcorr ≤ 400 5 < rcorr ≤ 15 5 < rcorr ≤ 12 0,6 < rcorr ≤ 2"
+"",μm/a,"25 < rcorr ≤ 50 0,7 < rcorr ≤ 2,1 0,6 < rcorr ≤ 1,3 —"
+C4 g/(m2 ⋅ a),,400 < rcorr ≤ 650 15 < rcorr ≤ 30 12 < rcorr ≤ 25 2 < rcorr ≤ 5
+"",μm/a,"50 < rcorr ≤ 80 2,1 < rcorr ≤ 4,2 1,3 < rcorr ≤ 2,8 —"
+C5 g/(m2 ⋅ a),,650 < rcorr ≤ 1 500 30 < rcorr ≤ 60 25 < rcorr ≤ 50 5 < rcorr ≤ 10
+"",μm/a,"80 < rcorr ≤ 200 4,2 < rcorr ≤ 8,4 2,8 < rcorr ≤ 5,6 —"
+CX g/(m2 ⋅ a),,1 500 < rcorr ≤ 5 500 60 < rcorr ≤ 180 50 < rcorr ≤ 90 rcorr > 10
+"",μm/a,"200 < rcorr ≤ 700 8,4 < rcorr ≤ 25 5,6 < rcorr ≤ 10 —"
+ANMERKUNG 1,Das,Einteilungskriterium beruht auf den Verfahren zur Bestimmung von Korrosions-
+geschwindigkeiten an Standardproben zur Ermittlung der Korrosivität (siehe ISO 9226).,,
+ANMERKUNG 2,Die in Gramm je Quadratmeter und Jahr [g/(m2 ⋅ a)] angegebenen Korrosionsgeschwindigkeiten,
+werden in Mikrometer pro Jahr (μm/a) umgerechnet und gerundet.,,
+ANMERKUNG 3,Die metallischen Werkstoffe sind in ISO 9226 genormt.,
+ANMERKUNG 4,Aluminium unterliegt gleichmäßiger Flächenkorrosion und örtlicher Korrosion. Die in dieser Tabelle,
+angeführten Korrosionsgeschwindigkeiten werden als gleichmäßige Flächenkorrosion berechnet. Die maximale Loch-,,
+tiefe oder die Anzahl der Löcher könnten ein besserer Indikator für einen möglichen Schaden sein. Das hängt von,,
+Endanwendung ab. Die gleichmäßige Flächenkorrosion und örtliche Korrosion können aufgrund von Passivierungs-,,
+erscheinungen und abnehmenden Korrosionsgeschwindigkeiten nicht nach dem ersten Jahr der Auslagerung ermittelt,,
+werden.,,
+ANMERKUNG 5,"Korrosionsgeschwindigkeiten, die die oberen Grenzwerte der Kategorie C5 überschreiten, werden",
+als extrem angesehen.,Die,Korrosivitätskategorie CX bezieht sich auf spezielle Meeres- und Meeres-/Industrie-
+umgebungen (siehe Anhang C).,,

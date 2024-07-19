@@ -9,7 +9,7 @@ def convert_names(authors_string):
     
     # Process each author
     formatted_authors_identifier = []
-    formatted_authors_names = []
+    formatted_authors_names = [] 
     for author in authors:
         # Split each author by comma and strip any leading/trailing spaces
         parts_identifier = [part.strip() for part in author.replace(",", "").split()]
