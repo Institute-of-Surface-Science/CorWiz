@@ -5,6 +5,11 @@ import json
 from PIL import Image
 from matplotlib import pyplot as plt
 import numpy as np
+import pandas as pd
+from kadi_apy import KadiManager
+from models import i_the_prediction_of_atmospheric_corrosion_from_met
+
+manager = KadiManager()
 
 st.set_page_config(page_title="Corwiz Website Prototype", page_icon=":woman_scientist:", layout="wide")
 
@@ -25,8 +30,8 @@ lottie_animation = load_lottieurl("https://lottie.host/06c2ad3e-b44f-431c-ac89-4
 with st.container():
     left_column, right_column = st.columns((8, 1))
     with left_column:
-        st.subheader("CORWIZ - A web service being developed to assist engineers in accessing and utilizing data on steel corrosion.")
-        st.title("Developed by Aravinth Ravikumar, Dr.Sven Berger and Dr. Daniel Höche")
+        st.title("CORWIZ - A web service being developed to assist engineers in accessing and utilizing data on steel corrosion.")
+        st.subheader("Developed by Aravinth Ravikumar, Dr.Sven Berger and Dr. Daniel Höche")
         st.write("The goal is to create a comprehensive database of corrosion knowledge, including both structured and unstructured data such as research articles. Currently, engineers face challenges in selecting appropriate models and accessing relevant data for corrosion simulations. CorWiz aims to address this by providing a user-friendly web tool that offers engineers access to corrosion data, models, and relevant literature. By inputting parameters such as substrate material and environmental conditions, users can obtain corrosion grades, simulation results, and other structured data. The development of CorWiz involves data scraping, processing, and quality assessment, which will be facilitated by tools developed for the Kadi4Mat research data management platform. This project aims to streamline the design process, raise awareness of potential corrosion issues, and contribute to more cost-effective and eco-friendly design practices.")
         st.write("[Learn more at >](https://www.hereon.de/institutes/surface_science/projects/112600/index.php.en)")
     with right_column:    
@@ -38,49 +43,88 @@ with st.container():
 with st.container():
     st.write("---")
     st.header("Corrosion Mass Loss Model")
-    st.subheader("Standard: ISO 9224:2012")
-    st.write("[Download PDF >](https://a1sv2300300.fzg.local/records/44?tab=files)")
+
+    # Extract the model names and identifiers from the excel sheet atmospheric_corrosion_model_kadi_identifiers.xlsx
+    atmospheric_corrosion_model_kadi_identifiers = pd.read_excel('../bin/atmospheric_corrosion_model_kadi_identifiers.xlsx')
+    model_names = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 0].tolist()
+    model_ids = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 1].tolist()
+    model_kadi_identifiers = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 2].tolist()
+    model_developers = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 3].tolist()
+    model_abstracts = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 4].tolist()
+    model_special_notes = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 5].tolist()
+
+    model = st.selectbox(
+        'Which mass loss model would you like to use?',
+        ((model_names))
+    )
+    model_identifier = model_kadi_identifiers[model_names.index(model)]
+    model_id =  model_ids[model_names.index(model)]
+    st.subheader("Selected model: " + model)
+    model_record = manager.record(identifier=model_identifier)
+    st.write("[Model in Kadi4mat](https://a1sv2300300.fzg.local/records/" + str(model_record.id) + ")")
+    # Download the tables associated with model record if any
+    try: 
+        table_id = model_record.get_file_id('tables.xlsx')
+        model_record.download_file(table_id, '../bin/temp/tables.xlsx')
+    except Exception as err:
+        pass
 
     data_column, image_column = st.columns((1, 1))
 
     with data_column:
-        st.write("$D$ - Mass loss [grams]")
+        st.write("Model developed by: " + model_developers[model_names.index(model)])
+        st.write("Model Abstract: " + model_abstracts[model_names.index(model)])
+        st.write("Model Notes: " + model_special_notes[model_names.index(model)])
 
-        st.write("Short term mass loss:")
-        st.image(Image.open("../bin/images/iso_9224_eqn.png"), width=250)
-        st.write("Long term mass loss (> 20 years):")
-        st.image(Image.open("../bin/images/iso_9224_eqn_2.png"), width=300)
+        if model_id == 1:
+            with st.container():
+                table_2 = pd.read_excel('../bin/temp/tables.xlsx', sheet_name='Table_2', header=None, engine='openpyxl')
+                table_4 = pd.read_excel('../bin/temp/tables.xlsx', sheet_name='Table_4', header=None, engine='openpyxl')
+                atmosphere_types = table_4.iloc[0, 1:]
+                atmosphere_types['4'] = "Enter Cl^- and SO_2 pollution annual averages"
+                atmosphere_types = atmosphere_types.to_list()
+                binary_interaction = st.selectbox(
+                'Use Binary Interaction?',
+                ((True, False,))
+                )
 
-        corrosion_rate = float(st.text_input("$r_{corr}$ - The corrosion rate in the first year, expressed in grams per square meter per year [g/(m²⋅a)]", "0"))
-        time = float(st.text_input("$t$ - The exposure time, in [years]", "0.1"))
-        b = float(st.text_input("$b$ - Time exponent specific to the metal and environment (usually less than one)", "0.1"))
+                atmosphere = st.selectbox(
+                'Select atmosphere:',
+                ((atmosphere_types))
+                )
+                Cl = table_2.iloc[7, 2]
+                SO2 = table_2.iloc[7, 2]
+                atmosphere = atmosphere_types.index(atmosphere)
+                if atmosphere == 3:
+                    Cl = float(st.text_input(r"$Cl^-$ - chloride pollution annual average  $[mg Cl^{-} dm^{-2} d^{-1}]$,", str(table_2.iloc[7, 2])))
+                    SO2 = float(st.text_input(r"$SO_2$ - SO2 pollution annual average  $[mg SO_2 dm^{-2} d^{-1}]$,", str(table_2.iloc[7, 2])))
+                annual_corrosion = float(st.text_input(r"$A$ - Corrosion after the first year of exposure [um]", str(table_2.iloc[8, 2])))
+                temp = float(st.text_input(r"$T$ - Temperature [°C]", str(table_2.iloc[6, 2])))
+                tw = float(st.text_input(r"$T_w$ - Wetness time [annual fraction]", str(table_2.iloc[4, 2])))
+                D = float(st.text_input(r"$D$ - Number of rainy days per year [days]", str(table_2.iloc[5, 2])))
+
+                if binary_interaction:
+                    st.write(r'Annual corrosion, A $[um]$ = $132.4Cl^-(1 + 0.038T - 1.96t_w - 0.53SO_2 + 74.6t_w(1 + 1.07SO_2) - 6.3)$ ')
+                else:
+                    st.write(r'Annual corrosion, A $[um]$ = $33.0 + 57.4Cl^- + 26.6SO_2$')
+
+                st.write(r'Exponent, n = $0.570 + 0.0057Cl^-T + 7.7 \times 10^{-4}D - 1.7 \times 10^{-3}A$')
+
+                model = i_the_prediction_of_atmospheric_corrosion_from_met(binary_interaction, atmosphere, parameters=[Cl, SO2, temp, tw, D])
+
+        time = float(st.text_input(r"$t$ - The exposure time, in [years]", "0.1"))
 
         t = np.linspace(0, time, 400)
-        if time<=20:
-            D = b * corrosion_rate * t**(b - 1)
-            plt.figure(figsize=(10, 6))
-            plt.plot(t, D, label=f'D = {b:.2f} * {corrosion_rate:.2f} * t^({b:.2f}-1)', color='blue')
-            plt.xlabel('Time (years)')
-            plt.ylabel('D')
-            plt.title('Plot of D = b*r*t^(b-1)')
-            plt.legend()
-            plt.grid(True)
+        D = model.eval_material_loss(t)
+        plt.figure(figsize=(10, 6))
+        plt.plot(t, D, color='blue')
+        plt.xlabel(r'Time [years]')
+        plt.ylabel(r'Mass loss $[um]$')
+        plt.legend()
+        plt.grid(True)
 
-            # Save the figure
-            plt.savefig('../bin/images/plot_output.png')
-
-        else:
-            D = corrosion_rate*(20**b + b*(20**(b-1))*(t-20))
-            plt.figure(figsize=(10, 6))
-            plt.plot(t, D, label=f'D = {b:.2f} * {corrosion_rate:.2f} * t^({b:.2f}-1)', color='blue')
-            plt.xlabel('Time (years)')
-            plt.ylabel('D')
-            plt.title('Plot of D = b*r*t^(b-1)')
-            plt.legend()
-            plt.grid(True)
-
-            # Save the figure
-            plt.savefig('../bin/images/plot_output.png')
+        # Save the figure
+        plt.savefig('../bin/images/plot_output.png')
 
     with image_column:
         st.image(Image.open("../bin/images/plot_output.png"))

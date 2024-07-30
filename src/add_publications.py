@@ -23,9 +23,6 @@ def convert_names(authors_string):
     return formatted_authors_identifier, formatted_authors_names
 
 
-manager = KadiManager()
-
-
 def get_publication_date_metadata(pub_year):
 
   new_year = datetime(int(pub_year), 1, 1, 0, 0, 0)
@@ -117,7 +114,10 @@ def get_journal_metadata(jounral = ""):
     return journal_metadata
 
 
-with open('../bin/reference.bib', 'r') as bibtex_file:
+manager = KadiManager()
+
+
+with open('../bin/reference_2.bib', 'r') as bibtex_file:
     bib_database = bibtexparser.load(bibtex_file)
 
 for entry in bib_database.entries:
@@ -154,6 +154,8 @@ for entry in bib_database.entries:
     # Link the publication record to the author records
     for id, author_name in zip(author_id, author_names):
       bib_record.link_record(id, name=bib_identifier + '_' + author_name)
+
+    print('Publication ' + entry['title'] + ' successfully added as a record and linked to appropriate author records')
 
 
 
