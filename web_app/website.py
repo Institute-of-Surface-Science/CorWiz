@@ -6,10 +6,7 @@ from PIL import Image
 from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
-from kadi_apy import KadiManager
 from models import i_the_prediction_of_atmospheric_corrosion_from_met
-
-manager = KadiManager()
 
 st.set_page_config(page_title="Corwiz Website Prototype", page_icon=":woman_scientist:", layout="wide")
 
