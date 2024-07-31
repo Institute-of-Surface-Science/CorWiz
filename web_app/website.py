@@ -161,7 +161,7 @@ with footer:
             display_logo(
                 url="https://www.hereon.de",
                 img_src="./app/static/logos/hereon.png",
-                width=150,
+                width="80%",
                 alt_text="Logo of the Helmholtz Center hereon www.hereon.de",
             )
 
@@ -169,7 +169,7 @@ with footer:
             display_logo(
                 url="https://www.helmholtz-metadaten.de",
                 img_src="./app/static/logos/hmc.jpg",
-                width=150,
+                width="80%",
                 alt_text="Logo of the Helmholtz Metadata Colaboration www.helmholtz-metadaten.de",
             )
 
@@ -177,7 +177,7 @@ with footer:
             display_logo(
                 url="https://www.nfdi4ing.de",
                 img_src="./app/static/logos/nfdi4ing.png",
-                width=150,
+                width="80%",
                 alt_text="Logo of the German National Research Data Infrastructure for Engineering Sciences www.nfdi4ing.de",
             )
 
