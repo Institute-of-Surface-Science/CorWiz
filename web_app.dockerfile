@@ -13,6 +13,10 @@ RUN apt-get update && \
     git && \
     rm -rf /var/lib/apt/lists/*
 
+RUN pip install pip-review
+
+RUN pip-review --local --auto
+
 # Install pipenv
 RUN pip install pipenv
 
