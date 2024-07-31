@@ -20,13 +20,15 @@ RUN pip-review --local --auto
 # Install pipenv
 RUN pip install pipenv
 
+RUN git clone https://github.com/Institute-of-Surface-Science/CorWiz.git .
+
 # Copy Pipfile and Pipfile.lock
 COPY Pipfile Pipfile.lock ./
 
 # Install Python dependencies
 RUN pipenv install --deploy --ignore-pipfile
 
-# Copy the application code
+## Copy the application code
 COPY . .
 
 # Expose the port the app runs on
@@ -36,4 +38,4 @@ EXPOSE 8501
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 
 # Run the application
-ENTRYPOINT ["pipenv", "run", "streamlit", "run", "website.py", "--server.port=8501", "--server.address=0.0.0.0"]
+ENTRYPOINT ["pipenv", "run", "streamlit", "run", "web_app/website.py", "--server.port=8501", "--server.address=0.0.0.0"]
