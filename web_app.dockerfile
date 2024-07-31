@@ -35,8 +35,8 @@ COPY . .
 RUN mkdir -p /etc/letsencrypt/live/www.corwiz.xyz
 
 # Copy the certificate and key files
-COPY /etc/letsencrypt/live/www.corwiz.xyz/fullchain.pem /etc/letsencrypt/live/www.corwiz.xyz/fullchain.pem
-COPY /etc/letsencrypt/live/www.corwiz.xyz/privkey.pem /etc/letsencrypt/live/www.corwiz.xyz/privkey.pem
+COPY .certificates/fullchain.pem /etc/letsencrypt/live/www.corwiz.xyz/fullchain.pem
+COPY .certificates/privkey.pem /etc/letsencrypt/live/www.corwiz.xyz/privkey.pem
 
 # Expose the port the app runs on
 EXPOSE 8501
