@@ -11,6 +11,7 @@ pandas = "~=2.2.2"
 requests = "~=2.32.3"
 pillow = "~=10.4.0"
 streamlit-lottie = "~=0.0.5"
+streamlit_extras = "*"
 
 [dev-packages]
 
