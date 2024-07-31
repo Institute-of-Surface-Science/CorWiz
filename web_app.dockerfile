@@ -39,7 +39,7 @@ COPY .certificates/fullchain.pem /etc/letsencrypt/live/www.corwiz.xyz/fullchain.
 COPY .certificates/privkey.pem /etc/letsencrypt/live/www.corwiz.xyz/privkey.pem
 
 # Expose the port the app runs on
-EXPOSE 8501
+EXPOSE 8501 443
 
 # Define a health check to ensure the service is running
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
