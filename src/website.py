@@ -20,6 +20,14 @@ def load_lottieurl(url):
         return None
     return r.json()
 
+
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}<\style>", unsafe_allow_html=True)
+
+
+local_css('style/style.css')
+
 # ---- LOAD ASSETS ----
 lottie_animation = load_lottieurl("https://lottie.host/06c2ad3e-b44f-431c-ac89-4c4b916c4b43/b4ZvbBJBa9.json")
 
@@ -30,7 +38,7 @@ lottie_animation = load_lottieurl("https://lottie.host/06c2ad3e-b44f-431c-ac89-4
 with st.container():
     left_column, right_column = st.columns((8, 1))
     with left_column:
-        st.title("CORWIZ - A web service being developed to assist engineers in accessing and utilizing data on steel corrosion.")
+        st.title("CorWiz - A web service to assist engineers in accessing and utilizing data on steel corrosion.")
         st.subheader("Developed by Aravinth Ravikumar, Dr.Sven Berger and Dr. Daniel Höche")
         st.write("The goal is to create a comprehensive database of corrosion knowledge, including both structured and unstructured data such as research articles. Currently, engineers face challenges in selecting appropriate models and accessing relevant data for corrosion simulations. CorWiz aims to address this by providing a user-friendly web tool that offers engineers access to corrosion data, models, and relevant literature. By inputting parameters such as substrate material and environmental conditions, users can obtain corrosion grades, simulation results, and other structured data. The development of CorWiz involves data scraping, processing, and quality assessment, which will be facilitated by tools developed for the Kadi4Mat research data management platform. This project aims to streamline the design process, raise awareness of potential corrosion issues, and contribute to more cost-effective and eco-friendly design practices.")
         st.write("[Learn more at >](https://www.hereon.de/institutes/surface_science/projects/112600/index.php.en)")
@@ -54,7 +62,7 @@ with st.container():
     model_special_notes = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 5].tolist()
 
     model = st.selectbox(
-        'Which mass loss model would you like to use?',
+        'Please select model',
         ((model_names))
     )
     model_identifier = model_kadi_identifiers[model_names.index(model)]
