@@ -139,7 +139,6 @@ with empty:
 def display_logo(url, img_src, width, alt_text):
     st.html(
         f"""
-        </br>
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
             <a href="{url}" target="_blank">
                 <img src="{img_src}" width="{width}" alt="{alt_text}">
