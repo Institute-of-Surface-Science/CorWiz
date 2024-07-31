@@ -50,7 +50,7 @@ with st.container():
     st.header("Corrosion Mass Loss Model")
 
     # Extract the model names and identifiers from the excel sheet atmospheric_corrosion_model_kadi_identifiers.xlsx
-    atmospheric_corrosion_model_kadi_identifiers = pd.read_excel('../bin/atmospheric_corrosion_model_kadi_identifiers.xlsx')
+    # atmospheric_corrosion_model_kadi_identifiers = pd.read_excel('../data/atmospheric_corrosion_model_kadi_identifiers.xlsx')
     model_names = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 0].tolist()
     model_ids = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 1].tolist()
     model_kadi_identifiers = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 2].tolist()
@@ -65,14 +65,14 @@ with st.container():
     model_identifier = model_kadi_identifiers[model_names.index(model)]
     model_id =  model_ids[model_names.index(model)]
     st.subheader("Selected model: " + model)
-    model_record = manager.record(identifier=model_identifier)
-    st.write("[Model in Kadi4mat](https://a1sv2300300.fzg.local/records/" + str(model_record.id) + ")")
+    # model_record = manager.record(identifier=model_identifier)
+    # st.write("[Model in Kadi4mat](https://a1sv2300300.fzg.local/records/" + str(model_record.id) + ")")
     # Download the tables associated with model record if any
-    try: 
-        table_id = model_record.get_file_id('tables.xlsx')
-        model_record.download_file(table_id, '../bin/temp/tables.xlsx')
-    except Exception as err:
-        pass
+    # try:
+    #     table_id = model_record.get_file_id('tables.xlsx')
+    #     model_record.download_file(table_id, '../data/temp/tables.xlsx')
+    # except Exception as err:
+    #     pass
 
     data_column, image_column = st.columns((1, 1))
 
@@ -83,8 +83,8 @@ with st.container():
 
         if model_id == 1:
             with st.container():
-                table_2 = pd.read_excel('../bin/temp/tables.xlsx', sheet_name='Table_2', header=None, engine='openpyxl')
-                table_4 = pd.read_excel('../bin/temp/tables.xlsx', sheet_name='Table_4', header=None, engine='openpyxl')
+                # table_2 = pd.read_excel('../data/temp/tables.xlsx', sheet_name='Table_2', header=None, engine='openpyxl')
+                # table_4 = pd.read_excel('../data/temp/tables.xlsx', sheet_name='Table_4', header=None, engine='openpyxl')
                 atmosphere_types = table_4.iloc[0, 1:]
                 atmosphere_types['4'] = "Enter Cl^- and SO_2 pollution annual averages"
                 atmosphere_types = atmosphere_types.to_list()
@@ -129,7 +129,7 @@ with st.container():
         plt.grid(True)
 
         # Save the figure
-        plt.savefig('../bin/images/plot_output.png')
+        plt.savefig('../data/images/plot_output.png')
 
     with image_column:
-        st.image(Image.open("../bin/images/plot_output.png"))
+        st.image(Image.open("../data/images/plot_output.png"))
