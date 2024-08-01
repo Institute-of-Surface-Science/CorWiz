@@ -23,6 +23,10 @@ local_css('style/style.css')
 
 lottie_animation = load_lottieurl("https://lottie.host/06c2ad3e-b44f-431c-ac89-4c4b916c4b43/b4ZvbBJBa9.json")
 
+# side navigation collapsed by default
+if 'sbstate' not in st.session_state:
+    st.session_state.sbstate = 'collapsed'
+
 header = st.container()
 main_app = st.container()
 empty = st.container()
