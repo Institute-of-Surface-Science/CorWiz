@@ -4,7 +4,7 @@ from streamlit_lottie import st_lottie
 from streamlit_extras.stylable_container import stylable_container
 from streamlit_extras.add_vertical_space import add_vertical_space
 
-st.set_page_config(page_title="Corwiz", page_icon=":woman_scientist:", layout="wide")
+st.set_page_config(page_title="Corwiz", page_icon=":woman_scientist:", layout="wide", initial_sidebar_state="collapsed")
 
 
 def load_lottieurl(url):
@@ -22,10 +22,6 @@ def local_css(file_name):
 local_css('style/style.css')
 
 lottie_animation = load_lottieurl("https://lottie.host/06c2ad3e-b44f-431c-ac89-4c4b916c4b43/b4ZvbBJBa9.json")
-
-# side navigation collapsed by default
-if 'sbstate' not in st.session_state:
-    st.session_state.sbstate = 'collapsed'
 
 header = st.container()
 main_app = st.container()
