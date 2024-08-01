@@ -94,7 +94,6 @@ class iso_9223(atmospheric_corrosion_model):
         
         if time < 20:
             material_loss = self.p[5]*corrosion_speed*time**(self.p[5] - 1)
-
         else:
             material_loss = corrosion_speed*(20**self.p[5] + self.p[5]*20**(self.p[5] - 1)*(time - 20))
 
