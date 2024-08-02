@@ -6,7 +6,7 @@ from streamlit_extras.add_vertical_space import add_vertical_space
 import pandas as pd
 from models import model1, model2
 
-st.set_page_config(page_title="Corwiz", page_icon=":woman_scientist:", layout="wide")
+st.set_page_config(page_title="Corwiz", page_icon=":woman_scientist:", layout="wide", initial_sidebar_state="collapsed")
 
 
 def load_lottieurl(url):
@@ -133,7 +133,7 @@ with footer:
         with logo2:
             display_logo(
                 url="https://www.helmholtz-metadaten.de",
-                img_src="./app/static/logos/hmc.jpg",
+                img_src="./app/static/logos/hmc.png",
                 width="80%",
                 alt_text="Logo of the Helmholtz Metadata Colaboration www.helmholtz-metadaten.de",
             )
