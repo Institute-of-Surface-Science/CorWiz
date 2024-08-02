@@ -1,0 +1,3 @@
+Field,Rural Atmosphere ( $Cl < 0.1 mg Cl^{-} dm^{-2} d^{-1}$ and $S0_2 < mg SO_2^ dm^{-2} d^{-1}$),Urban industrial Atmosphere ( $Cl > 0.1 mg Cl^{-} dm^{-2} d^{-1}$ and $S0_2 < mg SO_2^ dm^{-2} d^{-1}$),Marine Atmosphere ( $Cl > 0.1 mg Cl^{-} dm^{-2} d^{-1}$ )
+mean,0.59,0.59,0.69
+SD,0.18,0.14,0.13

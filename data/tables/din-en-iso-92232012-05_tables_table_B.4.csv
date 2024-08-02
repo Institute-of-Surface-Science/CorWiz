@@ -1,0 +1,5 @@
+lower limit,upper limit,Atmosphere
+0,3,Country
+3,60,City
+60,300,Industrial
+300,1500,Strongly contaminated Industrial

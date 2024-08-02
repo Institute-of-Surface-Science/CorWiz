@@ -1,0 +1,5 @@
+Symbol,Description,Lower limit,Upper limit,Unit
+T,Temperatue,-17.1,28.7,°C
+RH,Relative Humidity,34.0,93.0,%
+Pd,SO₂-Deposit,0.7,150.4,mg/(m²⋅d)
+Sd,Cl⁻-Deposit,0.4,760.5,mg/(m²⋅d)

@@ -1,0 +1,9 @@
+Field,Unit,Mean ,SD,Samallest Value,Largest Value
+exponent ,n,0.623,0.15,0.24,1.0
+annual corrosion,um,41.6,31.3,6.0,288.0
+RH,%,74.9,6.3,55.0,88.0
+tw,annual fraction,0.43,0.16,0.04,0.84
+number of rainy days per year,days,132.2,45.9,16.0,231.0
+temperature ,°C,12.0,5.4,1.2,29.0
+chlorides,mg Cl^{-} dm^{-2} d^{-1},0.29,1.14,0.0,11.3
+SO2,mg SO_2^ dm^{-2} d^{-1},0.39,0.43,0.0,2.3

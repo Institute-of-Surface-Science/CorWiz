@@ -3,6 +3,8 @@ import streamlit as st
 from streamlit_lottie import st_lottie
 from streamlit_extras.stylable_container import stylable_container
 from streamlit_extras.add_vertical_space import add_vertical_space
+import pandas as pd
+from models import model1, model2
 
 st.set_page_config(page_title="Corwiz", page_icon=":woman_scientist:", layout="wide")
 
@@ -49,74 +51,38 @@ with main_app:
 
     # Extract the model names and identifiers from the excel sheet atmospheric_corrosion_model_kadi_identifiers.xlsx
     # atmospheric_corrosion_model_kadi_identifiers = pd.read_excel('../data/atmospheric_corrosion_model_kadi_identifiers.xlsx')
-    # model_names = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 0].tolist()
-    # model_ids = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 1].tolist()
-    # model_kadi_identifiers = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 2].tolist()
-    # model_developers = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 3].tolist()
-    # model_abstracts = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 4].tolist()
-    # model_special_notes = atmospheric_corrosion_model_kadi_identifiers.iloc[:, 5].tolist()
-    #
-    # model = st.selectbox(
-    #     'Please select model',
-    #     ((model_names))
-    # )
-    # model_identifier = model_kadi_identifiers[model_names.index(model)]
-    # model_id =  model_ids[model_names.index(model)]
-    # st.subheader("Selected model: " + model)
-    # model_record = manager.record(identifier=model_identifier)
-    # st.write("[Model in Kadi4mat](https://a1sv2300300.fzg.local/records/" + str(model_record.id) + ")")
-    # Download the tables associated with model record if any
-    # try:
-    #     table_id = model_record.get_file_id('tables.xlsx')
-    #     model_record.download_file(table_id, '../data/temp/tables.xlsx')
-    # except Exception as err:
-    #     pass
+    atmospheric_corrosion_model_kadi_identifiers = pd.read_csv('../data/atmospheric_corrosion_model_kadi_identifiers.csv')
 
-    image_column, data_column, = st.columns((2, 1))
+    columns = ['model_names', 'model_ids', 'model_kadi_identifiers', 'model_developers', 'model_abstracts', 'model_special_notes']
+    model_info = {col: atmospheric_corrosion_model_kadi_identifiers.iloc[:, idx].tolist() for idx, col in enumerate(columns)}
+    
+    model = st.selectbox(
+        'Please select model',
+        ((model_info['model_names']))
+    )
+    model_identifier = model_info['model_kadi_identifiers'][model_info['model_names'].index(model)]
+    model_id =  model_info['model_ids'][model_info['model_names'].index(model)]
+    st.subheader("Selected model: " + model)
+
+    image_column, data_column, = st.columns((1, 1))
 
     with data_column:
-        st.write("test")
-        # st.write("Model developed by: " + model_developers[model_names.index(model)])
-        # st.write("Model Abstract: " + model_abstracts[model_names.index(model)])
-        # st.write("Model Notes: " + model_special_notes[model_names.index(model)])
+        st.write("Model developed by: " + model_info['model_developers'][model_info['model_names'].index(model)])
+        st.write("Model Abstract: " + model_info['model_abstracts'][model_info['model_names'].index(model)])
+        try:
+            st.write("Model Notes: " + model_info['model_special_notes'][model_info['model_names'].index(model)])
+        except:
+            pass
 
-        # if model_id == 1:
-        #     with st.container():
-        #         # table_2 = pd.read_excel('../data/temp/tables.xlsx', sheet_name='Table_2', header=None, engine='openpyxl')
-        #         # table_4 = pd.read_excel('../data/temp/tables.xlsx', sheet_name='Table_4', header=None, engine='openpyxl')
-        #         atmosphere_types = table_4.iloc[0, 1:]
-        #         atmosphere_types['4'] = "Enter Cl^- and SO_2 pollution annual averages"
-        #         atmosphere_types = atmosphere_types.to_list()
-        #         binary_interaction = st.selectbox(
-        #         'Use Binary Interaction?',
-        #         ((True, False,))
-        #         )
-        #
-        #         atmosphere = st.selectbox(
-        #         'Select atmosphere:',
-        #         ((atmosphere_types))
-        #         )
-        #         Cl = table_2.iloc[7, 2]
-        #         SO2 = table_2.iloc[7, 2]
-        #         atmosphere = atmosphere_types.index(atmosphere)
-        #         if atmosphere == 3:
-        #             Cl = float(st.text_input(r"$Cl^-$ - chloride pollution annual average  $[mg Cl^{-} dm^{-2} d^{-1}]$,", str(table_2.iloc[7, 2])))
-        #             SO2 = float(st.text_input(r"$SO_2$ - SO2 pollution annual average  $[mg SO_2 dm^{-2} d^{-1}]$,", str(table_2.iloc[7, 2])))
-        #         annual_corrosion = float(st.text_input(r"$A$ - Corrosion after the first year of exposure [um]", str(table_2.iloc[8, 2])))
-        #         temp = float(st.text_input(r"$T$ - Temperature [°C]", str(table_2.iloc[6, 2])))
-        #         tw = float(st.text_input(r"$T_w$ - Wetness time [annual fraction]", str(table_2.iloc[4, 2])))
-        #         D = float(st.text_input(r"$D$ - Number of rainy days per year [days]", str(table_2.iloc[5, 2])))
-        #
-        #         if binary_interaction:
-        #             st.write(r'Annual corrosion, A $[um]$ = $132.4Cl^-(1 + 0.038T - 1.96t_w - 0.53SO_2 + 74.6t_w(1 + 1.07SO_2) - 6.3)$ ')
-        #         else:
-        #             st.write(r'Annual corrosion, A $[um]$ = $33.0 + 57.4Cl^- + 26.6SO_2$')
-        #
-        #         st.write(r'Exponent, n = $0.570 + 0.0057Cl^-T + 7.7 \times 10^{-4}D - 1.7 \times 10^{-3}A$')
-        #
-        #         model = i_the_prediction_of_atmospheric_corrosion_from_met(binary_interaction, atmosphere, parameters=[Cl, SO2, temp, tw, D])
-        #
-        # time = float(st.text_input(r"$t$ - The exposure time, in [years]", "0.1"))
+        if model_id == 1:
+            with st.container():
+                model = model1(model_identifier)
+
+        elif model_id == 2:
+            with st.container():
+                model = model2(model_identifier)
+        
+        time = float(st.text_input(r"$t$ - The exposure time, in [years]", "0.1"))
         #
         # t = np.linspace(0, time, 400)
         # D = model.eval_material_loss(t)

@@ -1,0 +1,7 @@
+Category,Units,Corrosion speed - lower limit,Corrosion Speed - higher limit
+C1,g/(m²⋅a),0,10
+C2,g/(m²⋅a),10,200
+C3,g/(m²⋅a),200,400
+C4,g/(m²⋅a),400,650
+C5,g/(m²⋅a),650,1500
+CX,g/(m²⋅a),1500,5500

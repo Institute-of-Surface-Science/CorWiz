@@ -34,19 +34,27 @@ class i_the_prediction_of_atmospheric_corrosion_from_met(atmospheric_corrosion_m
         self.binary_interaction = binary_interaction
         self.atmosphere = atmosphere
         self.steel = "Carbon Steel"
-        self.p = parameters  # [0 - Cl, 1 - SO2, 2 - T (temperature), 3 - Tw (wetness time (annual fraction)), 4 - D(number of rainy days), 5 - n(exponent)]
+        self.p = parameters
 
 
     def eval_annual_corrosion(self):
 
         if self.binary_interaction:
-            annual_corrosion = 132.4*self.p[0]*(1 + 0.038*self.p[2] - 1.96*self.p[3] - 0.53*self.p[1] + 74.6*self.p[3]*(1 + 1.07*self.p[1]) - 6.3)
+            annual_corrosion = (132.4 * self.p['Cl'] * 
+                        (1 + 0.038 * self.p['temp'] - 
+                         1.96 * self.p['tw'] - 
+                         0.53 * self.p['SO2'] + 
+                         74.6 * self.p['tw'] * (1 + 1.07 * self.p['SO2']) - 
+                         6.3))
         else:
-            annual_corrosion = 33.0 + 57.4*self.p[0] + 26.6*self.p[1]
+            annual_corrosion = (33.0 + 
+                        57.4 * self.p['Cl'] + 
+                        26.6 * self.p['SO2'])
+
         return annual_corrosion
     
     def evaluate_exponent(self):
-        table_4 = pd.read_excel('../bin/temp/tables.xlsx', sheet_name='Table_4', header=None, engine='openpyxl')
+        table_4 = pd.read_csv('../data/tables/i_the_prediction_of_atmospheric_corrosion_from_met_tables_table_4.csv', header=None)
         if self.atmosphere == 0:
             exponent = table_4.iloc[1, 1]
         elif self.atmosphere == 1:
@@ -54,7 +62,10 @@ class i_the_prediction_of_atmospheric_corrosion_from_met(atmospheric_corrosion_m
         elif self.atmosphere == 2:
             exponent = table_4.iloc[1, 3]
         else:
-            exponent = 0.570 + 0.0057*self.p[0]*self.p[2] + 7.7e-4*self.p[4] - 1.7e-3*self.eval_annual_corrosion()
+            exponent = (0.570 + 
+            0.0057 * self.p['Cl'] * self.p['temp'] + 
+            7.7e-4 * self.p['D'] - 
+            1.7e-3 * self.eval_annual_corrosion())
 
         return exponent
     
@@ -64,7 +75,7 @@ class i_the_prediction_of_atmospheric_corrosion_from_met(atmospheric_corrosion_m
         return material_loss
 
 
-class iso_9223(atmospheric_corrosion_model):
+class iso_9224(atmospheric_corrosion_model):
     
     '''
 
@@ -74,27 +85,31 @@ class iso_9223(atmospheric_corrosion_model):
         self.model_name = 'ISO 9223:2012 and ISO 9224:2012'
         self.article_identifier = ['din-en-iso-92232012-05', 'din-en-iso-92242012-05']
         self.steel = "Unalloyed Steel"
-        self.p = parameters  # [0 - Pd, 1 - Sd, 2 - RH, 3 - fst, 4- temp, 5 - b]
+        self.p = parameters
+        self.correlation_speed_provided = 'corrosion_speed' in parameters
 
     
     def eval_corrosion_speed(self):
 
-        if self.p[4] <= 10:
-            fst = 0.15*(self.p[4] - 10)
+        if self.p['T'] <= 10:
+            fst = 0.15*(self.p['T'] - 10)
         else:
-            fst = -0.054*(self.p[4] - 10)
+            fst = -0.054*(self.p['T'] - 10)
 
-        corrosion_speed = 1.77*self.p[0]**0.52*np.e**(0.02*self.p[2] + fst) + 0.102*self.p[1]**0.62*np.e**(0.033*self.p[2] + 0.04*self.p[4])
+        corrosion_speed = 1.77*self.p['Pd']**0.52*np.e**(0.02*self.p['RH'] + fst) + 0.102*self.p['Sd']**0.62*np.e**(0.033*self.p['RH'] + 0.04*self.p['T'])
         return corrosion_speed
 
 
     def eval_material_loss(self, time):
         
-        corrosion_speed = self.eval_corrosion_speed()
+        if self.correlation_speed_provided:
+            corrosion_speed = self.p['corrosion_speed']
+        else:
+            corrosion_speed = self.eval_corrosion_speed()
         
         if time < 20:
-            material_loss = self.p[5]*corrosion_speed*time**(self.p[5] - 1)
+            material_loss = self.p['exponent']*corrosion_speed*time**(self.p['exponent'] - 1)
         else:
-            material_loss = corrosion_speed*(20**self.p[5] + self.p[5]*20**(self.p[5] - 1)*(time - 20))
+            material_loss = corrosion_speed*(20**self.p['exponent'] + self.p['exponent']*20**(self.p['exponent'] - 1)*(time - 20))
 
         return material_loss
