@@ -58,7 +58,7 @@ def model2(model_identifier):
 
         st.write('Corrosion speed = ' + str(corrosion_speed))
 
-        parameters['Corrosion_speed'] = float(corrosion_speed)
+        parameters['corrosion_speed'] = float(corrosion_speed)
 
     else:
         st.table(table_3)
@@ -79,7 +79,7 @@ def model2(model_identifier):
         
         def get_input(symbol):
             limit = limits[symbol]
-            value = st.text_input(f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:", value='')
+            value = st.text_input(f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:", value=limit['lower'])
             
             if value:
                 try:
@@ -94,7 +94,7 @@ def model2(model_identifier):
             return value
 
         for symbol in limits.keys():
-            parameters[symbol] = get_input(symbol)
+            parameters[symbol] = float(get_input(symbol))
 
     exponent_types = ['Use DIN recommeneded time exponents measured from the ISO CORRAG program', 'Enter manually']     
     exponent_type = st.selectbox(
@@ -114,4 +114,4 @@ def model2(model_identifier):
 
     parameters['exponent'] = exponent
 
-    return iso_9224(parameters)
+    return iso_9224(parameters), time

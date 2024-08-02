@@ -4,7 +4,10 @@ from streamlit_lottie import st_lottie
 from streamlit_extras.stylable_container import stylable_container
 from streamlit_extras.add_vertical_space import add_vertical_space
 import pandas as pd
-from models import model1, model2
+from models import model1, model2, model3
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 st.set_page_config(page_title="Corwiz", page_icon=":woman_scientist:", layout="wide", initial_sidebar_state="collapsed")
 
@@ -69,8 +72,8 @@ with main_app:
     st.write("---")
     st.header("Corrosion Mass Loss Model")
 
-    # Extract the model names and identifiers from the excel sheet atmospheric_corrosion_model_kadi_identifiers.xlsx
-    # atmospheric_corrosion_model_kadi_identifiers = pd.read_excel('../data/atmospheric_corrosion_model_kadi_identifiers.xlsx')
+    # Extract the model names and identifiers from the atmospheric_corrosion_model_kadi_identifiers.csv file
+
     atmospheric_corrosion_model_kadi_identifiers = pd.read_csv('../data/atmospheric_corrosion_model_kadi_identifiers.csv')
 
     columns = ['model_names', 'model_ids', 'model_kadi_identifiers', 'model_developers', 'model_abstracts', 'model_special_notes']
@@ -96,25 +99,27 @@ with main_app:
 
         if model_id == 1:
             with st.container():
-                model = model1(model_identifier)
+                model, time = model1(model_identifier)
 
         elif model_id == 2:
             with st.container():
-                model = model2(model_identifier)
+                model, time = model2(model_identifier)
+
+        elif model_id == 3:
+            with st.container():
+                model, time = model3(model_identifier)
+
+        t = np.linspace(0, time, 400)
+        D = model.eval_material_loss(t)
+        plt.figure(figsize=(10, 6))
+        plt.plot(t, D, color='blue')
+        plt.xlabel(r'Time [years]')
+        plt.ylabel(r'Mass loss $[um]$')
+        plt.legend()
+        plt.grid(True)
         
-        time = float(st.text_input(r"$t$ - The exposure time, in [years]", "0.1"))
-        #
-        # t = np.linspace(0, time, 400)
-        # D = model.eval_material_loss(t)
-        # plt.figure(figsize=(10, 6))
-        # plt.plot(t, D, color='blue')
-        # plt.xlabel(r'Time [years]')
-        # plt.ylabel(r'Mass loss $[um]$')
-        # plt.legend()
-        # plt.grid(True)
-        #
-        # # Save the figure
-        # plt.savefig('../data/images/plot_output.png')
+        # Save the figure
+        plt.savefig('../data/images/plot_output.png')
 
     with image_column:
         st.image("../data/images/plot_output.png")

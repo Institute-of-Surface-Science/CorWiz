@@ -5,6 +5,9 @@ from . atmospheric_corrosion_models import i_the_prediction_of_atmospheric_corro
 
 def model1(model_identifier):
 
+
+    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
+
     table_2 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_2.csv', header=None)
     table_4 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_4.csv', header=None)
     atmosphere_types = table_4.iloc[0, 1:]
@@ -19,13 +22,13 @@ def model1(model_identifier):
     'Select atmosphere:',
     ((atmosphere_types))
     )
-    Cl = table_2.iloc[7, 2]
-    SO2 = table_2.iloc[7, 2]
+    
+    Cl = float(table_2.iloc[7, 2])
+    SO2 = float(table_2.iloc[7, 2])
     atmosphere = atmosphere_types.index(atmosphere)
     if atmosphere == 3:
         Cl = float(st.text_input(r"$Cl^-$ - chloride pollution annual average  $[mg Cl^{-} dm^{-2} d^{-1}]$,", str(table_2.iloc[7, 2])))
         SO2 = float(st.text_input(r"$SO_2$ - SO2 pollution annual average  $[mg SO_2 dm^{-2} d^{-1}]$,", str(table_2.iloc[7, 2])))
-    annual_corrosion = float(st.text_input(r"$A$ - Corrosion after the first year of exposure [um]", str(table_2.iloc[8, 2])))
     temp = float(st.text_input(r"$T$ - Temperature [°C]", str(table_2.iloc[6, 2])))
     tw = float(st.text_input(r"$T_w$ - Wetness time [annual fraction]", str(table_2.iloc[4, 2])))
     D = float(st.text_input(r"$D$ - Number of rainy days per year [days]", str(table_2.iloc[5, 2])))
@@ -43,6 +46,8 @@ def model1(model_identifier):
     'temp': temp,  # Temperature
     'tw': tw,    # Time
     'D': D       # Material parameter or other variable
-}
+    }
 
-    return i_the_prediction_of_atmospheric_corrosion_from_met(binary_interaction, atmosphere, parameters)
+    print(parameters)
+    
+    return i_the_prediction_of_atmospheric_corrosion_from_met(binary_interaction, atmosphere, parameters), time
