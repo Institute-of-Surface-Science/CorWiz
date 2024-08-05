@@ -4,7 +4,7 @@ from streamlit_lottie import st_lottie
 from streamlit_extras.stylable_container import stylable_container
 from streamlit_extras.add_vertical_space import add_vertical_space
 import pandas as pd
-from models import model1, model2, model3, model4, model5
+from models import model1, model2, model3, model4, model5, model6
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -116,6 +116,10 @@ with main_app:
         elif model_id == 5:
             with st.container():
                 model, time = model5(model_identifier)
+
+        elif model_id == 6:
+            with st.container():
+                model, time = model6(model_identifier)
 
         t = np.linspace(0, time, 400)
         D = model.eval_material_loss(t)

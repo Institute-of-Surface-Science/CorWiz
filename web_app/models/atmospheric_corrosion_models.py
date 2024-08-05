@@ -250,6 +250,46 @@ class coated_mass_loss_model(atmospheric_corrosion_model):
         mask = time >= self.p['t_c']  # Create a boolean mask for time elements >= T_c
         material_loss[mask] = self.p['d_inf'] * (1 - np.exp(-(time[mask] - self.p['t_c']) / self.p['t_t']))
         return material_loss
+    
+
+class sophisticated_corrosion_rate(atmospheric_corrosion_model):
+    '''
+        @article{klinesmith2007effect,
+        title={Effect of environmental conditions on corrosion rates},
+        author={Klinesmith, Dawn E and McCuen, Richard H and Albrecht, Pedro},
+        journal={Journal of Materials in Civil Engineering},
+        volume={19},
+        number={2},
+        pages={121--129},
+        year={2007},
+        publisher={American Society of Civil Engineers}
+}
+    '''
+
+    def __init__(self, parameters):
+        atmospheric_corrosion_model.__init__(self)
+        self.model_name = 'Effect of environmental conditions on corrosion rates'
+        self.article_identifier = ['effect_of_environmental_conditions_on_corrosion_ra']
+        self.steel = "Carbon Steel"
+        self.p = parameters
+
+    
+    def eval_material_loss(self, time):
+        
+        table_2 = pd.read_csv('../data/tables/effect_of_environmental_conditions_on_corrosion_ra_tables_table_2.csv', header=None)
+        A = float(table_2.iloc[1, 2])
+        B = float(table_2.iloc[1, 3])
+        C = float(table_2.iloc[1, 4])
+        D = float(table_2.iloc[1, 5])
+        E = float(table_2.iloc[1, 6])
+        F = float(table_2.iloc[1, 7])
+        G = float(table_2.iloc[1, 8])
+        H = float(table_2.iloc[1, 9])
+        J = float(table_2.iloc[1, 10])
+        T0 = float(table_2.iloc[1, 11])
+
+        material_loss = A*(time**B)*((self.p['TOW']*24/C)**D)*(1+(self.p['SO2']/E)**F)*(1+(self.p['Cl']/G)**H)*(np.exp(J*(self.p['T']+T0)))
+        return material_loss
 
     
 

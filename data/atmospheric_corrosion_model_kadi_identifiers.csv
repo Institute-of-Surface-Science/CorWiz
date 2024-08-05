@@ -37,3 +37,13 @@ $$d_{\infty}$$ is the long-term thickness of the corrosion wastage.
 $$q_c$$ is the coating life, the time interval during which the coating is effective. 
 
 $$q_t$$ is the transition time, which determines the rate at which the corrosion process progresses after the coating fails. ",
+Effect of environmental conditions on corrosion rates,6,effect_of_environmental_conditions_on_corrosion_ra,"Klinesmith, Dawn E and McCuen, Richard H and Albrecht, Pedro","**Model Formulation**: The model incorporates multiple environmental factors, has a physically rational structure, allows variation of calendar time, and is sufficiently flexible that it can be transferred to other locations. The model form used to estimate corrosion loss is given by the equation 
+$$D=A t^{B}\left(\frac{\mathrm{TOW}}{C}\right)^{D}\left(1+\frac{\mathrm{SO}_{2}}{E}\right)^{F}\left(1+\frac{\mathrm{Cl}}{G}\right)^{H} e^{J\left(T+T_{0}\right)} $$ 
+
+Where, $$D$$ is the mass loss due to corrosion, $$t$$ is the exposure time, $$TOW$$ is the time-of-wetness, $$SO2$$ is the sulfur dioxide concentration, $$Cl$$ is the chloride deposition rate, $$T$$ is the air temperature, and $$A, B, C, D, E, F, G, H, J, and T0$$ are empirical coefficients.
+
+**Model Calibration**: The model was calibrated using data from the ISO CORRAG program, which recorded measurements at 51 test sites in 13 countries. The coefficients of the model were fitted using numerical least squares. The goodness-of-fit statistics were used to evaluate the accuracy and bias of the corrosion loss models.
+
+**Environmental Effects**: The model takes into account the effects of time-of-wetness, sulfur dioxide, salinity, and temperature on corrosion loss. The document provides detailed analysis of how each of these factors influences the corrosion process. 
+
+**Model Validation**: Two independent data sets were used to validate the calibrated corrosion models. The validation focused on the relative change in corrosion loss due to variation in the environmental factors. The models were found to provide accurate predictions of the criterion variable.  ",

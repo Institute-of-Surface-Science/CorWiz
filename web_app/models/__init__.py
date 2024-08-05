@@ -3,3 +3,4 @@ from . model2 import model2
 from . model3 import model3
 from . model4 import model4
 from . model5 import model5
+from . model6 import model6
