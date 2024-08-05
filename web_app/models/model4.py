@@ -4,18 +4,6 @@ import numpy as np
 from . atmospheric_corrosion_models import a_general_corrosion_function
 
 
-def get_exponent_value(year, table):
-    years = np.array(table[0].astype(int))
-    exponents = np.array(table[1].astype(float))
-    # Check if the year is exactly in the data
-    if year in years:
-        return exponents[years == year][0]
-    else:
-        # Interpolate the exponent value for the given year
-        exponent_value = np.interp(year, years, exponents)
-        return exponent_value
-
-
 def model4(model_identifier):
 
 

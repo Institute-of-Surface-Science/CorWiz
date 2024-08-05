@@ -219,3 +219,38 @@ class a_general_corrosion_function(atmospheric_corrosion_model):
         
         material_loss = A*time**n
         return material_loss
+    
+
+class coated_mass_loss_model(atmospheric_corrosion_model):
+    '''
+        @article{soares1999reliability,
+        title={Reliability of maintained, corrosion protected plates subjected to non-linear corrosion and compressive loads},
+        author={Soares, C Guedes and Garbatov, Yordan},
+        journal={Marine structures},
+        volume={12},
+        number={6},
+        pages={425--445},
+        year={1999},
+        publisher={Elsevier}
+        }
+
+    '''
+
+    def __init__(self, parameters):
+        atmospheric_corrosion_model.__init__(self)
+        self.model_name = 'Reliability of maintained, corrosion protected plates subjected to non-linear corrosion and compressive loads'
+        self.article_identifier = ['reliability_of_maintained_corrosion_protected_plat']
+        self.steel = "Steel"
+        self.p = parameters
+
+    
+    def eval_material_loss(self, time):
+        
+        material_loss = np.zeros_like(time)  # Initialize the material_loss array with zeros
+        mask = time >= self.p['t_c']  # Create a boolean mask for time elements >= T_c
+        material_loss[mask] = self.p['d_inf'] * (1 - np.exp(-(time[mask] - self.p['t_c']) / self.p['t_t']))
+        return material_loss
+
+    
+
+
