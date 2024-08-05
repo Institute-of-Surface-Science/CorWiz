@@ -47,7 +47,5 @@ def model1(model_identifier):
     'tw': tw,    # Time
     'D': D       # Material parameter or other variable
     }
-
-    print(parameters)
     
     return i_the_prediction_of_atmospheric_corrosion_from_met(binary_interaction, atmosphere, parameters), time

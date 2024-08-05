@@ -4,7 +4,7 @@ from streamlit_lottie import st_lottie
 from streamlit_extras.stylable_container import stylable_container
 from streamlit_extras.add_vertical_space import add_vertical_space
 import pandas as pd
-from models import model1, model2, model3
+from models import model1, model2, model3, model4
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -91,7 +91,7 @@ with main_app:
 
     with data_column:
         st.write("Model developed by: " + model_info['model_developers'][model_info['model_names'].index(model)])
-        st.write("Model Abstract: " + model_info['model_abstracts'][model_info['model_names'].index(model)])
+        st.write("Model Abstract: " + str(model_info['model_abstracts'][model_info['model_names'].index(model)]))
         try:
             st.write("Model Notes: " + model_info['model_special_notes'][model_info['model_names'].index(model)])
         except:
@@ -108,6 +108,10 @@ with main_app:
         elif model_id == 3:
             with st.container():
                 model, time = model3(model_identifier)
+
+        elif model_id == 4:
+            with st.container():
+                model, time = model4(model_identifier)
 
         t = np.linspace(0, time, 400)
         D = model.eval_material_loss(t)

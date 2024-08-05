@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the Excel file
-file_name = 'i_the_prediction_of_atmospheric_corrosion_from_met_tables'
+file_name = '../data/tables/a_general_corrosion_function_in_terms_of_atmospher_tables'
 excel_file = file_name + '.xlsx'
 
 # Read the Excel file

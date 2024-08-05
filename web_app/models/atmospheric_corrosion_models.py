@@ -88,7 +88,6 @@ class iso_9224(atmospheric_corrosion_model):
         self.article_identifier = ['din-en-iso-92232012-05', 'din-en-iso-92242012-05']
         self.steel = "Unalloyed Steel"
         self.p = parameters
-        print(parameters)
         self.correlation_speed_provided = 'corrosion_speed' in parameters
 
     
@@ -175,11 +174,48 @@ class tropical_marine_env(atmospheric_corrosion_model):
         elif self.p['distance'] == distances[-1]:
             return np.exp(log_A_values[-1]), n_values[-1]
 
-    
 
     def eval_material_loss(self, time):
 
         A, n = self.eval_corrosion_speed_and_exponent()
 
+        material_loss = A*time**n
+        return material_loss
+    
+
+class a_general_corrosion_function(atmospheric_corrosion_model):
+    '''
+        @article{benarie1986general,
+        title={A general corrosion function in terms of atmospheric pollutant concentrations and rain pH},
+        author={Benarie, Michel and Lipfert, Frederick L},
+        journal={Atmospheric Environment (1967)},
+        volume={20},
+        number={10},
+        pages={1947--1958},
+        year={1986},
+        publisher={Elsevier}
+        }
+
+    '''
+
+    def __init__(self, parameters):
+        atmospheric_corrosion_model.__init__(self)
+        self.model_name = 'A general corrosion function in terms of atmospheric pollutant concentrations and rain pH'
+        self.article_identifier = ['a_general_corrosion_function_in_terms_of_atmospher']
+        self.steel = "Carbon Steel"
+        self.p = parameters
+
+    
+    def eval_corrosion_speed_and_exponent(self):
+        table_2 = pd.read_csv('../data/tables/a_general_corrosion_function_in_terms_of_atmospher_tables_table_2.csv', header=None)
+        A = float(table_2.iloc[self.p['corrosion_site'], 1])
+        b = float(table_2.iloc[self.p['corrosion_site'], 2])
+
+        return A, b 
+
+    
+    def eval_material_loss(self, time):
+        A, n = self.eval_corrosion_speed_and_exponent()
+        
         material_loss = A*time**n
         return material_loss
