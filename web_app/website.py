@@ -1,15 +1,29 @@
-import requests
-import streamlit as st
-from streamlit_lottie import st_lottie
-from streamlit_extras.stylable_container import stylable_container
-from streamlit_extras.add_vertical_space import add_vertical_space
-import pandas as pd
-from models import model1, model2, model3, model4, model5, model6
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import requests
+import streamlit as st
+from streamlit_extras.add_vertical_space import add_vertical_space
+from streamlit_extras.stylable_container import stylable_container
 
+from models import model1, model2, model3, model4, model5, model6
 
-st.set_page_config(page_title="Corwiz", page_icon=":woman_scientist:", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="CorWiz", page_icon=":material/rainy:", layout="wide", initial_sidebar_state="collapsed")
+
+# TODO: move to local css file
+st.markdown(
+    f'''
+       <style>
+           .block-container {{
+               padding-top: 2rem;
+               padding-right: 1rem;
+               padding-left: 1rem;
+               padding-bottom: 2rem;
+           }}
+       </style>
+           ''',
+    unsafe_allow_html=True,
+)
 
 
 def load_lottieurl(url):
@@ -32,18 +46,23 @@ header = st.container()
 main_app = st.container()
 empty = st.container()
 footer = stylable_container(key="footer-box",
-                            css_styles="""{
-                                            background-color: white
-                                          }
-                                          """)
+                            css_styles="""{background-color: white}""")
 
 
-def display_logo(url, img_src, width, alt_text):
+def display_logo(url, img_src, alt_text, width="", height=""):
+    height_html = ""
+    if height:
+        height_html = f"""max-height: {height} """
+
+    width_html = ""
+    if width:
+        width_html = f"""width="{width}" """
+
     st.html(
         f"""
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; {height_html};">
             <a href="{url}" target="_blank">
-                <img src="{img_src}" width="{width}" alt="{alt_text}">
+                <img src="{img_src}" {width_html} alt="{alt_text}" style="{height_html};">
             </a>
         </div>
         """
@@ -51,20 +70,24 @@ def display_logo(url, img_src, width, alt_text):
 
 
 with header:
-    left_column, right_column = st.columns((8, 1))
-    with left_column:
-        st.title("CorWiz - A web service to assist engineers in accessing and utilizing data on steel corrosion.")
-        st.subheader("Developed by Aravinth Ravikumar, Dr.Sven Berger and Dr. Daniel Höche")
-        st.write(
-            "The goal is to create a comprehensive database of corrosion knowledge, including both structured and unstructured data such as research articles. Currently, engineers face challenges in selecting appropriate models and accessing relevant data for corrosion simulations. CorWiz aims to address this by providing a user-friendly web tool that offers engineers access to corrosion data, models, and relevant literature. By inputting parameters such as substrate material and environmental conditions, users can obtain corrosion grades, simulation results, and other structured data. The development of CorWiz involves data scraping, processing, and quality assessment, which will be facilitated by tools developed for the Kadi4Mat research data management platform. This project aims to streamline the design process, raise awareness of potential corrosion issues, and contribute to more cost-effective and eco-friendly design practices.")
-        st.write("[Learn more at >](https://www.hereon.de/institutes/surface_science/projects/112600/index.php.en)")
-    with right_column:
-        display_logo(
-            url="http://corwiz.xyz/",
-            img_src="./app/static/logos/banner.gif",
-            width="80%",
-            alt_text="Logo of Corwiz",
-        )
+    with st.container(height=150, border=False):
+        left_column, middle_column, right_column = st.columns((1, 5, 1))
+        with left_column:
+            with stylable_container(key="logo_box",
+                                    css_styles="""{background-color: white; border-radius: 0.5rem;padding: 2px;padding-left:10px;padding-right:10px;max-height:150px;box-sizing: border-box;}"""):
+                display_logo(
+                    url="http://corwiz.xyz/",
+                    img_src="./app/static/logos/corwiz.png",
+                    width="90%",
+                    alt_text="Logo of Corwiz",
+                )
+        with right_column:
+            display_logo(
+                url="http://corwiz.xyz/",
+                img_src="./app/static/logos/banner.gif",
+                height="150px",
+                alt_text="Animated Banner",
+            )
 
 with main_app:
     st.write("---")
@@ -72,20 +95,24 @@ with main_app:
 
     # Extract the model names and identifiers from the atmospheric_corrosion_model_kadi_identifiers.csv file
 
-    atmospheric_corrosion_model_kadi_identifiers = pd.read_csv('../data/atmospheric_corrosion_model_kadi_identifiers.csv')
+    atmospheric_corrosion_model_kadi_identifiers = pd.read_csv(
+        '../data/atmospheric_corrosion_model_kadi_identifiers.csv')
 
-    columns = ['model_names', 'model_ids', 'model_kadi_identifiers', 'model_developers', 'model_abstracts', 'model_special_notes']
-    model_info = {col: atmospheric_corrosion_model_kadi_identifiers.iloc[:, idx].tolist() for idx, col in enumerate(columns)}
-    
+    columns = ['model_names', 'model_ids', 'model_kadi_identifiers', 'model_developers', 'model_abstracts',
+               'model_special_notes']
+    model_info = {col: atmospheric_corrosion_model_kadi_identifiers.iloc[:, idx].tolist() for idx, col in
+                  enumerate(columns)}
+
     model = st.selectbox(
         'Please select model',
         ((model_info['model_names']))
     )
     model_identifier = model_info['model_kadi_identifiers'][model_info['model_names'].index(model)]
-    model_id =  model_info['model_ids'][model_info['model_names'].index(model)]
+    model_id = model_info['model_ids'][model_info['model_names'].index(model)]
     st.subheader("Selected model: " + model)
 
     image_column, data_column, = st.columns((1, 1))
+    fig = plt.figure(figsize=(10, 6))
 
     with data_column:
         st.write("Model developed by: " + model_info['model_developers'][model_info['model_names'].index(model)])
@@ -121,21 +148,21 @@ with main_app:
 
         t = np.linspace(0, time, 400)
         D = model.eval_material_loss(t)
-        plt.figure(figsize=(10, 6))
         plt.plot(t, D, color='blue')
         plt.xlabel(r'Time [years]')
         plt.ylabel(r'Mass loss $[um]$')
         plt.legend()
         plt.grid(True)
-        
-        # Save the figure
-        plt.savefig('../data/images/plot_output.png')
 
     with image_column:
-        st.image("../data/images/plot_output.png")
+        # # Save the figure
+        # plt.savefig('../data/images/plot_output.png')
+        # st.image("../data/images/plot_output.png")
+        st.pyplot(fig)
 
 with empty:
     add_vertical_space(20)
+
 
 def display_logo(url, img_src, width, alt_text):
     st.html(
@@ -147,6 +174,7 @@ def display_logo(url, img_src, width, alt_text):
         </div>
         """
     )
+
 
 with footer:
     left_column, middle_column, right_column = st.columns((1, 1, 1))
@@ -180,4 +208,3 @@ with footer:
                 width="80%",
                 alt_text="Logo of the German National Research Data Infrastructure for Engineering Sciences www.nfdi4ing.de",
             )
-
