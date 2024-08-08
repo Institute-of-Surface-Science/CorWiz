@@ -71,7 +71,7 @@ def display_logo(url, img_src, alt_text, width="", height=""):
 
 with header:
     with st.container(height=150, border=False):
-        left_column, middle_column, right_column = st.columns((1, 5, 1))
+        left_column, middle_column, right_column = st.columns((2, 9, 2))
         with left_column:
             with stylable_container(key="logo_box",
                                     css_styles="""{background-color: white; border-radius: 0.5rem;padding: 2px;padding-left:10px;padding-right:10px;max-height:150px;box-sizing: border-box;}"""):
