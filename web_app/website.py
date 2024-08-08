@@ -49,20 +49,23 @@ footer = stylable_container(key="footer-box",
                             css_styles="""{background-color: white}""")
 
 
-def display_logo(url, img_src, alt_text, width="", height=""):
-    height_html = ""
-    if height:
-        height_html = f"""max-height: {height} """
+def display_logo(url, img_src, alt_text, width="auto", height="auto", min_width_to_display=0):
+    # height_html = f"max-height: {height};" if height else ""
+    # width_html = f'width="{width}"' if width else ""
+    simple_id = "img-" + img_src.replace("/", "").replace(".", "")
 
-    width_html = ""
-    if width:
-        width_html = f"""width="{width}" """
+    image_css = f"""
+    width: {width};  # Dynamic width, defaults to 'auto'
+    height: {height};  
+    max-height:150px;
+    object-fit: contain; 
+    """
 
     st.html(
         f"""
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; {height_html};">
+        <div id="{simple_id}" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <a href="{url}" target="_blank">
-                <img src="{img_src}" {width_html} alt="{alt_text}" style="{height_html};">
+                <img src="{img_src}" alt="{alt_text}" style="{image_css}">
             </a>
         </div>
         """
@@ -71,7 +74,7 @@ def display_logo(url, img_src, alt_text, width="", height=""):
 
 with header:
     with st.container(height=150, border=False):
-        left_column, middle_column, right_column = st.columns((2, 9, 2))
+        left_column, middle_column, right_column = st.columns((3, 3, 3))
         with left_column:
             with stylable_container(key="logo_box",
                                     css_styles="""{background-color: white; border-radius: 0.5rem;padding: 2px;padding-left:10px;padding-right:10px;max-height:150px;box-sizing: border-box;}"""):
@@ -85,8 +88,9 @@ with header:
             display_logo(
                 url="http://corwiz.xyz/",
                 img_src="./app/static/logos/banner_small.gif",
-                height="150px",
+                width="90%",
                 alt_text="Animated Banner",
+                min_width_to_display=1200,
             )
 
 with main_app:
