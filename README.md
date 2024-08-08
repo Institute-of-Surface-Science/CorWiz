@@ -40,3 +40,11 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 The project is funded through a grant from [NFDI4Ing](https://nfdi4ing.de/).
 Additional funding has been provided by the Helmholtz Metadata Collaboration [HMC](https://helmholtz-metadaten.de/en/inf-projects/metasurf).
+
+<p align="center">
+  <img align="middle" src="https://github.com/user-attachments/assets/6367a5c8-b130-42e5-8958-a9467b536803" width=20%/>&nbsp;&nbsp;&nbsp;
+  <img align="middle" src="https://github.com/user-attachments/assets/863cbd4e-a879-418d-b03a-c2e5165af476" width=20%/>&nbsp;&nbsp;&nbsp;
+  <img align="middle" src="https://github.com/user-attachments/assets/5b9c74a5-af36-466f-beb2-7972985d3a3f" width=20%/>&nbsp;&nbsp;&nbsp;
+</p>
+
+
