@@ -49,9 +49,7 @@ footer = stylable_container(key="footer-box",
                             css_styles="""{background-color: white}""")
 
 
-def display_logo(url, img_src, alt_text, width="auto", height="auto", min_width_to_display=0):
-    # height_html = f"max-height: {height};" if height else ""
-    # width_html = f'width="{width}"' if width else ""
+def display_logo(url, img_src, alt_text, width="auto", height="auto"):
     simple_id = "img-" + img_src.replace("/", "").replace(".", "")
 
     image_css = f"""
@@ -90,7 +88,6 @@ with header:
                 img_src="./app/static/logos/banner_small.gif",
                 width="90%",
                 alt_text="Animated Banner",
-                min_width_to_display=1200,
             )
 
 with main_app:
