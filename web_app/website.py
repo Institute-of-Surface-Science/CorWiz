@@ -84,7 +84,7 @@ with header:
         with right_column:
             display_logo(
                 url="http://corwiz.xyz/",
-                img_src="./app/static/logos/banner.gif",
+                img_src="./app/static/logos/banner_small.gif",
                 height="150px",
                 alt_text="Animated Banner",
             )
