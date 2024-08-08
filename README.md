@@ -1,6 +1,7 @@
-# CorWiz: Corrosion Knowledge Wizard
+<p align="center">
+  <img align="middle" src="https://github.com/user-attachments/assets/a4ad7641-b658-4b9b-a13f-30d0b287a927" width=40%/>&nbsp;&nbsp;&nbsp;
+</p>
 
-## Project Goal
 The primary objective of CorWiz is to develop a comprehensive database encompassing a wide range of corrosion knowledge. This database will integrate both structured and unstructured data sources, including scholarly research articles.
 
 ## Challenges
