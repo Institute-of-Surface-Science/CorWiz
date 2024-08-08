@@ -26,8 +26,6 @@ def local_css(file_name):
 
 local_css('style/style.css')
 
-lottie_animation = load_lottieurl("https://lottie.host/06c2ad3e-b44f-431c-ac89-4c4b916c4b43/b4ZvbBJBa9.json")
-
 header = st.container()
 main_app = st.container()
 empty = st.container()
@@ -66,6 +64,17 @@ with header:
             alt_text="Logo of Corwiz",
         )
 
+
+models = {
+    1: model1,
+    2: model2,
+    3: model3,
+    4: model4,
+    5: model5,
+    6: model6
+}
+
+
 with main_app:
     st.write("---")
     st.header("Corrosion Mass Loss Model")
@@ -95,29 +104,8 @@ with main_app:
         except:
             pass
 
-        if model_id == 1:
-            with st.container():
-                model, time = model1(model_identifier)
-
-        elif model_id == 2:
-            with st.container():
-                model, time = model2(model_identifier)
-
-        elif model_id == 3:
-            with st.container():
-                model, time = model3(model_identifier)
-
-        elif model_id == 4:
-            with st.container():
-                model, time = model4(model_identifier)
-
-        elif model_id == 5:
-            with st.container():
-                model, time = model5(model_identifier)
-
-        elif model_id == 6:
-            with st.container():
-                model, time = model6(model_identifier)
+        with st.container():
+            model, time = models[model_id](model_identifier)        
 
         t = np.linspace(0, time, 400)
         D = model.eval_material_loss(t)
