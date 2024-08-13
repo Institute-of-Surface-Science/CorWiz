@@ -27,45 +27,43 @@ class i_the_prediction_of_atmospheric_corrosion_from_met(atmospheric_corrosion_m
         year={1993},
         publisher={Elsevier}
     '''
-    def __init__(self, binary_interaction, atmosphere, parameters):
+    def __init__(self, parameters):
         atmospheric_corrosion_model.__init__(self)
         self.model_name = 'The prediction of atmospheric corrosion from meteorological and pollution parameters—I. Annual corrosion'
         self.article_identifier = 'i_the_prediction_of_atmospheric_corrosion_from_met'
-        self.binary_interaction = binary_interaction
-        self.atmosphere = atmosphere
         self.steel = "Carbon Steel"
         self.p = parameters
 
 
     def eval_annual_corrosion(self):
 
-        if self.binary_interaction:
-            annual_corrosion = (132.4 * self.p['Cl'] * 
-                        (1 + 0.038 * self.p['temp'] - 
-                         1.96 * self.p['tw'] - 
-                         0.53 * self.p['SO2'] + 
-                         74.6 * self.p['tw'] * (1 + 1.07 * self.p['SO2']) - 
+        if self.p['Binary Interaction']:
+            annual_corrosion = (132.4 * self.p['Chloride pollution annual average'] * 
+                        (1 + 0.038 * self.p['Temperature'] - 
+                         1.96 * self.p['Wetness time'] - 
+                         0.53 * self.p['SO2 pollution annual average'] + 
+                         74.6 * self.p['Wetness time'] * (1 + 1.07 * self.p['SO2 pollution annual average']) - 
                          6.3))
         else:
             annual_corrosion = (33.0 + 
-                        57.4 * self.p['Cl'] + 
-                        26.6 * self.p['SO2'])
+                        57.4 * self.p['Chloride pollution annual average'] + 
+                        26.6 * self.p['SO2 pollution annual average'])
 
         return annual_corrosion
     
 
     def evaluate_exponent(self):
         table_4 = pd.read_csv('../data/tables/i_the_prediction_of_atmospheric_corrosion_from_met_tables_table_4.csv', header=None)
-        if self.atmosphere == 0:
+        if self.p['Atmosphere'] == 0:
             exponent = table_4.iloc[1, 1]
-        elif self.atmosphere == 1:
+        elif self.p['Atmosphere'] == 1:
             exponent = table_4.iloc[1, 2]
-        elif self.atmosphere == 2:
+        elif self.p['Atmosphere'] == 2:
             exponent = table_4.iloc[1, 3]
         else:
             exponent = (0.570 + 
-            0.0057 * self.p['Cl'] * self.p['temp'] + 
-            7.7e-4 * self.p['D'] - 
+            0.0057 * self.p['Chloride pollution annual average'] * self.p['Temperature'] + 
+            7.7e-4 * self.p['Wetness time']*365 - 
             1.7e-3 * self.eval_annual_corrosion())
 
         return float(exponent)
@@ -288,7 +286,7 @@ class sophisticated_corrosion_rate(atmospheric_corrosion_model):
         J = float(table_2.iloc[1, 10])
         T0 = float(table_2.iloc[1, 11])
 
-        material_loss = A*(time**B)*((self.p['TOW']*24/C)**D)*(1+(self.p['SO2']/E)**F)*(1+(self.p['Cl']/G)**H)*(np.exp(J*(self.p['T']+T0)))
+        material_loss = A*(time**B)*((self.p['TOW']*365*24/C)**D)*(1+(self.p['SO2']/E)**F)*(1+(self.p['Cl']/G)**H)*(np.exp(J*(self.p['T']+T0)))
         return material_loss
 
     

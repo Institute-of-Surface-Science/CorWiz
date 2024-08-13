@@ -1,6 +1,7 @@
-from . model1 import model1
-from . model2 import model2
-from . model3 import model3
-from . model4 import model4
-from . model5 import model5
-from . model6 import model6
+from . AC_model1 import AC_model1
+from . AC_model2 import AC_model2
+from . AC_model3 import AC_model3
+from . AC_model4 import AC_model4
+from . AC_model5 import AC_model5
+from . AC_model6 import AC_model6#
+from . IC_model1 import IC_model1
