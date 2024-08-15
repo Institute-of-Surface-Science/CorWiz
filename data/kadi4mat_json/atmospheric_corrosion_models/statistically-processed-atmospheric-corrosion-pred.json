@@ -1,0 +1,159 @@
+{
+  "created_at": "2024-08-14T14:36:51.345546+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "Worldwide atmospheric corrosion and environmental data, compiled in a comprehensive literature survey were statistically processed for establishing general corrosion damage functions for mild steel, zinc, copper and aluminium, in terms of simple meteorological and pollution parameters. The regression equations thus developed account for 83, 62, 59 and 41% of the variance in the annual corrosion data for zinc, steel, aluminium and copper, respectively. The goodness of the fits of data from rural atmospheres is considerably lower",
+  "extras": [
+    {
+      "key": "special notes",
+      "type": "str",
+      "value": "The linear model using binary interaction terms together with the main effect terms of the environmental variables  accounts for ca 60% of the variance in steel corrosion. The linear regression model in the absence of the interaction terms, is somewhat poorer but has the advantage of showing the effect of variables in separate terms for ready comparisons with previously reported equations."
+    },
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Binary Interaction",
+          "type": "bool",
+          "value": null
+        },
+        {
+          "key": "Atmosphere",
+          "type": "list",
+          "value": [
+            {
+              "type": "str",
+              "value": "Rural Atmosphere"
+            },
+            {
+              "type": "str",
+              "value": "Urban industrial Atmosphere"
+            },
+            {
+              "type": "str",
+              "value": "Marine Atmosphere"
+            }
+          ]
+        },
+        {
+          "key": "Temperature",
+          "type": "float",
+          "unit": "°C",
+          "value": null
+        },
+        {
+          "key": "Wetness time",
+          "type": "float",
+          "unit": "annual fraction",
+          "value": null
+        }
+      ]
+    },
+    {
+      "key": "Formula",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Annual Corrosion",
+          "type": "str",
+          "value": "$A [um]$ = $132.4Cl^-(1 + 0.038T - 1.96t_w - 0.53SO_2 + 74.6t_w(1 + 1.07SO_2) - 6.3)$"
+        },
+        {
+          "key": "Exponent",
+          "type": "str",
+          "value": "$n = 0.570 + 0.0057Cl^-T + 7.7 \\times 10^{-4}D - 1.7 \\times 10^{-3}A$"
+        },
+        {
+          "key": "Material loss",
+          "type": "str",
+          "value": "$At^n$"
+        }
+      ]
+    }
+  ],
+  "files": [],
+  "id": 223,
+  "identifier": "statistically-processed-atmospheric-corrosion-pred",
+  "last_modified": "2024-08-15T07:33:50.309888+00:00",
+  "license": null,
+  "links": [
+    {
+      "created_at": "2024-08-14T14:36:51.468637+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 180,
+      "last_modified": "2024-08-14T14:36:51.468642+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-07-29T13:27:14.052428+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-07-29T13:27:14.164773+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "1993-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": "403--414"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Corrosion Science"
+          }
+        ],
+        "id": 185,
+        "identifier": "i_the_prediction_of_atmospheric_corrosion_from_met",
+        "last_modified": "2024-08-14T14:36:51.549445+00:00",
+        "license": null,
+        "tags": [],
+        "title": "I_The prediction of atmospheric corrosion from meteorological and pollution parameters—I. Annual corrosion",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "atmospheric corrosion model",
+    "corrosion model",
+    "corwiz",
+    "model"
+  ],
+  "title": "Statistically Processed Atmospheric Corrosion Prediction Model (SP-ACPM) for Mild Steel based on Meteorological and Pollution Parameters",
+  "type": "model"
+}

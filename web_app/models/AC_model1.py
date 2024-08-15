@@ -23,7 +23,7 @@ def get_parameters(table_2, atmosphere, atmosphere_types):
     parameters['Atmosphere'] = atmosphere_types.index(atmosphere)
     parameters['Chloride pollution annual average'] = float(table_2.iloc[7, 2])
     parameters['SO2 pollution annual average'] = float(table_2.iloc[7, 2])
-    if atmosphere == 3:
+    if parameters['Atmosphere'] == 3:
         parameters['Chloride pollution annual average'] = float(st.text_input(r"$Cl^-$ - Chloride pollution annual average  $[mg Cl^{-} dm^{-2} d^{-1}]$,", str(table_2.iloc[7, 2])))
         parameters['SO2 pollution annual average'] = float(st.text_input(r"$SO_2$ - SO2 pollution annual average  $[mg SO_2 dm^{-2} d^{-1}]$,", str(table_2.iloc[7, 2])))
     parameters['Temperature'] = float(st.text_input(r"$T$ - Temperature [°C]", str(table_2.iloc[6, 2])))

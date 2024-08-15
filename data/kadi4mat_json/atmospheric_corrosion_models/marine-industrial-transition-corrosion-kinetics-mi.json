@@ -1,0 +1,135 @@
+{
+  "created_at": "2024-08-14T15:13:27.988290+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "This model provides the mass loss due to atmospheric corrosion for low carbon steels at different distances from the sea. The authors showed that the presence of chloride ions (Cl-) adjacent to the sea water (marine environment) and the transition point (where the corrosion rate changes with respect to time) moves forward compared to the industrial atmosphere. The corrosion speed and the exponent used to evaluate the mass loss were evaluated by corrosion experiments performed on low carbon steel (Q235), where samples were exposed to marine environment at two different exposure sites, Wanning city (marine site: 110050 eastern longitude and 18580 northern latitude; SITE 1) and Shenyang city (industrial site: 123240 eastern longitude and 41320 northern latitude; SITE 2).",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Corrosion site",
+          "type": "list",
+          "value": [
+            {
+              "type": "str",
+              "value": "Site 1 - Wanning"
+            },
+            {
+              "type": "str",
+              "value": "Site 2 - Shenyang"
+            }
+          ]
+        },
+        {
+          "key": "Distance",
+          "type": "float",
+          "unit": "m",
+          "validation": {
+            "range": {
+              "max": 375.0,
+              "min": 25.0
+            }
+          },
+          "value": null
+        },
+        {
+          "key": "Formula",
+          "type": "dict",
+          "value": [
+            {
+              "key": "Material Loss",
+              "type": "str",
+              "value": "$D = At^n$"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "files": [],
+  "id": 225,
+  "identifier": "marine-industrial-transition-corrosion-kinetics-mi",
+  "last_modified": "2024-08-15T07:40:09.523159+00:00",
+  "license": null,
+  "links": [
+    {
+      "created_at": "2024-08-14T15:13:28.073793+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 186,
+      "last_modified": "2024-08-14T15:13:28.073799+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-07-29T13:27:16.056537+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-07-29T13:27:16.102279+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2010-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": "1796--1800"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Corrosion Science"
+          }
+        ],
+        "id": 190,
+        "identifier": "the_atmospheric_corrosion_kinetics_of_low_carbon_s",
+        "last_modified": "2024-08-14T15:13:28.093810+00:00",
+        "license": null,
+        "tags": [],
+        "title": "The atmospheric corrosion kinetics of low carbon steel in a tropical marine environment",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "atmospheric corrosion model",
+    "corrosion model",
+    "corwiz",
+    "model"
+  ],
+  "title": "Marine-Industrial Transition Corrosion Kinetics (MITCK) Model",
+  "type": "model"
+}

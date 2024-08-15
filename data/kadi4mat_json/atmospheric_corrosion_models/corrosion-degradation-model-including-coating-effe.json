@@ -1,0 +1,132 @@
+{
+  "created_at": "2024-08-15T07:59:38.012349+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "The model described in Equation 6 of the document is a non-linear model for corrosion degradation over time. The model is designed to capture the three distinct phases of corrosion typically observed in marine structures:  \n1. **Initial Phase (Protection Phase)**: During this phase, the metal surface is protected by a coating, and there is no corrosion. This phase lasts until the coating loses its effectiveness.     \n2. **Active Corrosion Phase**: Once the coating is compromised, corrosion begins, and the thickness of the plate decreases. This phase is characterized by an exponential increase in corrosion wastage.     \n3. **Stabilization Phase**: Eventually, the corrosion process slows down as the corroded material forms a layer that protects the underlying metal from further exposure to the corrosive environment, effectively halting the corrosion process.  \n\nThe mathematical representation of the model is given by the differential equation:  \n$$ d(t) = d_{\\infty} (1 - e^{-(t - q_c)/q_t}) $$  \n\nHere:\n\n$d(t)$ is the thickness of the corrosion wastage at time $t$. \n\n$d_{\\infty}$ is the long-term thickness of the corrosion wastage. \n\n$q_c$ is the coating life, the time interval during which the coating is effective. \n\n$q_t$ is the transition time, which determines the rate at which the corrosion process progresses after the coating fails.",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Coating Life",
+          "type": "float",
+          "unit": "years",
+          "value": null
+        },
+        {
+          "key": "Transition Time",
+          "type": "float",
+          "unit": "years",
+          "value": null
+        },
+        {
+          "key": "Long term thickness of corrosion wastage",
+          "type": "float",
+          "unit": "mm",
+          "value": null
+        }
+      ]
+    },
+    {
+      "key": "Formula",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Material Loss",
+          "type": "str",
+          "value": "d(t)=d_{\\infty}\\left(1-\\mathrm{e}^{-\\left(t-\\tau_c\\right) / \\tau_t}\\right), \\quad t>\\tau_c"
+        },
+        {
+          "key": "Material Loss t<\\tau_c",
+          "type": "str",
+          "value": "d(t)=0, \\quad t \\leqslant \\tau_c"
+        }
+      ]
+    }
+  ],
+  "files": [],
+  "id": 227,
+  "identifier": "corrosion-degradation-model-including-coating-effe",
+  "last_modified": "2024-08-15T08:01:55.834569+00:00",
+  "license": null,
+  "links": [
+    {
+      "created_at": "2024-08-15T07:59:38.109998+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 188,
+      "last_modified": "2024-08-15T07:59:38.110006+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-07-29T13:27:18.015525+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-07-29T13:27:18.056381+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "1999-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": "425--445"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Marine structures"
+          }
+        ],
+        "id": 197,
+        "identifier": "reliability_of_maintained_corrosion_protected_plat",
+        "last_modified": "2024-08-15T07:59:38.116905+00:00",
+        "license": null,
+        "tags": [],
+        "title": "Reliability of maintained, corrosion protected plates subjected to non-linear corrosion and compressive loads",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "atmospheric corrosion model",
+    "corrosion model",
+    "corwiz",
+    "model"
+  ],
+  "title": "Corrosion Degradation Model including coating effects",
+  "type": "model"
+}
