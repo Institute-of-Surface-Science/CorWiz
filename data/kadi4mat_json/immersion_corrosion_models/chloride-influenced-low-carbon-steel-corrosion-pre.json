@@ -1,0 +1,126 @@
+{
+  "created_at": "2024-08-15T11:24:51.859729+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "The experimental work in the paper involves studying the corrosion behavior of low-carbon steel when immersed in various concentrations of sodium chloride (NaCl) solutions over a period of time. Here's a summary of the experimental procedures:\n\n### Materials Used: \n**Low-Carbon Steel Specimens**: These were cut from a steel plate into cross-sectional specimens with dimensions of 80 mm in length, 24 mm in width, and 3 mm in thickness. Each specimen also had a 10 mm diameter hole. \n\n**NaCl Solutions**: Five different concentrations of NaCl solutions were prepared: 0%, 2%, 3%, 4%, and 5% by weight. \n\n### Experimental Setup: \n\n1. **Specimen Preparation**: The specimens were polished, cleaned, and dried. They were weighed with precision to three decimal places before being immersed in the NaCl solutions. \n2. **Immersion Process**: The specimens were divided into five groups, with each group immersed in one of the five different NaCl concentrations. The experiment lasted for 75 days, with continuous monitoring. \n3. **Environmental Conditions**: Compressed air was continuously supplied to the solutions to ensure sufficient oxygen for the corrosion process. The experiments were conducted at room temperature with a solution pH of 7.2. \n\n### Measurement and Analysis: \n\n**Weight Change**: The weight of each specimen was measured seven times throughout the experiment to track changes due to corrosion. \n\n**Corrosion Rate**: The corrosion rate was calculated based on the weight change over time using established empirical models.",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Concentration of NaCl",
+          "type": "float",
+          "unit": "%w/w",
+          "value": null
+        },
+        {
+          "key": "Constant relating to the solution environment",
+          "type": "float",
+          "unit": null,
+          "value": null
+        }
+      ]
+    },
+    {
+      "key": "Formula",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Material Loss",
+          "type": "str",
+          "value": "$W_L = (0.00006C + 0.0008)t + b$"
+        }
+      ]
+    }
+  ],
+  "files": [],
+  "id": 229,
+  "identifier": "chloride-influenced-low-carbon-steel-corrosion-pre",
+  "last_modified": "2024-08-15T11:24:51.984116+00:00",
+  "license": null,
+  "links": [
+    {
+      "created_at": "2024-08-15T11:24:51.962035+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 190,
+      "last_modified": "2024-08-15T11:24:51.962042+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-08-08T08:07:59.210171+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-08-08T14:32:40.211347+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2020-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "doi",
+            "type": "str",
+            "value": "10.1016/j.heliyon.2020.e05050"
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": "e05050"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Heliyon"
+          }
+        ],
+        "id": 203,
+        "identifier": "the_empirical_prediction_of_weight_change_and_corr",
+        "last_modified": "2024-08-15T11:24:51.969006+00:00",
+        "license": null,
+        "tags": [],
+        "title": "The empirical prediction of weight change and corrosion rate of low-carbon steel",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "atmospheric corrosion model",
+    "corrosion model",
+    "corwiz",
+    "model"
+  ],
+  "title": "Chloride-Influenced Low-Carbon Steel Corrosion Prediction Model",
+  "type": "model"
+}

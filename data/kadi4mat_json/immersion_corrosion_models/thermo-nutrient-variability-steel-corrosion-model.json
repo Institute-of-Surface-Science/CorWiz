@@ -1,0 +1,121 @@
+{
+  "created_at": "2024-08-15T12:02:02.416054+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "The linearised (asymptotic) model for long-term corrosion was developed from data for annual average seawater temperatures and for annual average nutrient concentration. The model parameters $c_{s}$ and $r_{s}$ also were derived from such annual average data. The corrosion loss at any time $t_{1}$ is then given by:\n\n$$\n\\begin{equation*}\nc\\left(T, N, t_{1}\\right)=c_{s}(T, N)+t_{1} \\cdot r_{s}(T, N) \\tag{1}\n\\end{equation*}\n$$\n\nwhere $c\\left(T, N, t_{1}\\right)$ is the corrosion loss at average seawater temperature $T\\left({ }^{\\circ} \\mathrm{C}\\right), N$ is the average DIN concentration ( $\\left.\\mathrm{mgN} / \\mathrm{L}\\right)$ in the immediate neighbourhood of the corroding steel at time $t_{1}$ (years), $c_{s}(T, N)$ and $r_{s}(T, N)$ are parameters of the model, both functions of $T$ and $N$ and typically the time $t_{1}$ exceeds about 6 years.\n\nIt is assumed that the linearised model also applies for seawater temperatures averaged over shorter periods of time, and similarly for nutrient concentration, again averaged over shorter time periods. Both can be justified on the basis that the choice of one year for averaging of data happens to be convenient because that is the way data usually are reported, but a one-year time period actually is an entirely arbitrary choice. Any time period could be used, provided suitable time-related scaling is applied. In other words, the model may be assumed valid also for short-term averages in long-term corrosion (i.e. not just for one year intervals for averaging). The corrosion rate $r_{s}($.$) over a time interval \\Delta t$ can thus be considered as the integrated rate over incremental intervals $\\mathrm{d} t$ as follows:\n\n$$\n\\begin{equation*}\nr_{s}(T, N)=\\int_{0}^{\\Delta t} r_{s}[T(t), N(t), t] \\mathrm{d} t \\tag{2}\n\\end{equation*}\n$$\n\nwhere $r_{s}($.$) is the incremental corrosion rate of corrosion over$ the period $\\Delta t$ and $r_{s}(T, N, t)$ is the 'instantaneous' corrosion rate as a function of mean seawater temperature $T$, mean DIN $N$ and time $t$. It is directly obtainable from Figure 2(b). Usually the water temperatures are available on a monthly or three monthly basis (and thus $\\mathrm{d} t$ would be 1 or 3 months) and for this case Equation (2) can be discretised as a summation. Note that Equation (2) does not depend on the degree of correlation between $T$ and $N$. For all practical purposes the time interval $\\Delta t$ of interest is one year.\n\nThe initial corrosion loss parameter $c_{s}$ is not affected by temporal variations in $T$ or $N$ except that the largest value should be chosen for the period $0-\\Delta t$, that is:\n\n$$\n\\begin{equation*}\nc_{s}=\\max _{0-\\Delta t}\\left[c_{s}(t)\\right] \\tag{3}\n\\end{equation*}\n$$\n\nThis follows from the fact that the actual corrosion loss over a time interval $\\Delta t$ will be governed by the largest loss during that time interval as given by the components of the model. In turn, this may be seen by considering two (or more) successive corrosion loss trends. If the first corrosion loss trend involves very little corrosion loss, and if the second has much greater corrosion loss it will govern the subsequent overall losses. Alternatively, if the first trend has a high corrosion loss compared to the subsequent trend, the latter will affect only the slope (i.e. the rate), not the magnitude of loss. From a practical perspective, Equation (3) is consistent with the usual experimental practice of first exposure in the period immediately before the most corrosive season.",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "key": "c_s",
+          "type": "float",
+          "unit": null,
+          "value": null
+        },
+        {
+          "key": "r_s",
+          "type": "float",
+          "unit": null,
+          "value": null
+        }
+      ]
+    },
+    {
+      "key": "Formula",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Material Loss",
+          "type": "str",
+          "value": "$c\\left(T, N, t_1\\right)=c_s(T, N)+t_1 \\cdot r_s(T, N)$"
+        }
+      ]
+    }
+  ],
+  "files": [],
+  "id": 230,
+  "identifier": "thermo-nutrient-variability-steel-corrosion-model",
+  "last_modified": "2024-08-15T12:02:24.803930+00:00",
+  "license": null,
+  "links": [
+    {
+      "created_at": "2024-08-15T12:02:02.499078+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 191,
+      "last_modified": "2024-08-15T12:02:02.499084+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-08-08T12:21:22.989668+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-08-08T14:32:40.904947+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2017-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": "978--987"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Structure and Infrastructure Engineering"
+          }
+        ],
+        "id": 207,
+        "identifier": "long-term_immersion_corrosion_of_steel_subject_to_",
+        "last_modified": "2024-08-15T12:02:02.517018+00:00",
+        "license": null,
+        "tags": [],
+        "title": "Long-term immersion corrosion of steel subject to large annual variations in seawater temperature and nutrient concentration",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "corrosion model",
+    "corwiz",
+    "immersion corrosion model",
+    "model"
+  ],
+  "title": "Thermo-Nutrient Variability Steel Corrosion Model",
+  "type": "model"
+}

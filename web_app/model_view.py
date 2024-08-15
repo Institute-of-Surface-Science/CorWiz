@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import json
-from models import AC_model1, AC_model2, AC_model3, AC_model4, AC_model5, AC_model6, IC_model1
+from models import AC_model1, AC_model2, AC_model3, AC_model4, AC_model5, AC_model6, IC_model1, IC_model2
 import os
 
 
@@ -70,7 +70,7 @@ def model_view(model_view_container):
         st.write("---")
         st.header("Corrosion Mass Loss Models")
 
-        # immersion_corrosion_models = extract_model_details_from_json('../data/model_json/immersion_corrosion_models.json')
+        immersion_corrosion_models = extract_model_details_from_json('../data/kadi4mat_json/immersion_corrosion_models/')
         atmospheric_corrosion_models = extract_model_details_from_json('../data/kadi4mat_json/atmospheric_corrosion_models/')
 
         models = ['Atmospheric corrosion models', 'Immersed corrosion models']
@@ -88,8 +88,9 @@ def model_view(model_view_container):
                                'corrosion-degradation-model-including-coating-effe': AC_model5, 
                                'so2-cl-deposition-and-wetness-time-factor-based-ex': AC_model6}
         else:
-            # model_info = immersion_corrosion_models
-            model_functions = {1: IC_model1}  
+            model_info = immersion_corrosion_models
+            model_functions = {'chloride-influenced-low-carbon-steel-corrosion-pre': IC_model1, 
+                               'thermo-nutrient-variability-steel-corrosion-model': IC_model2}  
 
         model = st.selectbox(
             'Please select model',

@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from . immersed_corrosion_models import empirical_prediction_model
+from . immersed_corrosion_models import thermo_nutrient_variability_steel_corrosion_model
 
 
 def get_constant_value(nacl_conc, table):
@@ -51,16 +51,19 @@ def display_formulas():
     st.write(r'Mass loss due to corrosion, $W_L [um] = (0.00006C + 0.0008)t + b $ ')
 
 
-def IC_model1(model_identifier):
+def IC_model2(model_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    limits = {
-        'C': {'desc': 'Concentration of NaCl', 'lower': 0, 'upper': 5, 'unit': '%w/w'},
-    }
-    parameters = get_parameters(limits)
-
     table_3 = load_data(model_identifier)
+    st.table(table_3.iloc[:, 1:-2 ])
 
-    parameters['b'] = get_constant_value(parameters['C'], table_3)
+    parameters = {}
 
-    display_formulas()
-    return empirical_prediction_model(parameters), time
+    parameters['Condition'] = int(st.selectbox('Select the Temperature and Dissolved Inorganic Nitrogen', (table_3.iloc[1:, 0])))
+
+    parameters['c_s'] = float(table_3.iloc[parameters['Condition'], 3])
+    parameters['r_s'] = float(table_3.iloc[parameters['Condition'], 4])
+
+    print('\n\n\n”')
+    print(parameters)
+
+    return thermo_nutrient_variability_steel_corrosion_model(parameters), time
