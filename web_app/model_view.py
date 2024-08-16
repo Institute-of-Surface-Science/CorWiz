@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import json
-from models import AC_model1, AC_model2, AC_model3, AC_model4, AC_model5, AC_model6, IC_model1, IC_model2
+from models import AC_model1, AC_model2, AC_model3, AC_model4, AC_model5, AC_model6, IC_model1, IC_model2, IC_model3
 import os
 
 
@@ -90,7 +90,8 @@ def model_view(model_view_container):
         else:
             model_info = immersion_corrosion_models
             model_functions = {'chloride-influenced-low-carbon-steel-corrosion-pre': IC_model1, 
-                               'thermo-nutrient-variability-steel-corrosion-model': IC_model2}  
+                               'thermo-nutrient-variability-steel-corrosion-model': IC_model2, 
+                               'immersion-corrosion-predictive-model-incorporating': IC_model3}  
 
         model = st.selectbox(
             'Please select model',

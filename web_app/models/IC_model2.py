@@ -62,8 +62,5 @@ def IC_model2(model_identifier):
 
     parameters['c_s'] = float(table_3.iloc[parameters['Condition'], 3])
     parameters['r_s'] = float(table_3.iloc[parameters['Condition'], 4])
-
-    print('\n\n\n”')
-    print(parameters)
-
+    
     return thermo_nutrient_variability_steel_corrosion_model(parameters), time
