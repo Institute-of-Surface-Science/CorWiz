@@ -3,11 +3,10 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import json
-from models import AC_model1, AC_model2, AC_model3, AC_model4, AC_model5, AC_model6, IC_model1, IC_model2, IC_model3
+from models import AC_model1, AC_model2, AC_model3, AC_model4, AC_model5, AC_model6, IC_model1, IC_model2, IC_model3, IC_model4
 import os
-
-
 import json
+
 
 def extract_model_details_from_json(path):
     model_infos = {
@@ -44,8 +43,6 @@ def extract_model_details_from_json(path):
                     model_infos['parameters'].append(item['value'])
                 elif item['key'] == 'Formula':
                     model_infos['formulas'].append(item['value'])
-
-    print(model_infos['kadi_identifiers'])
 
     return model_infos
 
@@ -91,7 +88,8 @@ def model_view(model_view_container):
             model_info = immersion_corrosion_models
             model_functions = {'chloride-influenced-low-carbon-steel-corrosion-pre': IC_model1, 
                                'thermo-nutrient-variability-steel-corrosion-model': IC_model2, 
-                               'immersion-corrosion-predictive-model-incorporating': IC_model3}  
+                               'immersion-corrosion-predictive-model-incorporating': IC_model3, 
+                               'atmospheric-pollutant-and-ph-dependent-corrosion-r': IC_model4}  
 
         model = st.selectbox(
             'Please select model',
@@ -100,6 +98,7 @@ def model_view(model_view_container):
 
         model_identifier = model_info['kadi_identifiers'][model_info['names'].index(model)]
         article_identifier = model_info['article_identifier'][model_info['names'].index(model)]
+        formulas = model_info['formulas'][model_info['names'].index(model)]
         st.subheader("Selected model: " + model)
 
         image_column, data_column = st.columns((1, 1))
@@ -108,6 +107,10 @@ def model_view(model_view_container):
         with data_column:
             display_model_info(model_info, model)
             model, time = run_model(model_identifier, model_functions, article_identifier)
+
+
+        for formula in formulas:
+            st.write(r'' + formula['key'] + ': ' + formula['value'])
 
         if model is not None:
             t = np.linspace(0, time, 400)

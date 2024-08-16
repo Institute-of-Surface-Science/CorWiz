@@ -1,0 +1,10 @@
+Regression Parameter (x),Regression Equation,P-value,Significance
+Alkalinity,y=0.0014x-0.0103,0.005,Significant
+Chloride,y=0.0055x+0.0382,0.02,Significant
+Sulfate,y=0.0008x+0.0735,0.23,Not Significant
+Larson-Skold Index,y=0.0372x+0.0751,0.40,Not Significant
+Conductivity,y=0.0004x+0.0052,0.04,Significant
+pH,y=-0.0155x+0.2113,0.29,Not Significant
+DOC,y=0.0016x+0.0683,0.08,Not Significant
+Dissolved Copper,y=3.785x+0.0803,0.43,Not Significant
+Dissolved Oxygen,y=-0.0151x+0.2306,0.04,Significant Negative

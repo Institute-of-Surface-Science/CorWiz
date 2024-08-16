@@ -114,3 +114,59 @@ class immersion_corrosion_predictive_model_incorporating(immersed_corrosion_mode
         return material_loss
 
 
+class atmospheric_pollutant_and_ph_dependent_corrosion_r(immersed_corrosion_model):
+    '''
+        @article{hicks2012developing,
+        title={Developing a risk assessment tool to predict the risk of accelerated corrosion to port infrastructure},
+        author={Hicks, Randall E and Oster, Ryan J},
+        journal={Great Lakes Maritime Research Institute},
+        pages={1--20},
+        year={2012}
+        }
+    '''
+
+    def __init__(self, parameters):
+        immersed_corrosion_model.__init__(self)
+        self.model_name = 'Corrosion modeling in marine structures'
+        self.article_identifier = ['corrosion_modeling_in_marine_structures']
+        self.steel = "A328 sheet steel"
+        self.p = parameters
+
+    
+    def eval_material_loss(self, time):
+        
+        # Define the parameters and their formulas
+        parameters = {
+            'Alkalinity': (0.0014, -0.0103),
+            'Chloride': (0.0055, 0.0382),
+            'Sulfate': (0.0008, 0.0735),
+            'Larson Skold Index': (0.0372, 0.0751),
+            'Conductivity': (0.0004, 0.0052),
+            'pH': (-0.0155, 0.2113),
+            'Dissolved Organic Carbon': (0.0016, 0.0683),
+            'Dissolved Copper': (3.785, 0.0803),
+            'Dissolved Oxygen': (-0.0151, 0.2306),
+        }
+
+        # Calculate the d_ values
+        d_values = {}
+        for key, (multiplier, constant) in parameters.items():
+            value = self.p[key]
+            d_values[f'd_{key.replace(" ", "_")}'] = 0 if value == 0 else multiplier * value + constant
+
+        # Example usage
+        d_Alkalinity = d_values['d_Alkalinity']
+        d_Chloride = d_values['d_Chloride']
+        d_Sulfate = d_values['d_Sulfate']
+        d_Larson_Skold_Index = d_values['d_Larson_Skold_Index']
+        d_Conductivity = d_values['d_Conductivity']
+        d_pH = d_values['d_pH']
+        d_DOC = d_values['d_Dissolved_Organic_Carbon']
+        d_DC = d_values['d_Dissolved_Copper']
+        d_DO = d_values['d_Dissolved_Oxygen']
+
+        corrosion_rate = d_Alkalinity + d_Chloride + d_Sulfate +d_Larson_Skold_Index + d_Conductivity + d_pH + d_DOC + d_DC + d_DO
+
+        material_loss = corrosion_rate*time
+
+        return material_loss

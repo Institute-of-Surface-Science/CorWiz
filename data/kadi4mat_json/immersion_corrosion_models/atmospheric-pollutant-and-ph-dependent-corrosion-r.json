@@ -1,0 +1,157 @@
+{
+  "created_at": "2024-08-16T07:58:51.769934+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "A multiple linear regression model is used to predict corrosion rates. This model was parameterized with data collected from the Duluth-Superior Harbor in 2010 and 2011. It uses alkalinity and total Sulfate-Reducing Bacteria (SRB) measurements to predict corrosion rates. The model was then applied to data collected during 2011 at three harbors on the north shore of Lake Superior.",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Alkalinity",
+          "type": "float",
+          "unit": "mg L^{-1}",
+          "value": null
+        },
+        {
+          "key": "Chloride",
+          "type": "float",
+          "unit": "mg L^{-1}",
+          "value": null
+        },
+        {
+          "key": "Sulfate",
+          "type": "float",
+          "unit": "mg L^{-1}",
+          "value": null
+        },
+        {
+          "key": "Larson Skold Index",
+          "type": "float",
+          "unit": null,
+          "value": null
+        },
+        {
+          "key": "Conductivity",
+          "type": "float",
+          "unit": "uS cm^{-1}",
+          "value": null
+        },
+        {
+          "key": "pH",
+          "type": "float",
+          "unit": null,
+          "value": null
+        },
+        {
+          "key": "Dissolved Oxygen",
+          "type": "float",
+          "unit": "mg L^{-1}",
+          "value": null
+        },
+        {
+          "key": "Dissolved Organic Carbon",
+          "type": "float",
+          "unit": "mg L^{-1}",
+          "value": null
+        },
+        {
+          "key": "Dissolved Copper",
+          "type": "float",
+          "unit": "mg L^{-1}",
+          "value": null
+        }
+      ]
+    },
+    {
+      "key": "Formula",
+      "type": "dict",
+      "value": []
+    }
+  ],
+  "files": [],
+  "id": 232,
+  "identifier": "atmospheric-pollutant-and-ph-dependent-corrosion-r",
+  "last_modified": "2024-08-16T08:06:31.623737+00:00",
+  "license": null,
+  "links": [
+    {
+      "created_at": "2024-08-16T07:58:51.853958+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 193,
+      "last_modified": "2024-08-16T08:06:31.601529+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-08-08T14:32:42.637308+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-08-08T14:32:42.695379+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2012-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": "1--20"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Great Lakes Maritime Research Institute"
+          }
+        ],
+        "id": 217,
+        "identifier": "developing_a_risk_assessment_tool_to_predict_the_r",
+        "last_modified": "2024-08-16T08:06:31.612106+00:00",
+        "license": null,
+        "tags": [],
+        "title": "Developing a risk assessment tool to predict the risk of accelerated corrosion to port infrastructure",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "corrosion model",
+    "corwiz",
+    "immersion corrosion model",
+    "model"
+  ],
+  "title": "Atmospheric Pollutant and pH-Dependent Corrosion Regression Model (APCR Model)",
+  "type": "model"
+}
