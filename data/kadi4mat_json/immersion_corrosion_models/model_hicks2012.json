@@ -12,24 +12,26 @@
       "type": "dict",
       "value": [
         {
+          "description": "Alkalinity is a measure of water's ability to neutralize acids or resist changes that cause acidity, maintaining a stable pH.",
           "key": "Alkalinity",
           "type": "float",
           "unit": "mg L^{-1}",
           "value": null
         },
         {
-          "key": "Chloride",
+          "key": "Chloride content",
           "type": "float",
           "unit": "mg L^{-1}",
           "value": null
         },
         {
-          "key": "Sulfate",
+          "key": "Sulfate content",
           "type": "float",
           "unit": "mg L^{-1}",
           "value": null
         },
         {
+          "description": "Larson Skold Index (LSI) The Larson Skold Index describes the ratio of the concentration of chloride and sulfate ions to the concentration of bicarbonate and carbonate ions.",
           "key": "Larson Skold Index",
           "type": "float",
           "unit": null,
@@ -75,9 +77,9 @@
   ],
   "files": [],
   "id": 232,
-  "identifier": "atmospheric-pollutant-and-ph-dependent-corrosion-r",
-  "last_modified": "2024-08-16T08:06:31.623737+00:00",
-  "license": null,
+  "identifier": "model_hicks2012",
+  "last_modified": "2024-08-26T13:20:28.876270+00:00",
+  "license": "CC-BY-4.0",
   "links": [
     {
       "created_at": "2024-08-16T07:58:51.853958+00:00",
@@ -136,8 +138,8 @@
           }
         ],
         "id": 217,
-        "identifier": "developing_a_risk_assessment_tool_to_predict_the_r",
-        "last_modified": "2024-08-16T08:06:31.612106+00:00",
+        "identifier": "hicks2012",
+        "last_modified": "2024-08-26T13:08:06.163366+00:00",
         "license": null,
         "tags": [],
         "title": "Developing a risk assessment tool to predict the risk of accelerated corrosion to port infrastructure",

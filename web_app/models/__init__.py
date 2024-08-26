@@ -1,10 +1,10 @@
-from . AC_model1 import AC_model1
-from . AC_model2 import AC_model2
-from . AC_model3 import AC_model3
-from . AC_model4 import AC_model4
-from . AC_model5 import AC_model5
-from . AC_model6 import AC_model6
-from . IC_model1 import IC_model1
-from . IC_model2 import IC_model2
-from . IC_model3 import IC_model3
-from . IC_model4 import IC_model4
+from . AC_model_fileu1993 import AC_model_fileu1993
+from .AC_model_iso9223 import AC_model_iso9223
+from .AC_model_ma2010 import AC_model_ma2010
+from .AC_model_benarie1986 import AC_model_benarie1986
+from .AC_model_soares1999 import AC_model_soares1999
+from .AC_model_klinesmith2007 import AC_model_klinesmith2007
+from .IC_model_ali2020 import IC_model_ali2020
+from .IC_model_kovalenko2016 import IC_model_kovalenko2016
+from .IC_model_garbatov2011 import IC_model_garbatov2011
+from .IC_model_hicks2012 import IC_model_hicks2012

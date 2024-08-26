@@ -14,7 +14,7 @@
         {
           "key": "Temperature",
           "type": "float",
-          "unit": "°C",
+          "unit": "Celcius",
           "value": null
         },
         {
@@ -51,9 +51,9 @@
   ],
   "files": [],
   "id": 231,
-  "identifier": "immersion-corrosion-predictive-model-incorporating",
-  "last_modified": "2024-08-16T07:57:04.835069+00:00",
-  "license": null,
+  "identifier": "model_garbatov2011",
+  "last_modified": "2024-08-26T13:23:57.598457+00:00",
+  "license": "CC-BY-4.0",
   "links": [
     {
       "created_at": "2024-08-15T12:49:10.258688+00:00",
@@ -107,8 +107,8 @@
           }
         ],
         "id": 214,
-        "identifier": "corrosion_modeling_in_marine_structures",
-        "last_modified": "2024-08-15T12:49:10.264105+00:00",
+        "identifier": "garbatov2011",
+        "last_modified": "2024-08-26T13:21:50.178044+00:00",
         "license": null,
         "tags": [],
         "title": "Corrosion modeling in marine structures",

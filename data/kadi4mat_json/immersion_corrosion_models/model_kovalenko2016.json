@@ -39,9 +39,9 @@
   ],
   "files": [],
   "id": 230,
-  "identifier": "thermo-nutrient-variability-steel-corrosion-model",
-  "last_modified": "2024-08-15T12:02:24.803930+00:00",
-  "license": null,
+  "identifier": "model_kovalenko2016",
+  "last_modified": "2024-08-26T13:25:28.073677+00:00",
+  "license": "CC-BY-4.0",
   "links": [
     {
       "created_at": "2024-08-15T12:02:02.499078+00:00",
@@ -100,8 +100,8 @@
           }
         ],
         "id": 207,
-        "identifier": "long-term_immersion_corrosion_of_steel_subject_to_",
-        "last_modified": "2024-08-15T12:02:02.517018+00:00",
+        "identifier": "kovalenko2016",
+        "last_modified": "2024-08-26T13:25:13.078431+00:00",
         "license": null,
         "tags": [],
         "title": "Long-term immersion corrosion of steel subject to large annual variations in seawater temperature and nutrient concentration",

@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import json
-from models import AC_model1, AC_model2, AC_model3, AC_model4, AC_model5, AC_model6, IC_model1, IC_model2, IC_model3, IC_model4
+from models import AC_model_fileu1993, AC_model_iso9223, AC_model_ma2010, AC_model_benarie1986, AC_model_soares1999, AC_model_klinesmith2007, IC_model_ali2020, IC_model_kovalenko2016, IC_model_garbatov2011, IC_model_hicks2012
 import os
 import json
 
@@ -38,11 +38,20 @@ def extract_model_details_from_json(path):
 
             extras = data.get('extras', [])
             # Iterate through each model in the 'extras' array
+            parameters_found = False
+            formula_found = False
             for item in extras:
                 if item['key'] == 'Parameters':
                     model_infos['parameters'].append(item['value'])
-                elif item['key'] == 'Formula':
+                    parameters_found = True
+                if item['key'] == 'Formula':
                     model_infos['formulas'].append(item['value'])
+                    formula_found = True
+            if not parameters_found:
+                model_infos['parameters'].append('')
+            if not formula_found:
+                model_infos['formulas'].append('')
+
 
     return model_infos
 
@@ -57,6 +66,12 @@ def display_model_info(model_info, model):
 
 
 def run_model(model_identifier, model_functions, article_identifier):
+    print('\n\n\n')
+    print(model_identifier)
+    print('\n\n\n')
+    print(article_identifier)
+    print('\n\n\n')
+    print(model_functions)
     with st.container():
         model, time = model_functions[model_identifier](article_identifier)
     return model, time
@@ -78,18 +93,18 @@ def model_view(model_view_container):
 
         if ac_or_ic == models[0]:
             model_info = atmospheric_corrosion_models
-            model_functions = {'statistically-processed-atmospheric-corrosion-pred': AC_model1, 
-                               'din-corrosion-protection-model-iso-9223-compliant': AC_model2, 
-                               'marine-industrial-transition-corrosion-kinetics-mi': AC_model3, 
-                               'exponential-corrosion-model-for-pollutant-concentr': AC_model4, 
-                               'corrosion-degradation-model-including-coating-effe': AC_model5, 
-                               'so2-cl-deposition-and-wetness-time-factor-based-ex': AC_model6}
+            model_functions = {'model_feliu1993': AC_model_fileu1993, 
+                               'din-corrosion-protection-model-iso-9223-compliant': AC_model_iso9223, 
+                               'model_ma2010': AC_model_ma2010, 
+                               'model_benarie1986': AC_model_benarie1986, 
+                               'model_soares1999': AC_model_soares1999, 
+                               'model_klinesmith2007': AC_model_klinesmith2007}
         else:
             model_info = immersion_corrosion_models
-            model_functions = {'chloride-influenced-low-carbon-steel-corrosion-pre': IC_model1, 
-                               'thermo-nutrient-variability-steel-corrosion-model': IC_model2, 
-                               'immersion-corrosion-predictive-model-incorporating': IC_model3, 
-                               'atmospheric-pollutant-and-ph-dependent-corrosion-r': IC_model4}  
+            model_functions = {'model_ali2020': IC_model_ali2020, 
+                               'model_kovalenko2016': IC_model_kovalenko2016, 
+                               'model_garbatov2011': IC_model_garbatov2011, 
+                               'model_hicks2012': IC_model_hicks2012}  
 
         model = st.selectbox(
             'Please select model',

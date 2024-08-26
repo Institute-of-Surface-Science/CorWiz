@@ -12,12 +12,14 @@
       "type": "dict",
       "value": [
         {
+          "description": "Concentration of NaCl in the corroding water",
           "key": "Concentration of NaCl",
           "type": "float",
           "unit": "%w/w",
           "value": null
         },
         {
+          "description": "Evaluated from experiments",
           "key": "Constant relating to the solution environment",
           "type": "float",
           "unit": null,
@@ -39,9 +41,9 @@
   ],
   "files": [],
   "id": 229,
-  "identifier": "chloride-influenced-low-carbon-steel-corrosion-pre",
-  "last_modified": "2024-08-15T11:24:51.984116+00:00",
-  "license": null,
+  "identifier": "model_ali2020",
+  "last_modified": "2024-08-26T13:05:10.041742+00:00",
+  "license": "CC-BY-4.0",
   "links": [
     {
       "created_at": "2024-08-15T11:24:51.962035+00:00",
@@ -105,8 +107,8 @@
           }
         ],
         "id": 203,
-        "identifier": "the_empirical_prediction_of_weight_change_and_corr",
-        "last_modified": "2024-08-15T11:24:51.969006+00:00",
+        "identifier": "ali2020",
+        "last_modified": "2024-08-26T13:06:01.779256+00:00",
         "license": null,
         "tags": [],
         "title": "The empirical prediction of weight change and corrosion rate of low-carbon steel",
@@ -116,9 +118,9 @@
     }
   ],
   "tags": [
-    "atmospheric corrosion model",
     "corrosion model",
     "corwiz",
+    "immersion corrosion model",
     "model"
   ],
   "title": "Chloride-Influenced Low-Carbon Steel Corrosion Prediction Model",

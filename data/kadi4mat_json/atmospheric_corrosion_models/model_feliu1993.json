@@ -26,14 +26,17 @@
           "type": "list",
           "value": [
             {
+              "description": "$Cl < 0.1 mg dm^{-2} d^{-1}$ and $S0_2 < 0.1 mg dm^{-2} d^{-1}$",
               "type": "str",
               "value": "Rural Atmosphere"
             },
             {
+              "description": "$Cl >= 0.1 mg dm^{-2} d^{-1}$ and $S0_2 < 0.1 mg dm^{-2} d^{-1}$",
               "type": "str",
               "value": "Urban industrial Atmosphere"
             },
             {
+              "description": "$Cl >= 0.1 mg dm^{-2} d^{-1}$",
               "type": "str",
               "value": "Marine Atmosphere"
             }
@@ -42,10 +45,11 @@
         {
           "key": "Temperature",
           "type": "float",
-          "unit": "°C",
+          "unit": "Celcius",
           "value": null
         },
         {
+          "description": "The number of rainy days/ Total number of days in a year",
           "key": "Wetness time",
           "type": "float",
           "unit": "annual fraction",
@@ -77,9 +81,9 @@
   ],
   "files": [],
   "id": 223,
-  "identifier": "statistically-processed-atmospheric-corrosion-pred",
-  "last_modified": "2024-08-15T07:33:50.309888+00:00",
-  "license": null,
+  "identifier": "model_feliu1993",
+  "last_modified": "2024-08-26T12:47:14.544713+00:00",
+  "license": "CC-BY-4.0",
   "links": [
     {
       "created_at": "2024-08-14T14:36:51.468637+00:00",
@@ -138,8 +142,8 @@
           }
         ],
         "id": 185,
-        "identifier": "i_the_prediction_of_atmospheric_corrosion_from_met",
-        "last_modified": "2024-08-14T14:36:51.549445+00:00",
+        "identifier": "feliu1993",
+        "last_modified": "2024-08-26T12:48:47.604551+00:00",
         "license": null,
         "tags": [],
         "title": "I_The prediction of atmospheric corrosion from meteorological and pollution parameters—I. Annual corrosion",
