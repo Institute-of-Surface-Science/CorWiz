@@ -1,4 +1,14 @@
+import sys
+import os
+
+# Add the root directory of the project to the sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import streamlit as st
+from header import add_header
+from footer import add_footer
+
+add_header()
 
 st.markdown("# About")
 st.sidebar.markdown("# About")
@@ -12,3 +22,5 @@ st.markdown("## Authors")
 
 
 st.markdown("## Cite Us")
+
+add_footer()
