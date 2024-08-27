@@ -1,12 +1,12 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .atmospheric_corrosion_models import atmospheric_corrosion_model
+from .corrosion_model import corrosion_model
 
-class iso_9224(atmospheric_corrosion_model):
+class iso_9224(corrosion_model):
 
     def __init__(self, parameters):
-        atmospheric_corrosion_model.__init__(self)
+        corrosion_model.__init__(self)
         self.model_name = 'ISO 9223:2012 and ISO 9224:2012'
         self.article_identifier = ['din-en-iso-92232012-05', 'din-en-iso-92242012-05']
         self.steel = "Unalloyed Steel"

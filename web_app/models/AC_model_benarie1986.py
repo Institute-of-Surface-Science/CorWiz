@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .atmospheric_corrosion_models import atmospheric_corrosion_model
+from .corrosion_model import corrosion_model
 
 
 '''
@@ -17,11 +17,11 @@ from .atmospheric_corrosion_models import atmospheric_corrosion_model
     }
 '''
 
-class a_general_corrosion_function(atmospheric_corrosion_model):
+class a_general_corrosion_function(corrosion_model):
 
 
     def __init__(self, parameters):
-        atmospheric_corrosion_model.__init__(self)
+        corrosion_model.__init__(self)
         self.model_name = 'A general corrosion function in terms of atmospheric pollutant concentrations and rain pH'
         self.article_identifier = ['benarie1986']
         self.steel = "Carbon Steel"

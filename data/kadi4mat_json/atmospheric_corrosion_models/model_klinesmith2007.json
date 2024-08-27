@@ -28,13 +28,13 @@
         {
           "key": "Chloride pollution annual average",
           "type": "float",
-          "unit": "(mg) (m)^{−2] (days)^{−1]",
+          "unit": "(mg)((m)^{2}(days))^{−1}",
           "value": null
         },
         {
           "key": "SO2 pollution annual average",
           "type": "float",
-          "unit": "(mg) (m)^{−2] (days)^{−1]",
+          "unit": "(mg)((m)^{2}(days))^{−1}",
           "value": null
         }
       ]
@@ -54,7 +54,7 @@
   "files": [],
   "id": 228,
   "identifier": "model_klinesmith2007",
-  "last_modified": "2024-08-27T11:15:08.685026+00:00",
+  "last_modified": "2024-08-27T12:21:08.835523+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

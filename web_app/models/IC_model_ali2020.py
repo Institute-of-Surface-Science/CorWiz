@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .immersed_corrosion_models import immersed_corrosion_model
+from .corrosion_model import corrosion_model
 
 
 '''
@@ -20,10 +20,10 @@ from .immersed_corrosion_models import immersed_corrosion_model
 
 '''
 
-class empirical_prediction_model(immersed_corrosion_model):
+class empirical_prediction_model(corrosion_model):
 
     def __init__(self, parameters):
-        immersed_corrosion_model.__init__(self)
+        corrosion_model.__init__(self)
         self.model_name = 'The empirical prediction of weight change and corrosion rate of low-carbon steel'
         self.article_identifier = ['ali2020']
         self.steel = "Low carbon steel"

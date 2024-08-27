@@ -12,7 +12,7 @@
       "type": "dict",
       "value": [
         {
-          "description": "The constant $A$ and time exponent $n$ were evaluated for different sites over hte world using a linear fit with the experimental data.",
+          "description": "The constant $A$ and time exponent $n$ were evaluated for different sites over the world using a linear fit with the experimental data.",
           "key": "Corrosion site",
           "type": "str",
           "value": null
@@ -34,7 +34,7 @@
   "files": [],
   "id": 226,
   "identifier": "model_benarie1986",
-  "last_modified": "2024-08-27T09:52:53.987132+00:00",
+  "last_modified": "2024-08-27T11:54:36.146983+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

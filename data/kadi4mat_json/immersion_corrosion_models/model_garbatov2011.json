@@ -32,7 +32,7 @@
         {
           "key": "Nominal Corrosion Rate",
           "type": "float",
-          "unit": "(mm)(year)^ {-1}",
+          "unit": "(mm)(year)^{-1}",
           "value": null
         }
       ]
@@ -52,7 +52,7 @@
   "files": [],
   "id": 231,
   "identifier": "model_garbatov2011",
-  "last_modified": "2024-08-27T11:17:16.925075+00:00",
+  "last_modified": "2024-08-27T12:26:46.997918+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

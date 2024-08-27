@@ -1,9 +1,11 @@
 import numpy as np
+import pandas as pd
 
 
-class immersed_corrosion_model:
+class corrosion_model:
     def __init__(self):
         self.article_identifier = 'parent class'
+        self.model_name = 'parent class'
 
 
     def eval_material_loss(self):
@@ -12,4 +14,3 @@ class immersed_corrosion_model:
 
     def get_model_name(self):
         return self.model_name
-    
