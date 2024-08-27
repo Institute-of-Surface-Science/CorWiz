@@ -5,9 +5,10 @@ from helper import display_logo
 
 def setup_footer(footer_container):
     with footer_container:
-        left_column, middle_column, right_column = st.columns((1, 3, 1))
+        left_column, middle_column, right_column = st.columns((0.75, 2.5, 1))
         with left_column:
-            left_button_col, right_button_col = st.columns((1, 1))
+            # optimized for 16:10
+            empty_box_left, left_button_col, right_button_col, empty_box_right = st.columns((0.05, 0.75, 1.5, 1.25))
 
 
             with left_button_col:
