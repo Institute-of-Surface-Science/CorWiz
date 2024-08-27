@@ -15,19 +15,19 @@
           "description": "Alkalinity is a measure of water's ability to neutralize acids or resist changes that cause acidity, maintaining a stable pH.",
           "key": "Alkalinity",
           "type": "float",
-          "unit": "mg L^{-1}",
+          "unit": "(mg)(L)^{-1}",
           "value": null
         },
         {
           "key": "Chloride content",
           "type": "float",
-          "unit": "mg L^{-1}",
+          "unit": "(mg)(L)^{-1}",
           "value": null
         },
         {
           "key": "Sulfate content",
           "type": "float",
-          "unit": "mg L^{-1}",
+          "unit": "(mg)(L)^{-1}",
           "value": null
         },
         {
@@ -40,7 +40,7 @@
         {
           "key": "Conductivity",
           "type": "float",
-          "unit": "uS cm^{-1}",
+          "unit": "(uS)(cm)^{-1}",
           "value": null
         },
         {
@@ -52,19 +52,19 @@
         {
           "key": "Dissolved Oxygen",
           "type": "float",
-          "unit": "mg L^{-1}",
+          "unit": "(mg)(L)^{-1}",
           "value": null
         },
         {
           "key": "Dissolved Organic Carbon",
           "type": "float",
-          "unit": "mg L^{-1}",
+          "unit": "(mg)(L)^{-1}",
           "value": null
         },
         {
           "key": "Dissolved Copper",
           "type": "float",
-          "unit": "mg L^{-1}",
+          "unit": "(mg)(L)^{-1}",
           "value": null
         }
       ]
@@ -78,7 +78,7 @@
   "files": [],
   "id": 232,
   "identifier": "model_hicks2012",
-  "last_modified": "2024-08-26T13:20:28.876270+00:00",
+  "last_modified": "2024-08-27T11:16:25.066947+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

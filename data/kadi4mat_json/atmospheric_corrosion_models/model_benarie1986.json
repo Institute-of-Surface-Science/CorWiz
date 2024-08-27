@@ -26,7 +26,7 @@
         {
           "key": "Material Loss",
           "type": "str",
-          "value": "$D = At^n$"
+          "value": "$D = At^n [um]$"
         }
       ]
     }
@@ -34,7 +34,7 @@
   "files": [],
   "id": 226,
   "identifier": "model_benarie1986",
-  "last_modified": "2024-08-26T12:52:25.503154+00:00",
+  "last_modified": "2024-08-27T09:52:53.987132+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

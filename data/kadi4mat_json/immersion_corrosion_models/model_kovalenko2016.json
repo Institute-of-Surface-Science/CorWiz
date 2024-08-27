@@ -14,13 +14,13 @@
         {
           "key": "c_s",
           "type": "float",
-          "unit": null,
+          "unit": "(um)(year)^{-1}",
           "value": null
         },
         {
           "key": "r_s",
           "type": "float",
-          "unit": null,
+          "unit": "(um)",
           "value": null
         }
       ]
@@ -40,7 +40,7 @@
   "files": [],
   "id": 230,
   "identifier": "model_kovalenko2016",
-  "last_modified": "2024-08-26T13:25:28.073677+00:00",
+  "last_modified": "2024-08-27T11:18:44.036595+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

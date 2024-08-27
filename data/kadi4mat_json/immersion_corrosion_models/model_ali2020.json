@@ -15,7 +15,7 @@
           "description": "Concentration of NaCl in the corroding water",
           "key": "Concentration of NaCl",
           "type": "float",
-          "unit": "%w/w",
+          "unit": "(%w)(w)^{-1}",
           "value": null
         },
         {
@@ -34,7 +34,7 @@
         {
           "key": "Material Loss",
           "type": "str",
-          "value": "$W_L = (0.00006C + 0.0008)t + b$"
+          "value": "$W_L = (0.00006C + 0.0008)t + b  [um]$"
         }
       ]
     }
@@ -42,7 +42,7 @@
   "files": [],
   "id": 229,
   "identifier": "model_ali2020",
-  "last_modified": "2024-08-26T13:05:10.041742+00:00",
+  "last_modified": "2024-08-27T11:15:46.524408+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

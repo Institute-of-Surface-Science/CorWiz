@@ -45,14 +45,14 @@
         {
           "key": "Temperature",
           "type": "float",
-          "unit": "Celcius",
+          "unit": "(Celsius)",
           "value": null
         },
         {
           "description": "The number of rainy days/ Total number of days in a year",
           "key": "Wetness time",
           "type": "float",
-          "unit": "annual fraction",
+          "unit": "(annual fraction)",
           "value": null
         }
       ]
@@ -64,7 +64,7 @@
         {
           "key": "Annual Corrosion",
           "type": "str",
-          "value": "$A [um]$ = $132.4Cl^-(1 + 0.038T - 1.96t_w - 0.53SO_2 + 74.6t_w(1 + 1.07SO_2) - 6.3)$"
+          "value": "$A [um]$ = $132.4Cl^-(1 + 0.038T - 1.96t_w - 0.53SO_2 + 74.6t_w(1 + 1.07SO_2) - 6.3) [um/year]$"
         },
         {
           "key": "Exponent",
@@ -74,7 +74,7 @@
         {
           "key": "Material loss",
           "type": "str",
-          "value": "$At^n$"
+          "value": "$At^n [um]$"
         }
       ]
     }
@@ -82,7 +82,7 @@
   "files": [],
   "id": 223,
   "identifier": "model_feliu1993",
-  "last_modified": "2024-08-26T12:47:14.544713+00:00",
+  "last_modified": "2024-08-27T09:52:31.991623+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

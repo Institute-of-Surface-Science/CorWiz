@@ -14,19 +14,19 @@
         {
           "key": "Coating Life",
           "type": "float",
-          "unit": "years",
+          "unit": "(years)",
           "value": null
         },
         {
           "key": "Transition Time",
           "type": "float",
-          "unit": "years",
+          "unit": "(years)",
           "value": null
         },
         {
           "key": "Long term thickness of corrosion wastage",
           "type": "float",
-          "unit": "mm",
+          "unit": "(mm)",
           "value": null
         }
       ]
@@ -38,12 +38,12 @@
         {
           "key": "Material Loss",
           "type": "str",
-          "value": "d(t)=d_{\\infty}\\left(1-\\mathrm{e}^{-\\left(t-\\tau_c\\right) / \\tau_t}\\right), \\quad t>\\tau_c"
+          "value": "$d(t)=d_{\\infty}\\left(1-\\mathrm{e}^{-\\left(t-\\tau_c\\right) / \\tau_t}\\right), \\quad t>\\tau_c [um]$"
         },
         {
           "key": "Material Loss t<\\tau_c",
           "type": "str",
-          "value": "d(t)=0, \\quad t \\leqslant \\tau_c"
+          "value": "$d(t)=0, \\quad t \\leqslant \\tau_c [um]$"
         }
       ]
     }
@@ -51,7 +51,7 @@
   "files": [],
   "id": 227,
   "identifier": "model_soares1999",
-  "last_modified": "2024-08-26T12:54:40.602156+00:00",
+  "last_modified": "2024-08-27T09:54:14.317894+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

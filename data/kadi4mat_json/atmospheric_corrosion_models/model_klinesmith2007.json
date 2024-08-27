@@ -15,26 +15,26 @@
           "description": "The average ambient temperature of air in the region",
           "key": "Temperature",
           "type": "float",
-          "unit": "Celcius",
+          "unit": "(Celsius)",
           "value": null
         },
         {
           "description": "The number of rainy days/ Total number of days in a year",
           "key": "Wetness time",
           "type": "float",
-          "unit": "annual fraction",
+          "unit": "(annual fraction)",
           "value": null
         },
         {
           "key": "Chloride pollution annual average",
           "type": "float",
-          "unit": "mg m^{−2] days^{−1]",
+          "unit": "(mg) (m)^{−2] (days)^{−1]",
           "value": null
         },
         {
           "key": "SO2 pollution annual average",
           "type": "float",
-          "unit": "mg m^{−2] days^{−1]",
+          "unit": "(mg) (m)^{−2] (days)^{−1]",
           "value": null
         }
       ]
@@ -46,7 +46,7 @@
         {
           "key": "Material Loss",
           "type": "str",
-          "value": "$d(t)=A \\cdot t^B\\left(\\frac{T O W}{C}\\right)^D \\cdot\\left(1+\\frac{\\left[\\mathrm{SO}_2\\right]}{E}\\right)^F \\cdot\\left(1+\\frac{[C l]}{G}\\right)^H \\cdot e^{J\\left(T+T_0\\right)}$"
+          "value": "$d(t)=A \\cdot t^B\\left(\\frac{T O W}{C}\\right)^D \\cdot\\left(1+\\frac{\\left[\\mathrm{SO}_2\\right]}{E}\\right)^F \\cdot\\left(1+\\frac{[C l]}{G}\\right)^H \\cdot e^{J\\left(T+T_0\\right)} [um]$"
         }
       ]
     }
@@ -54,7 +54,7 @@
   "files": [],
   "id": 228,
   "identifier": "model_klinesmith2007",
-  "last_modified": "2024-08-26T12:58:28.265428+00:00",
+  "last_modified": "2024-08-27T11:15:08.685026+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

@@ -14,25 +14,25 @@
         {
           "key": "Temperature",
           "type": "float",
-          "unit": "Celcius",
+          "unit": "(Celsius)",
           "value": null
         },
         {
           "key": "Dissolved Oxygen",
           "type": "float",
-          "unit": "ml l^{-1}",
+          "unit": "(ml)(L)^{-1}",
           "value": null
         },
         {
           "key": "Flow Velocity",
           "type": "float",
-          "unit": "m s^{-1}",
+          "unit": "(m)(s)^{-1}",
           "value": null
         },
         {
           "key": "Nominal Corrosion Rate",
           "type": "float",
-          "unit": "mm year^ {-1}",
+          "unit": "(mm)(year)^ {-1}",
           "value": null
         }
       ]
@@ -44,7 +44,7 @@
         {
           "key": "Corrosion rate",
           "type": "str",
-          "value": "$d_{c, k}(t)=\\prod_{j=1}^{3} f\\left(x_{j}\\right) d_{n}(t)=f\\left(T_{r}\\right) f\\left(O_{2, r}\\right) f\\left(V_{r}\\right) d_{n}(t)$"
+          "value": "$d_{c, k}(t)=\\prod_{j=1}^{3} f\\left(x_{j}\\right) d_{n}(t)=f\\left(T_{r}\\right) f\\left(O_{2, r}\\right) f\\left(V_{r}\\right) d_{n}(t) [um/year]$"
         }
       ]
     }
@@ -52,7 +52,7 @@
   "files": [],
   "id": 231,
   "identifier": "model_garbatov2011",
-  "last_modified": "2024-08-26T13:23:57.598457+00:00",
+  "last_modified": "2024-08-27T11:17:16.925075+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {
