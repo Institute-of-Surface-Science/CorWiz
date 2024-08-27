@@ -1,0 +1,242 @@
+{
+  "created_at": "2024-08-14T15:06:38.125400+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "ISO 9223:2012 - This International Standard establishes a classification system for the corrosivity of atmospheric environments. It:\n- Defines corrosivity categories of atmospheric environments based on the corrosion rate of standard samples after the first year in an environment,\n- Provides dose-response functions for the normative estimation of the corrosivity category based on calculated mass losses due to corrosion of metallic standard samples after the first year in an environment, and\n- Enables an informative estimation of the corrosivity category based on the knowledge of the local environmental situation.\n\nThis International Standard identifies the decisive factors in the atmospheric corrosion of metals and alloys. These are the temperature-humidity complex, contamination by sulfur dioxide, and the salinity of the air.\n\nTemperature is also considered an important factor for corrosion in areas outside the temperate macroclimatic zone. The temperature-humidity complex can be evaluated in terms of wetness duration. Corrosion phenomena of other contaminants (ozone, nitrogen oxides, dust) can influence the corrosivity and the determined corrosion loss after one year; however, these factors are not considered decisive in assessing corrosivity according to this International Standard.\n\nThis International Standard does not characterize the corrosivity of specific operational atmospheres, such as atmospheres in the chemical or metallurgical industries.\n\nThe classified corrosivity categories and introduced contamination levels can be directly used for the technical and economic analysis of corrosion damage and for the rational selection of corrosion protection measures.\n\nISO 9224:2012 - This International Standard specifies reference values for the corrosion attack on metals and alloys that are exposed to natural outdoor atmospheres for more than one year. This International Standard is intended to be used in conjunction with ISO 9223.\n\nReference values for the corrosion of standardized construction materials can be used for engineering calculations. The corrosion reference values define the technical content of each of the individual corrosivity categories for these metallic standard samples.",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Time exponent",
+          "type": "list",
+          "value": [
+            {
+              "type": "str",
+              "value": "Use DIN recommended time exponents measured from the ISO CORRAG program"
+            },
+            {
+              "type": "str",
+              "value": "Enter manually"
+            }
+          ]
+        },
+        {
+          "description": "Insignificant - Heated rooms with low relative humidity and insignificant air pollution, e.g., offices, schools, museums.\nLow - Unheated rooms with fluctuating temperature and relative humidity. Rare condensation and low air pollution, e.g., storage rooms, sports halls.\nModerate - Rooms with occasional condensation and moderate air pollution from production processes, e.g., food processing plants, laundries, breweries, dairies. \nHigh - Rooms with frequent condensation and high air pollution from production processes, e.g., industrial plants, swimming pools.\nVery high - Rooms with very high frequency of condensation and/or high air pollution from production processes, e.g., mines, industrial cavities, non-ventilated halls in subtropical and tropical climate zones. \nExtreme - Rooms with nearly constant condensation or extended periods of exposure to extremely high humidity and/or high air pollution from production processes, e.g., non-ventilated halls in humid tropical climates with invasive pollution from outside air, including airborne chlorides and corrosion-promoting dust.",
+          "key": "Corrosion type",
+          "type": "list",
+          "value": [
+            {
+              "type": "str",
+              "value": "Insignificant"
+            },
+            {
+              "type": "str",
+              "value": "Low"
+            },
+            {
+              "type": "str",
+              "value": "Moderate"
+            },
+            {
+              "type": "str",
+              "value": "High"
+            },
+            {
+              "type": "str",
+              "value": "Very high"
+            },
+            {
+              "type": "str",
+              "value": "Extreme"
+            }
+          ]
+        },
+        {
+          "description": "t indicates the thickness of the metal that corrodes away annually.",
+          "key": "Corrosion rate",
+          "type": "float",
+          "unit": "(um)(year)^{-1}",
+          "value": null
+        },
+        {
+          "key": "Temperature",
+          "type": "float",
+          "unit": "(Celsius)",
+          "value": null
+        },
+        {
+          "key": "Relative Humidity",
+          "type": "float",
+          "unit": "(%)",
+          "value": null
+        },
+        {
+          "key": "Chloride pollution annual average",
+          "type": "float",
+          "unit": "(mg)((m)^{2}(days))^{−1}",
+          "value": null
+        },
+        {
+          "key": "SO2 pollution annual average",
+          "type": "float",
+          "unit": "(mg)((m)^{2}(days))^{−1}",
+          "value": null
+        }
+      ]
+    },
+    {
+      "key": "Formula",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Corrosion rate",
+          "type": "str",
+          "value": "$r_{\\text {corr }}=1,77 \\cdot P_{\\mathrm{d}}^{0,52} \\cdot \\exp \\left(0,020 \\cdot \\mathrm{RH}+f_{\\mathrm{St}}\\right)+0,102 \\cdot S_{\\mathrm{d}}^{0,62} \\cdot \\exp (0,033 \\cdot \\mathrm{RH}+0,040 \\cdot T) [um/year]$"
+        },
+        {
+          "key": "Temperature Correction Factor",
+          "type": "str",
+          "value": "$f_{\\mathrm{St}}=0,150 \\cdot(T-10) \\text { wenn } T \\leq 10^{\\circ} \\mathrm{C} \\text {, otherwise }-0,054 \\cdot(T-10) [Celsius]$"
+        },
+        {
+          "key": "Material Loss",
+          "type": "str",
+          "value": "$\\mathrm{d} D / \\mathrm{d} t=b \\cdot r_{\\text {Corr }} \\cdot(t)^{b-1} [um]$"
+        },
+        {
+          "key": "Material Loss (t>20)",
+          "type": "str",
+          "value": "$D(t>20)=r_{\\text {corr }}\\left[20^b+b\\left(20^{b-1}\\right)(t-20)\\right] [um]$"
+        }
+      ]
+    }
+  ],
+  "files": [],
+  "id": 224,
+  "identifier": "din-corrosion-protection-model-iso-9223-compliant",
+  "last_modified": "2024-08-27T12:19:56.933712+00:00",
+  "license": "CC-BY-4.0",
+  "links": [
+    {
+      "created_at": "2024-08-14T15:06:38.220656+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 184,
+      "last_modified": "2024-08-14T15:06:38.220661+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-07-15T13:48:19.455902+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "Corrosion of metals and alloys - Corrosivity of atmospheres - Classification, determination and assessment (ISO 9223:2012); German version EN ISO 9223:2012",
+        "extras": [
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "German"
+          },
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-07-14T22:00:00+00:00"
+          },
+          {
+            "key": "subTitle",
+            "type": "str",
+            "value": null
+          },
+          {
+            "key": "abstract",
+            "type": "str",
+            "value": null
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2012-04-30T22:00:00+00:00"
+          },
+          {
+            "key": "peerReviewed",
+            "type": "bool",
+            "validation": {
+              "required": true
+            },
+            "value": true
+          },
+          {
+            "key": "conferenceName",
+            "type": "str",
+            "value": null
+          },
+          {
+            "key": "bookName",
+            "type": "str",
+            "value": null
+          },
+          {
+            "key": "doi",
+            "type": "str",
+            "value": null
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": null
+          },
+          {
+            "key": "pageCount",
+            "type": "int",
+            "unit": "pages",
+            "value": null
+          },
+          {
+            "key": "url",
+            "type": "str",
+            "value": null
+          }
+        ],
+        "id": 71,
+        "identifier": "din-en-iso-92232012-05",
+        "last_modified": "2024-08-27T11:51:24.594922+00:00",
+        "license": null,
+        "tags": [
+          "document",
+          "publication"
+        ],
+        "title": "DIN EN ISO 9223:2012-05",
+        "type": "document"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "atmospheric corrosion model",
+    "corrosion model",
+    "corwiz",
+    "model"
+  ],
+  "title": "DIN-Corrosion Protection-Model: ISO 9223 Compliant",
+  "type": "model"
+}

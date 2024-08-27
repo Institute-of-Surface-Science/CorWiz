@@ -1,0 +1,23 @@
+"Sample Site
+Location","Alkalinity
+(mg/L)","Chloride
+(mg/L)","Sulfate
+(mg/L)","Larson
+Skold
+Index","Conductivity
+(pS//cm)",pH,"DO
+(mg//L)","DOC
+(mg/L)","Dissolved
+Copper
+(mg/L)"
+"Duluth Entry
+(lake side)",44,2.4,3.6,0.16,101,8.17,11.17,1.77,0.00082
+Superior Entry,54,5.2,7.4,0.28,123.4,7.93,11.33,5.59,0.0012
+Cargill Dock,77,12,31,0.64,219.6,7.8,8.93,12.66,0.0015
+Army Corps,77,12,33,0.67,215.4,7.72,9.12,12.95,0.003
+DSPA Berth 4,80,12,29,0.59,195.2,7.86,9.8,12.23,0.0083
+Cutler Maner,75,11,14,0.4,220.1,8.04,9.27,13.3,0.0019
+Cenex Harvest States,90,12,35,0.59,247.5,7.96,8.78,15.62,0.0018
+Midwest Energy,91,14,17,0.41,239,7.94,8.75,16.08,0.0016
+Hallett Dock 5,95,12,30,0.51,240.1,7.87,8.43,16.18,0.0018
+Oliver Bridge,68,9.4,49,0.97,176.3,7.71,8.8,18.99,0.002

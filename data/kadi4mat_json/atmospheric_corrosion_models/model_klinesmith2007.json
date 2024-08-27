@@ -1,0 +1,135 @@
+{
+  "created_at": "2024-08-15T08:13:23.140007+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "**Model Formulation**: The model incorporates multiple environmental factors, has a physically rational structure, allows variation of calendar time, and is sufficiently flexible that it can be transferred to other locations. The model form used to estimate corrosion loss is given by the equation \n\n$$D=A t^{B}\\left(\\frac{\\mathrm{TOW}}{C}\\right)^{D}\\left(1+\\frac{\\mathrm{SO}_{2}}{E}\\right)^{F}\\left(1+\\frac{\\mathrm{Cl}}{G}\\right)^{H} e^{J\\left(T+T_{0}\\right)} $$ \n\nWhere, $D$ is the mass loss due to corrosion, $t$ is the exposure time, $TOW$ is the time-of-wetness, $SO_2$ is the sulfur dioxide concentration, $Cl$ is the chloride deposition rate, $T$ is the air temperature, and $A, B, C, D, E, F, G, H, J,$ and $T0$ are empirical coefficients.\n\n**Model Calibration**: The model was calibrated using data from the ISO CORRAG program, which recorded measurements at 51 test sites in 13 countries. The coefficients of the model were fitted using numerical least squares. The goodness-of-fit statistics were used to evaluate the accuracy and bias of the corrosion loss models.\n\n**Environmental Effects**: The model takes into account the effects of time-of-wetness, sulfur dioxide, salinity, and temperature on corrosion loss. The document provides detailed analysis of how each of these factors influences the corrosion process. \n\n**Model Validation**: Two independent data sets were used to validate the calibrated corrosion models. The validation focused on the relative change in corrosion loss due to variation in the environmental factors. The models were found to provide accurate predictions of the criterion variable.",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "description": "The average ambient temperature of air in the region",
+          "key": "Temperature",
+          "type": "float",
+          "unit": "(Celsius)",
+          "value": null
+        },
+        {
+          "description": "The number of rainy days/ Total number of days in a year",
+          "key": "Wetness time",
+          "type": "float",
+          "unit": "(annual fraction)",
+          "value": null
+        },
+        {
+          "key": "Chloride pollution annual average",
+          "type": "float",
+          "unit": "(mg)((m)^{2}(days))^{−1}",
+          "value": null
+        },
+        {
+          "key": "SO2 pollution annual average",
+          "type": "float",
+          "unit": "(mg)((m)^{2}(days))^{−1}",
+          "value": null
+        }
+      ]
+    },
+    {
+      "key": "Formula",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Material Loss",
+          "type": "str",
+          "value": "$d(t)=A \\cdot t^B\\left(\\frac{T O W}{C}\\right)^D \\cdot\\left(1+\\frac{\\left[\\mathrm{SO}_2\\right]}{E}\\right)^F \\cdot\\left(1+\\frac{[C l]}{G}\\right)^H \\cdot e^{J\\left(T+T_0\\right)} [um]$"
+        }
+      ]
+    }
+  ],
+  "files": [],
+  "id": 228,
+  "identifier": "model_klinesmith2007",
+  "last_modified": "2024-08-27T12:21:08.835523+00:00",
+  "license": "CC-BY-4.0",
+  "links": [
+    {
+      "created_at": "2024-08-15T08:13:23.250432+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 189,
+      "last_modified": "2024-08-15T08:13:23.250438+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-08-05T14:29:12.548548+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "^^",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-08-05T14:29:12.637550+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2007-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": "121--129"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Journal of Materials in Civil Engineering"
+          }
+        ],
+        "id": 200,
+        "identifier": "klinesmith2007",
+        "last_modified": "2024-08-26T12:50:19.196715+00:00",
+        "license": null,
+        "tags": [],
+        "title": "Effect of environmental conditions on corrosion rates",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "atmospheric corrosion model",
+    "corrosion model",
+    "corwiz",
+    "model"
+  ],
+  "title": "SO2-Cl- Deposition and Wetness Time Factor-Based Exponential Atmospheric Corrosion Prediction Model for Carbon Steel",
+  "type": "model"
+}

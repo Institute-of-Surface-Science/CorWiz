@@ -1,0 +1,115 @@
+{
+  "created_at": "2024-08-15T07:48:26.588203+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "The process of atmospheric corrosion of metals can be represented by the well-known exponential expression   \n\n$$ M=a t^b $$ \n\nWhere, $M$ is the metal loss during the exposure time ( $M: \\mathrm{gm}^{-2} ; t$ : years) and $a$ and $b$ are described below. The critical review of the available corrosion test programs yielded a data basis for the statistical analysis of the parameters $a$ and $b$. If the multiplicative factor $a$ is expressed in terms of $t_w$, the time-of-wetness, which is a fraction of the total exposure time $t$, e.g. $t_w=f \\cdot t$, then $a=f^b A$, and $A$ may be approximated as a linear function of the $\\mathrm{SO}_2$ and $\\mathrm{Cl}^{-}$deposition per unit surface. For example, for zinc, the following relationship holds: \n\n$$ A=4.8+0.53\\left[\\mathrm{SO}_2+\\mathrm{Cl}^{-} \\text {surface deposition, } \\mathrm{mg} \\mathrm{m}^{-2} \\mathrm{~d}^{-1}\\right] $$  \n\nUnits of $A$ : weight loss per 1 wetness year, $\\mathrm{g} \\mathrm{m}^{-2}$. The above relationship is highly significant and represents, in conjunction with the exponential expression, a general formula for all atmospheric zinc corrosion tests, i.e. it is an effective reconciliation of corrosion results. Its predictive error is less than $\\pm 50 \\%$ for one-half of the cases and less than $\\pm 20 \\%$ in the other half. Similar expressions have been obtained for carbon steel and for copper. In the instance of carbon steel, the predictive accuracy is less than for zinc because 'carbon steel' was not exactly the same alloy on all test programs. For copper the relationship holds quite well, but the data base is yet small.  The exponent $b$, which characterizes the diffusivity of the corrosion product layer, can be expressed as a function of the average rain pH . For zinc, this relationship is: \n\n$$ b=1.55-0.142 \\text { (average rain } \\mathrm{pH} \\text { ). } $$\n\nThe correlation is very highly significant. The physical concept explaining the parameters $a$ and $b$ is strongly supported by observations about the skyward and groundward exposed corrosion samples. Tests at sheltered sites (inside louvered cabin) also fit into the general pattern.",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "description": "The constant $A$ and time exponent $n$ were evaluated for different sites over the world using a linear fit with the experimental data.",
+          "key": "Corrosion site",
+          "type": "str",
+          "value": null
+        }
+      ]
+    },
+    {
+      "key": "Formula",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Material Loss",
+          "type": "str",
+          "value": "$D = At^n [um]$"
+        }
+      ]
+    }
+  ],
+  "files": [],
+  "id": 226,
+  "identifier": "model_benarie1986",
+  "last_modified": "2024-08-27T11:54:36.146983+00:00",
+  "license": "CC-BY-4.0",
+  "links": [
+    {
+      "created_at": "2024-08-15T07:48:26.709364+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 187,
+      "last_modified": "2024-08-15T07:48:26.709372+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-07-03T13:54:23.781022+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-07-05T12:02:29.030311+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "1986-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": "1947--1958"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Atmospheric Environment (1967)"
+          }
+        ],
+        "id": 68,
+        "identifier": "benarie1986",
+        "last_modified": "2024-08-26T12:52:57.979840+00:00",
+        "license": null,
+        "tags": [],
+        "title": "A general corrosion function in terms of atmospheric pollutant concentrations and rain pH",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "atmospheric corrosion model",
+    "corrosion model",
+    "corwiz",
+    "model"
+  ],
+  "title": "Exponential Corrosion Model for Pollutant Concentration and Rain pH",
+  "type": "model"
+}

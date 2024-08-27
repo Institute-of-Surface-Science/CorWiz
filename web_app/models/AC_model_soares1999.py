@@ -1,6 +1,39 @@
 import streamlit as st
-from . atmospheric_corrosion_models import coated_mass_loss_model
+from .corrosion_model import corrosion_model
+import numpy as np
 
+
+'''
+    @article{soares1999reliability,
+    title={Reliability of maintained, corrosion protected plates subjected to non-linear corrosion and compressive loads},
+    author={Soares, C Guedes and Garbatov, Yordan},
+    journal={Marine structures},
+    volume={12},
+    number={6},
+    pages={425--445},
+    year={1999},
+    publisher={Elsevier}
+    }
+
+'''
+
+class coated_mass_loss_model(corrosion_model):
+
+    def __init__(self, parameters):
+        corrosion_model.__init__(self)
+        self.model_name = 'Reliability of maintained, corrosion protected plates subjected to non-linear corrosion and compressive loads'
+        self.article_identifier = ['soares1999']
+        self.steel = "Steel"
+        self.p = parameters
+
+    
+    def eval_material_loss(self, time):
+        
+        material_loss = np.zeros_like(time)  # Initialize the material_loss array with zeros
+        mask = time >= self.p['t_c']  # Create a boolean mask for time elements >= T_c
+        material_loss[mask] = self.p['d_inf'] * (1 - np.exp(-(time[mask] - self.p['t_c']) / self.p['t_t']))
+        return material_loss
+    
 
 def get_input(symbol, limits):
     limit = limits[symbol]
@@ -27,7 +60,7 @@ def get_parameters(limits):
     return parameters
 
 
-def AC_model5(model_identifier):
+def AC_model_soares1999(model_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
     limits = {
         'd_inf': {'desc': 'Long term thickness of corrosion wastage', 'lower': 0.001, 'upper': 1000, 'unit': 'mm'},
