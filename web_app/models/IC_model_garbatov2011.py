@@ -15,10 +15,10 @@ from .corrosion_model import corrosion_model
 
 class immersion_corrosion_predictive_model_incorporating(corrosion_model):
 
-    def __init__(self, parameters):
+    def __init__(self, parameters, article_identifier):
         corrosion_model.__init__(self)
         self.model_name = 'Corrosion modeling in marine structures'
-        self.article_identifier = ['garbatov2011']
+        self.article_identifier = article_identifier
         self.steel = "Mild carbon steel"
         self.p = parameters
 
@@ -42,7 +42,7 @@ class immersion_corrosion_predictive_model_incorporating(corrosion_model):
 
         return material_loss
 
-def IC_model_garbatov2011(model_identifier):
+def IC_model_garbatov2011(article_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
 
     parameters = {}
@@ -51,4 +51,4 @@ def IC_model_garbatov2011(model_identifier):
     parameters['Dissolved Oxygen Concentration'] = st.number_input('Enter the Dissolved Oxygen [ml l^{-1}]:', 0.1) 
     parameters['Flow Velocity'] = st.number_input('Enter the Flow Velocity [m s^{-1}]:', 0.1) 
 
-    return immersion_corrosion_predictive_model_incorporating(parameters), time
+    return immersion_corrosion_predictive_model_incorporating(parameters, article_identifier), time

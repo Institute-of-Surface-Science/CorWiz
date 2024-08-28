@@ -66,12 +66,6 @@ def display_model_info(model_info, model):
 
 
 def run_model(model_identifier, model_functions, article_identifier):
-    print('\n\n\n')
-    print(model_identifier)
-    print('\n\n\n')
-    print(article_identifier)
-    print('\n\n\n')
-    print(model_functions)
     with st.container():
         model, time = model_functions[model_identifier](article_identifier)
     return model, time
@@ -120,6 +114,8 @@ def model_view(model_view_container):
         fig = plt.figure(figsize=(10, 6))
 
         with data_column:
+            print('\n\n\n')
+            print(article_identifier)
             display_model_info(model_info, model)
             model, time = run_model(model_identifier, model_functions, article_identifier)
 
