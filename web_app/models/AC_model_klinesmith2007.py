@@ -19,10 +19,10 @@ import numpy as np
 
 class sophisticated_corrosion_rate(corrosion_model):
 
-    def __init__(self, parameters):
+    def __init__(self, parameters, article_identifier):
         corrosion_model.__init__(self)
         self.model_name = 'Effect of environmental conditions on corrosion rates'
-        self.article_identifier = ['klinesmith2007']
+        self.article_identifier = article_identifier
         self.steel = "Carbon Steel"
         self.p = parameters
 
@@ -68,7 +68,7 @@ def get_parameters(limits):
 
     return parameters
 
-def AC_model_klinesmith2007(model_identifier):
+def AC_model_klinesmith2007(article_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
     limits = {
         'T': {'desc': 'Temperature', 'lower': -17.1, 'upper': 28.7, 'unit': '°C'},
@@ -78,4 +78,4 @@ def AC_model_klinesmith2007(model_identifier):
     }
     parameters = get_parameters(limits)
 
-    return sophisticated_corrosion_rate(parameters), time
+    return sophisticated_corrosion_rate(parameters, article_identifier), time

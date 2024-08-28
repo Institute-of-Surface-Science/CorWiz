@@ -22,10 +22,10 @@ from .corrosion_model import corrosion_model
 
 class empirical_prediction_model(corrosion_model):
 
-    def __init__(self, parameters):
+    def __init__(self, parameters, article_identifier):
         corrosion_model.__init__(self)
         self.model_name = 'The empirical prediction of weight change and corrosion rate of low-carbon steel'
-        self.article_identifier = ['ali2020']
+        self.article_identifier = article_identifier
         self.steel = "Low carbon steel"
         self.p = parameters
 
@@ -48,8 +48,8 @@ def get_constant_value(nacl_conc, table):
         return constant_value
     
 
-def load_data(model_identifier):
-    table_3 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_3.csv', header=None)
+def load_data(article_identifier):
+    table_3 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_3.csv', header=None)
 
     return table_3
 
@@ -83,16 +83,16 @@ def display_formulas():
     st.write(r'Mass loss due to corrosion, $W_L [um] = (0.00006C + 0.0008)t + b $ ')
 
 
-def IC_model_ali2020(model_identifier):
+def IC_model_ali2020(article_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
     limits = {
         'C': {'desc': 'Concentration of NaCl', 'lower': 0, 'upper': 5, 'unit': '%w/w'},
     }
     parameters = get_parameters(limits)
 
-    table_3 = load_data(model_identifier)
+    table_3 = load_data(article_identifier)
 
     parameters['b'] = get_constant_value(parameters['C'], table_3)
 
     display_formulas()
-    return empirical_prediction_model(parameters), time
+    return empirical_prediction_model(parameters, article_identifier), time
