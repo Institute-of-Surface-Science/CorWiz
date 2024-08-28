@@ -12,27 +12,29 @@
       "type": "dict",
       "value": [
         {
+          "description": "The average ambient temperature of air in the region",
           "key": "Temperature",
           "type": "float",
-          "unit": "°C",
+          "unit": "(Celsius)",
           "value": null
         },
         {
+          "description": "The number of rainy days/ Total number of days in a year",
           "key": "Wetness time",
           "type": "float",
-          "unit": "annual fraction",
+          "unit": "(annual fraction)",
           "value": null
         },
         {
           "key": "Chloride pollution annual average",
           "type": "float",
-          "unit": "mgCl−dm−2d−1",
+          "unit": "(mg)((m)^{2}(days))^{−1}",
           "value": null
         },
         {
           "key": "SO2 pollution annual average",
           "type": "float",
-          "unit": "mgSO2​dm−2d−1",
+          "unit": "(mg)((m)^{2}(days))^{−1}",
           "value": null
         }
       ]
@@ -44,16 +46,16 @@
         {
           "key": "Material Loss",
           "type": "str",
-          "value": "$d(t)=A \\cdot t^B\\left(\\frac{T O W}{C}\\right)^D \\cdot\\left(1+\\frac{\\left[\\mathrm{SO}_2\\right]}{E}\\right)^F \\cdot\\left(1+\\frac{[C l]}{G}\\right)^H \\cdot e^{J\\left(T+T_0\\right)}$"
+          "value": "$d(t)=A \\cdot t^B\\left(\\frac{T O W}{C}\\right)^D \\cdot\\left(1+\\frac{\\left[\\mathrm{SO}_2\\right]}{E}\\right)^F \\cdot\\left(1+\\frac{[C l]}{G}\\right)^H \\cdot e^{J\\left(T+T_0\\right)} [um]$"
         }
       ]
     }
   ],
   "files": [],
   "id": 228,
-  "identifier": "so2-cl-deposition-and-wetness-time-factor-based-ex",
-  "last_modified": "2024-08-15T08:15:24.254483+00:00",
-  "license": null,
+  "identifier": "model_klinesmith2007",
+  "last_modified": "2024-08-27T12:21:08.835523+00:00",
+  "license": "CC-BY-4.0",
   "links": [
     {
       "created_at": "2024-08-15T08:13:23.250432+00:00",
@@ -72,7 +74,7 @@
           "id": 5,
           "orcid": null
         },
-        "description": "",
+        "description": "^^",
         "extras": [
           {
             "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
@@ -112,8 +114,8 @@
           }
         ],
         "id": 200,
-        "identifier": "effect_of_environmental_conditions_on_corrosion_ra",
-        "last_modified": "2024-08-15T08:13:23.272350+00:00",
+        "identifier": "klinesmith2007",
+        "last_modified": "2024-08-26T12:50:19.196715+00:00",
         "license": null,
         "tags": [],
         "title": "Effect of environmental conditions on corrosion rates",

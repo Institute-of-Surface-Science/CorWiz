@@ -12,6 +12,7 @@
       "type": "dict",
       "value": [
         {
+          "description": "The constant $A$ and time exponent $n$ were evaluated for different sites over the world using a linear fit with the experimental data.",
           "key": "Corrosion site",
           "type": "str",
           "value": null
@@ -25,16 +26,16 @@
         {
           "key": "Material Loss",
           "type": "str",
-          "value": "$D = At^n$"
+          "value": "$D = At^n [um]$"
         }
       ]
     }
   ],
   "files": [],
   "id": 226,
-  "identifier": "exponential-corrosion-model-for-pollutant-concentr",
-  "last_modified": "2024-08-15T07:48:26.731248+00:00",
-  "license": null,
+  "identifier": "model_benarie1986",
+  "last_modified": "2024-08-27T11:54:36.146983+00:00",
+  "license": "CC-BY-4.0",
   "links": [
     {
       "created_at": "2024-08-15T07:48:26.709364+00:00",
@@ -93,8 +94,8 @@
           }
         ],
         "id": 68,
-        "identifier": "a_general_corrosion_function_in_terms_of_atmospher",
-        "last_modified": "2024-08-15T07:48:26.715653+00:00",
+        "identifier": "benarie1986",
+        "last_modified": "2024-08-26T12:52:57.979840+00:00",
         "license": null,
         "tags": [],
         "title": "A general corrosion function in terms of atmospheric pollutant concentrations and rain pH",

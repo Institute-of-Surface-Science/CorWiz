@@ -1,0 +1,128 @@
+{
+  "created_at": "2024-08-15T12:49:10.161781+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "The model captures the corrosion wastage in ship deck plates of ballast tanks, and offers the analysis of environmental and operational factors affecting corrosion rates including the influence of factors such as temperature, dissolved oxygen, salinity, pH, and flow velocity on corrosion. \n\nIn the context of the short-term corrosion model, the presented model estimates the sensitivity of the short-term corrosion rate or corrosion wastage to environmental factors. This is done using the first partial derivation of them with respect to the ratio of the environmental factor under consideration. The mathematical expression for this is given as: \n\n$$\n\\frac{\\partial d_{c, k}(t)}{\\partial t}=\\prod_{j=1}^{m} f\\left(x_{j}\\right) \\frac{\\partial d_{n}(t)}{\\partial t} \n$$\n\nand \n\n$$\nd_{c, k}(t)=\\prod_{j=1}^{m} f\\left(x_{j}\\right) d_{n}(t) \n$$\n\nwhere $\\partial d_{c, k}(t) / \\partial t$ and $d_{c, k}(t)$ represent the corrected short-term corrosion rates and corrosion thickness, respectively, through the $k$ th interval of the vessel route, $\\partial d_{n}(t) / \\partial t$ and $d_{n}(t)$ are the nominal corrosion rate and corrosion thickness, respectively, $f\\left(x_{j}\\right)$ is the correction factor corresponding to the effect of the environmental parameter $x_{j}$, and $m$ is the total number of the environmental parameters affecting corrosion wastage. \n\nThis model assumes that there is no correlation among the effects, implying that the changes in each of them have cumulative effects. However, in reality, the different environmental factors considered here are dependent, but it is assumed that the effect of the interaction will be small compared with the effect of the individual changes of each parameter. \n\nThe most important environmental factors affecting corrosion under marine immersion conditions, considered here are sea water temperature, dissolved oxygen concentration and flow velocity. Therefore, the corrosion under marine immersion conditions at any short-term environmental conditions, as estimated by \n\n$$\n\\frac{\\partial d_{c, k}(t)}{\\partial t}=\\prod_{j=1}^{3} f\\left(x_{j}\\right) \\frac{\\partial d_{n}(t)}{\\partial t}=f\\left(T_{r}\\right) f\\left(O_{2, r}\\right) f\\left(V_{r}\\right) \\frac{\\partial d_{n}(t)}{\\partial t} \n$$\n\nand  \n\n$$\nd_{c, k}(t)=\\prod_{j=1}^{3} f\\left(x_{j}\\right) d_{n}(t)=f\\left(T_{r}\\right) f\\left(O_{2, r}\\right) f\\left(V_{r}\\right) d_{n}(t), \n$$\n\nwhere, the temperature correction factor is \n \n$$\nf(T_{r})= 0.5844 T_{r}+0.4156, \n$$\n\nwhere, the temperature ratio $T_{r}$ is defined as the ratio between the actual sea water temperature $T$ and the nominal one, $T_{n}$,  \n\n$$\nT_{r}~~~~ =\\frac{T}{T_{n}}=\\frac{T}{15.5},  \n$$\n\nthe corrosion loss correction factor for dissolved oxygen concentration is  \n\n$$\nf\\left(O_{2, r}\\right)=0.9483 O_{2, r}+0.0517, \n$$\n\nwhere, the dissolved oxygen concentration ratio $O_{2,}$ is defined as the ratio between the sea water dissolved oxygen concentration $O_{2}$ and the nominal one $O_{2, n}$, \n\n$$\nO_{2, r}=\\frac{O_{2}}{O_{2, n}}=\\frac{O_{2}}{5.88}, \n$$\n\nand the corrosion rate correction factor for flow velocity is defined as  \n\n$$\nf\\left(V_{r}\\right)=1.0978\\left[1-\\operatorname{Exp}\\left(-2.2927\\left(V_{r}+0.0548\\right)\\right)\\right],  \n$$ \n\nwhere the flow velocity ratio $V_{r}$ is defined as the ratio between the flow velocity $V$ and the nominal one, $V_{n}$, \n\n$$\nV_{r}=\\frac{V}{V_{n}}=\\frac{V}{10 \\times 0.5144} \n$$",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Temperature",
+          "type": "float",
+          "unit": "(Celsius)",
+          "value": null
+        },
+        {
+          "key": "Dissolved Oxygen",
+          "type": "float",
+          "unit": "(ml)(L)^{-1}",
+          "value": null
+        },
+        {
+          "key": "Flow Velocity",
+          "type": "float",
+          "unit": "(m)(s)^{-1}",
+          "value": null
+        },
+        {
+          "key": "Nominal Corrosion Rate",
+          "type": "float",
+          "unit": "(mm)(year)^{-1}",
+          "value": null
+        }
+      ]
+    },
+    {
+      "key": "Formula",
+      "type": "dict",
+      "value": [
+        {
+          "key": "Corrosion rate",
+          "type": "str",
+          "value": "$d_{c, k}(t)=\\prod_{j=1}^{3} f\\left(x_{j}\\right) d_{n}(t)=f\\left(T_{r}\\right) f\\left(O_{2, r}\\right) f\\left(V_{r}\\right) d_{n}(t) [um/year]$"
+        }
+      ]
+    }
+  ],
+  "files": [],
+  "id": 231,
+  "identifier": "model_garbatov2011",
+  "last_modified": "2024-08-27T12:26:46.997918+00:00",
+  "license": "CC-BY-4.0",
+  "links": [
+    {
+      "created_at": "2024-08-15T12:49:10.258688+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 192,
+      "last_modified": "2024-08-15T12:49:10.258705+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-08-08T13:50:34.222180+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-08-08T14:32:42.037371+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2011-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Marine Technology and Engineering"
+          }
+        ],
+        "id": 214,
+        "identifier": "garbatov2011",
+        "last_modified": "2024-08-26T13:21:50.178044+00:00",
+        "license": null,
+        "tags": [],
+        "title": "Corrosion modeling in marine structures",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "corrosion model",
+    "corwiz",
+    "immersion corrosion model",
+    "model"
+  ],
+  "title": "Immersion Corrosion Predictive Model Incorporating Pollutant Concentrations, Rain pH, and Exposure Time",
+  "type": "model"
+}

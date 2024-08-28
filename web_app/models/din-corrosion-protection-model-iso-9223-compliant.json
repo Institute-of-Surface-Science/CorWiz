@@ -78,13 +78,13 @@
         {
           "key": "Chloride pollution annual average",
           "type": "float",
-          "unit": "(mg)((m)^{2}(days))^{−1}",
+          "unit": "(mg)(m)^{−2}(days)^{−1}",
           "value": null
         },
         {
           "key": "SO2 pollution annual average",
           "type": "float",
-          "unit": "(mg)((m)^{2}(days))^{−1}",
+          "unit": "(mg)(m)^{−2}(days}^{−1}",
           "value": null
         }
       ]
@@ -119,7 +119,7 @@
   "files": [],
   "id": 224,
   "identifier": "din-corrosion-protection-model-iso-9223-compliant",
-  "last_modified": "2024-08-27T12:19:56.933712+00:00",
+  "last_modified": "2024-08-27T12:07:06.970768+00:00",
   "license": "CC-BY-4.0",
   "links": [
     {

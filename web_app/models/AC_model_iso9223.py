@@ -1,8 +1,44 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from . atmospheric_corrosion_models import iso_9224
+from .corrosion_model import corrosion_model
 
+class iso_9224(corrosion_model):
+
+    def __init__(self, parameters):
+        corrosion_model.__init__(self)
+        self.model_name = 'ISO 9223:2012 and ISO 9224:2012'
+        self.article_identifier = ['din-en-iso-92232012-05', 'din-en-iso-92242012-05']
+        self.steel = "Unalloyed Steel"
+        self.p = parameters
+        self.correlation_speed_provided = 'corrosion_speed' in parameters
+
+    
+    def eval_corrosion_speed(self):
+
+        if self.p['T'] <= 10:
+            fst = 0.15*(self.p['T'] - 10)
+        else:
+            fst = -0.054*(self.p['T'] - 10)
+
+        corrosion_speed = 1.77*self.p['Pd']**0.52*np.e**(0.02*self.p['RH'] + fst) + 0.102*self.p['Sd']**0.62*np.e**(0.033*self.p['RH'] + 0.04*self.p['T'])
+        return corrosion_speed
+
+
+    def eval_material_loss(self, time):
+        
+        if self.correlation_speed_provided:
+            corrosion_speed = self.p['corrosion_speed']
+        else:
+            corrosion_speed = self.eval_corrosion_speed()
+        
+        if np.max(time) < 20:
+            material_loss = self.p['exponent']*corrosion_speed*time**(self.p['exponent'] - 1)
+        else:
+            material_loss = corrosion_speed*(20**self.p['exponent'] + self.p['exponent']*20**(self.p['exponent'] - 1)*(time - 20))
+
+        return material_loss
+    
 
 def get_exponent_value(year, table):
     years = np.array(table[0].astype(int))
@@ -86,7 +122,7 @@ def get_exponent(time, table_9224_3):
     return exponent
 
 
-def AC_model2(model_identifier):
+def AC_model_iso9223(model_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
     table_2, table_3, table_b3, table_b4, table_c1, table_9224_3 = load_data(model_identifier)
     st.table(table_c1)

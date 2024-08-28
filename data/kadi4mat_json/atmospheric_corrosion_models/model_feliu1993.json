@@ -26,14 +26,17 @@
           "type": "list",
           "value": [
             {
+              "description": "$Cl < 0.1 mg dm^{-2} d^{-1}$ and $S0_2 < 0.1 mg dm^{-2} d^{-1}$",
               "type": "str",
               "value": "Rural Atmosphere"
             },
             {
+              "description": "$Cl >= 0.1 mg dm^{-2} d^{-1}$ and $S0_2 < 0.1 mg dm^{-2} d^{-1}$",
               "type": "str",
               "value": "Urban industrial Atmosphere"
             },
             {
+              "description": "$Cl >= 0.1 mg dm^{-2} d^{-1}$",
               "type": "str",
               "value": "Marine Atmosphere"
             }
@@ -42,13 +45,14 @@
         {
           "key": "Temperature",
           "type": "float",
-          "unit": "°C",
+          "unit": "(Celsius)",
           "value": null
         },
         {
+          "description": "The number of rainy days/ Total number of days in a year",
           "key": "Wetness time",
           "type": "float",
-          "unit": "annual fraction",
+          "unit": "(annual fraction)",
           "value": null
         }
       ]
@@ -60,7 +64,7 @@
         {
           "key": "Annual Corrosion",
           "type": "str",
-          "value": "$A [um]$ = $132.4Cl^-(1 + 0.038T - 1.96t_w - 0.53SO_2 + 74.6t_w(1 + 1.07SO_2) - 6.3)$"
+          "value": "$A [um]$ = $132.4Cl^-(1 + 0.038T - 1.96t_w - 0.53SO_2 + 74.6t_w(1 + 1.07SO_2) - 6.3) [um/year]$"
         },
         {
           "key": "Exponent",
@@ -70,16 +74,16 @@
         {
           "key": "Material loss",
           "type": "str",
-          "value": "$At^n$"
+          "value": "$At^n [um]$"
         }
       ]
     }
   ],
   "files": [],
   "id": 223,
-  "identifier": "statistically-processed-atmospheric-corrosion-pred",
-  "last_modified": "2024-08-15T07:33:50.309888+00:00",
-  "license": null,
+  "identifier": "model_feliu1993",
+  "last_modified": "2024-08-27T09:52:31.991623+00:00",
+  "license": "CC-BY-4.0",
   "links": [
     {
       "created_at": "2024-08-14T14:36:51.468637+00:00",
@@ -138,11 +142,11 @@
           }
         ],
         "id": 185,
-        "identifier": "i_the_prediction_of_atmospheric_corrosion_from_met",
-        "last_modified": "2024-08-14T14:36:51.549445+00:00",
+        "identifier": "feliu1993",
+        "last_modified": "2024-08-27T11:55:38.497724+00:00",
         "license": null,
         "tags": [],
-        "title": "I_The prediction of atmospheric corrosion from meteorological and pollution parameters—I. Annual corrosion",
+        "title": "The prediction of atmospheric corrosion from meteorological and pollution parameters—I. Annual corrosion",
         "type": "publication"
       },
       "term": null
