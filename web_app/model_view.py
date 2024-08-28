@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
+import plotly.express as px
 import numpy as np
-import pandas as pd
 import streamlit as st
-import json
+from streamlit_extras.stylable_container import stylable_container
 from models import AC_model_fileu1993, AC_model_iso9223, AC_model_ma2010, AC_model_benarie1986, AC_model_soares1999, AC_model_klinesmith2007, IC_model_ali2020, IC_model_kovalenko2016, IC_model_garbatov2011, IC_model_hicks2012
 import os
 import json
@@ -126,13 +126,22 @@ def model_view(model_view_container):
         if model is not None:
             t = np.linspace(0, time, 400)
             D = model.eval_material_loss(t)
-            plt.plot(t, D, color='blue')
-            plt.xlabel(r'Time [years]')
-            plt.ylabel(r'Mass loss $[um]$')
-            plt.legend()
-            plt.grid(True)
+
+            # Create the plot using Plotly Express
+            fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [um]'}, title="Mass Loss Over Time")
 
             with image_column:
-                st.pyplot(fig)
+                chart_container = st.container()
+                plot_html = fig.to_html(full_html=False)
+
+                with chart_container:
+                    st.markdown(
+                        f"""
+                        <div style="background-color: white; padding: 10px; border-radius: 10px;">
+                            {plot_html}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
         else:
             st.write("No model selected.")
