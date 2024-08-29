@@ -5,10 +5,10 @@ from .corrosion_model import corrosion_model
 
 class iso_9224(corrosion_model):
 
-    def __init__(self, parameters):
+    def __init__(self, parameters, article_identifier):
         corrosion_model.__init__(self)
         self.model_name = 'ISO 9223:2012 and ISO 9224:2012'
-        self.article_identifier = ['din-en-iso-92232012-05', 'din-en-iso-92242012-05']
+        self.article_identifier = article_identifier
         self.steel = "Unalloyed Steel"
         self.p = parameters
         self.correlation_speed_provided = 'corrosion_speed' in parameters
@@ -54,13 +54,13 @@ def get_exponent_value(year, table):
         return exponent_value
 
 
-def load_data(model_identifier):
-    table_2 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_2.csv', header=None)
-    table_3 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_3.csv', header=None)
-    table_b3 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_B.3.csv', header=None)
-    table_b4 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_B.4.csv', header=None)
-    table_c1 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_C.1.csv', header=None)
-    table_9224_3 = pd.read_csv('../data/tables/' + model_identifier +'_tables_9224_table_3.csv', header=None)
+def load_data(article_identifier):
+    table_2 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_2.csv', header=None)
+    table_3 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_3.csv', header=None)
+    table_b3 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_B.3.csv', header=None)
+    table_b4 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_B.4.csv', header=None)
+    table_c1 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_C.1.csv', header=None)
+    table_9224_3 = pd.read_csv('../data/tables/' + article_identifier +'_tables_9224_table_3.csv', header=None)
 
     return table_2, table_3, table_b3, table_b4, table_c1, table_9224_3
 
@@ -122,9 +122,9 @@ def get_exponent(time, table_9224_3):
     return exponent
 
 
-def AC_model_iso9223(model_identifier):
+def AC_model_iso9223(article_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    table_2, table_3, table_b3, table_b4, table_c1, table_9224_3 = load_data(model_identifier)
+    table_2, table_3, table_b3, table_b4, table_c1, table_9224_3 = load_data(article_identifier)
     st.table(table_c1)
     corrosion_type = st.selectbox('Select corrosion type?', ((get_corrosion_type(table_c1))))
     corrosion_type = get_corrosion_type(table_c1).index(corrosion_type)
@@ -149,4 +149,4 @@ def AC_model_iso9223(model_identifier):
             parameters[symbol] = get_input(symbol, limits)
     parameters['exponent'] = get_exponent(time, table_9224_3)
     
-    return iso_9224(parameters), time
+    return iso_9224(parameters, article_identifier), time

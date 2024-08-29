@@ -4,14 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-streamlit = "~=1.37.0"
+streamlit = "~=1.38.0"
 matplotlib = "~=3.9.1"
-numpy = "~=2.0.1"
+numpy = "~=2.1.0"
 pandas = "~=2.2.2"
 requests = "~=2.32.3"
 pillow = "~=10.4.0"
 streamlit-lottie = "~=0.0.5"
 streamlit_extras = "*"
+plotly ="~=5.23.0"
 
 [dev-packages]
 
