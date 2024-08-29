@@ -91,5 +91,5 @@ def model_view(model_view_container):
 
                 st.write("### Model Formulas")
                 if selected_model.formula:
-                    print(selected_model.formula)
-                    st.write(r'' + selected_model.formula)
+                    for formula in selected_model.formula:
+                        st.markdown(f"**{formula['key']}**: {formula['value']}")
