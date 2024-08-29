@@ -16,6 +16,7 @@ class Model:
     KEY_EXTRAS = 'extras'
     KEY_PARAMETERS = 'Parameters'
     KEY_FORMULA = 'Formula'
+    KEY_TAGS = 'tags'
 
     def __init__(self, json_file_path: str):
         self.json_file_path = json_file_path
@@ -26,6 +27,7 @@ class Model:
         self.parameters: str = ''
         self.formula: str = ''
         self.article_identifier: str = ''
+        self.tags: List[str] = []
 
         self._load_and_extract_details()
 
@@ -53,6 +55,7 @@ class Model:
         extras = data.get(self.KEY_EXTRAS, [])
         self.parameters = next((item['value'] for item in extras if item.get('key') == self.KEY_PARAMETERS), '')
         self.formula = next((item['value'] for item in extras if item.get('key') == self.KEY_FORMULA), '')
+        self.tags = data.get(self.KEY_TAGS, [])
 
     def display_details(self) -> None:
         """Prints the model details."""
@@ -64,6 +67,7 @@ class Model:
         print(f"Parameters: {self.parameters}")
         print(f"Formula: {self.formula}")
         print(f"Article Identifier: {self.article_identifier}")
+        print(f"Tags: {', '.join(self.tags)}")
 
 
 def load_models_from_directory(directory_path: str) -> List[Model]:
