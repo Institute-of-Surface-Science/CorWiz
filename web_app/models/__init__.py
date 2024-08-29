@@ -1,4 +1,4 @@
-from . AC_model_fileu1993 import AC_model_fileu1993
+from .AC_model_fileu1993 import AC_model_fileu1993
 from .AC_model_iso9223 import AC_model_iso9223
 from .AC_model_ma2010 import AC_model_ma2010
 from .AC_model_benarie1986 import AC_model_benarie1986
