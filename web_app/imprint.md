@@ -60,4 +60,4 @@ To the extent that parts of this website are offered in languages other than Ger
 This website including the texts, images and other content made available on this website are subject to applicable copyright laws. They (including any source code and software) must not be modified, copied, re-published, transmitted, distributed, or stored without our prior written consent. We however permit the use of such content exclusively for private, non-commercial purposes in accordance with applicable copyright law.
 
 ### Links to external websites
-Our website may contain references (hyperlinks) to content/information on third party websites which are not under our control. We here
+Our website may contain references (hyperlinks) to content/information on third party websites which are not under our control. We hereby exclude any warranty or liability for such third party content/information and referencing such content/information shall not express or imply that we approve or support such content/information.
