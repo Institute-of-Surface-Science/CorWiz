@@ -1,6 +1,6 @@
 import os
 import json
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 
 
 class Model:
@@ -69,8 +69,6 @@ class Model:
         print(f"Article Identifier: {self.article_identifier}")
         print(f"Tags: {', '.join(self.tags)}")
 
-
-from typing import Union
 
 def load_models_from_directory(directory_paths: Union[str, List[str]]) -> List[Model]:
     """Loads all models from JSON files in the specified directory or directories.
