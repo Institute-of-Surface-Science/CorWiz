@@ -19,10 +19,10 @@ import numpy as np
 
 class coated_mass_loss_model(corrosion_model):
 
-    def __init__(self, parameters):
+    def __init__(self, parameters, article_identifier):
         corrosion_model.__init__(self)
         self.model_name = 'Reliability of maintained, corrosion protected plates subjected to non-linear corrosion and compressive loads'
-        self.article_identifier = ['soares1999']
+        self.article_identifier = article_identifier
         self.steel = "Steel"
         self.p = parameters
 
@@ -60,7 +60,7 @@ def get_parameters(limits):
     return parameters
 
 
-def AC_model_soares1999(model_identifier):
+def AC_model_soares1999(article_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
     limits = {
         'd_inf': {'desc': 'Long term thickness of corrosion wastage', 'lower': 0.001, 'upper': 1000, 'unit': 'mm'},
@@ -69,4 +69,4 @@ def AC_model_soares1999(model_identifier):
     }
     parameters = get_parameters(limits)
 
-    return coated_mass_loss_model(parameters), time
+    return coated_mass_loss_model(parameters, article_identifier), time
