@@ -1,14 +1,16 @@
-import matplotlib.pyplot as plt
-import plotly.express as px
-import numpy as np
-import streamlit as st
-from streamlit_extras.stylable_container import stylable_container
-import streamlit.components.v1 as components
-
-from models import AC_model_fileu1993, AC_model_iso9223, AC_model_ma2010, AC_model_benarie1986, AC_model_soares1999, \
-    AC_model_klinesmith2007, IC_model_ali2020, IC_model_kovalenko2016, IC_model_garbatov2011, IC_model_hicks2012
 import os
 import json
+import numpy as np
+import streamlit as st
+import plotly.express as px
+import streamlit.components.v1 as components
+
+from models import (
+    AC_model_fileu1993, AC_model_iso9223, AC_model_ma2010,
+    AC_model_benarie1986, AC_model_soares1999, AC_model_klinesmith2007,
+    IC_model_ali2020, IC_model_kovalenko2016, IC_model_garbatov2011,
+    IC_model_hicks2012
+)
 
 
 def extract_model_details_from_json(path):
