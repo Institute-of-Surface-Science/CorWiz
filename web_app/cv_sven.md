@@ -47,6 +47,9 @@ Institute of Surface Science, Helmholtz Zentrum Hereon (2021-Present)
 ### Main Developer:
 - **TrixiParticles.jl** [TrixiParticles.jl](https://github.com/trixi-framework/TrixiParticles.jl)
 
+### Organized Events
+- **EU Workshop** for Ontology-based Workflows in Hamburg with 30 Contributions
+
 ---
 
 ## Recent Research Topics
