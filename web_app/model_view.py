@@ -88,7 +88,7 @@ def model_view(model_view_container):
 
                 model_category_selection = st.selectbox('**Corrosion Type**', model_categories)
 
-                if model_category_selection == 'Atmospheric corrosion models':
+                if model_category_selection == 'Atmospheric corrosion':
                     model_info = atmospheric_corrosion_models
                     model_functions = {'model_feliu1993': AC_model_fileu1993,
                                        'din-corrosion-protection-model-iso-9223-compliant': AC_model_iso9223,
