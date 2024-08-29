@@ -70,21 +70,38 @@ class Model:
         print(f"Tags: {', '.join(self.tags)}")
 
 
-def load_models_from_directory(directory_path: str) -> List[Model]:
-    """Loads all models from JSON files in the specified directory."""
-    if not os.path.isdir(directory_path):
-        raise ValueError(f"The specified directory does not exist: {directory_path}")
+from typing import Union
 
-    json_files = [os.path.join(directory_path, f) for f in os.listdir(directory_path) if f.endswith('.json')]
-    if not json_files:
-        raise ValueError(f"No JSON files found in the specified directory: {directory_path}")
+def load_models_from_directory(directory_paths: Union[str, List[str]]) -> List[Model]:
+    """Loads all models from JSON files in the specified directory or directories.
+
+    Args:
+        directory_paths (Union[str, List[str]]): A single directory path or a list of directory paths.
+
+    Returns:
+        List[Model]: A list of Model instances loaded from the JSON files in the specified directory or directories.
+
+    Raises:
+        ValueError: If a directory does not exist or no JSON files are found.
+    """
+    if isinstance(directory_paths, str):
+        directory_paths = [directory_paths]  # Convert to a list for uniform processing
 
     models = []
-    for json_file in json_files:
-        try:
-            model = Model(json_file)
-            models.append(model)
-        except ValueError as e:
-            print(f"Warning: {e}")
+    for directory_path in directory_paths:
+        if not os.path.isdir(directory_path):
+            raise ValueError(f"The specified directory does not exist: {directory_path}")
+
+        json_files = [os.path.join(directory_path, f) for f in os.listdir(directory_path) if f.endswith('.json')]
+        if not json_files:
+            raise ValueError(f"No JSON files found in the specified directory: {directory_path}")
+
+        for json_file in json_files:
+            try:
+                model = Model(json_file)
+                models.append(model)
+            except ValueError as e:
+                print(f"Warning: {e}")
 
     return models
+
