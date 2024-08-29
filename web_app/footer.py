@@ -8,25 +8,32 @@ def setup_footer(footer_container):
         left_column, middle_column, right_column = st.columns((0.75, 2.5, 1))
         with left_column:
             # optimized for 16:10
-            empty_box_left, left_button_col, right_button_col, empty_box_right = st.columns((0.05, 0.75, 1.5, 1.25))
+            empty_box_left, left_button_col, right_button_col, empty_box_right = st.columns((0.05, 1.5, 1.9, 1.25))
 
 
             with left_button_col:
-                # center vertically (doesn't work with st.html)
-                st.markdown("<div style='display: flex; align-items: center; height: 100%; justify-content: center;'>",
-                            unsafe_allow_html=True)
-
-                if st.button("Imprint"):
-                    st.switch_page("pages/imprint.py")
-                st.markdown("</div>", unsafe_allow_html=True)
+                st.markdown(
+                    """
+                    <div style='display: flex; align-items: center; justify-content: center; height: 100%; padding: 10px 0;'>
+                        <a href='/imprint' target='_self' style='display: flex; align-items: center; justify-content: center;'>
+                            <img src='./app/static/buttons/imprint.png' alt='Imprint' style='width: auto; height: 50px;'>
+                        </a>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
             with right_button_col:
-                # center vertically (doesn't work with st.html)
-                st.markdown("<div style='display: flex; align-items: center; height: 100%; justify-content: center;'>",
-                            unsafe_allow_html=True)
-                if st.button("Data Protection"):
-                    st.switch_page("pages/data_protection.py")
-                st.markdown("</div>", unsafe_allow_html=True)
+                st.markdown(
+                    """
+                    <div style='display: flex; align-items: center; justify-content: center; height: 100%; padding: 10px 0;'>
+                        <a href='/data_protection' target='_self' style='display: flex; align-items: center; justify-content: center;'>
+                            <img src='./app/static/buttons/data_protection.png' alt='Data Protection' style='width: auto; height: 50px;'>
+                        </a>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
         with right_column:
             logo_hereon, logo_hmc, logo_nfdi4ing = st.columns((1, 1, 1))
