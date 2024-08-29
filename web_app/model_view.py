@@ -60,53 +60,53 @@ def plot_mass_loss_over_time(model, time_range):
     )
 
 
-def model_view(model_view_container):
-    """Main function to display the model view."""
-    directories = [
+def display_model_view(container):
+    """
+    Displays the model view interface for selecting and analyzing corrosion mass loss models.
+
+    Args:
+        container (st.container): The Streamlit container in which the model view interface will be displayed.
+    """
+    model_directories = [
         '../data/kadi4mat_json/immersion_corrosion_models/',
         '../data/kadi4mat_json/atmospheric_corrosion_models/'
     ]
-    models = load_models_from_directory(directories)
 
-    with model_view_container:
+    models = load_models_from_directory(model_directories)
+
+    with container:
         st.write("---")
         st.header("Corrosion Mass Loss Models")
 
-        main_view = st.container()
-        description_box = st.container()
+        main_content = st.container()
+        description_content = st.container()
 
-        # Get all process types for the first selector box
-        model_process_types = get_corrosion_process_type(models)
+        model_process_pairs = get_corrosion_process_type(models)
 
-        with main_view:
-            image_column, data_column = st.columns((1, 1))
-            with data_column:
-                # Get unique, sorted corrosion process types
-                model_categories = sorted({process_type for _, process_type in model_process_types})
+        with main_content:
+            plot_column, selection_column = st.columns((1, 1))
 
-                model_category_selection = st.selectbox('**Corrosion Type**', model_categories)
+            with selection_column:
+                corrosion_types = sorted({process_type for _, process_type in model_process_pairs})
+                selected_corrosion_type = st.selectbox('**Corrosion Type**', corrosion_types)
 
-                # Filter models by the corrosion type selection
-                filtered_models = [model for model, process_type in model_process_types if
-                                   process_type == model_category_selection]
+                filtered_models = [model for model, process_type in model_process_pairs if process_type == selected_corrosion_type]
                 selected_model = st.selectbox('**Model**', filtered_models, format_func=lambda model: model.name)
-                model, time = run_model(selected_model.kadi_identifier)
 
-            with image_column:
-                chart_container = st.container()
+                model, time_range = run_model(selected_model.kadi_identifier)
 
-                with chart_container:
-                    plot_mass_loss_over_time(model, time)
+            with plot_column:
+                plot_mass_loss_over_time(model, time_range)
 
-            with description_box:
-                description = st.expander("**Model Description**", expanded=False)
+        with description_content:
+            description_expander = st.expander("**Model Description**", expanded=False)
 
-                with description:
-                    display_model_info(selected_model)
+            with description_expander:
+                display_model_info(selected_model)
 
-                    st.write("### Model Formulas")
-                    if isinstance(selected_model.formula, list):
-                        for formula in selected_model.formula:
-                            st.markdown(f"**{formula['key']}**: {formula['value']}")
-                    elif isinstance(selected_model.formula, str):
-                        st.markdown(selected_model.formula)
+                st.write("### Model Formulas")
+                if isinstance(selected_model.formula, list):
+                    for formula in selected_model.formula:
+                        st.markdown(f"**{formula['key']}**: {formula['value']}")
+                elif isinstance(selected_model.formula, str):
+                    st.markdown(selected_model.formula)
