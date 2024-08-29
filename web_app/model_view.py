@@ -84,7 +84,7 @@ def model_view(model_view_container):
         with main_view:
             image_column, data_column = st.columns((1, 1))
             with data_column:
-                model_categories = ['Atmospheric corrosion models', 'Immersed corrosion models']
+                model_categories = ['Atmospheric corrosion', 'Immersed corrosion']
 
                 model_category_selection = st.selectbox('**Corrosion Type**', model_categories)
 
