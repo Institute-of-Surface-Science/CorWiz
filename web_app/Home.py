@@ -7,8 +7,7 @@ from footer import setup_footer
 from model_view import model_view
 from helper import local_css
 
-
-st.set_page_config(page_title="CorWiz", page_icon=":material/rainy:", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="CorWiz", page_icon=":material/rainy:", layout="wide", initial_sidebar_state="auto")
 
 local_css('style/style.css')
 

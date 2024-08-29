@@ -39,3 +39,7 @@ header {visibility: hidden;}
     padding-left: 1rem;
     padding-bottom: 2rem;
 }
+
+div[data-testid="stExpander"] details summary p{
+    font-size: 2rem;
+}
