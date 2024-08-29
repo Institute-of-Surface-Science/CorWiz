@@ -19,10 +19,10 @@ from .corrosion_model import corrosion_model
 
 class tropical_marine_env(corrosion_model):
 
-    def __init__(self, parameters):
+    def __init__(self, parameters, article_identifier):
         corrosion_model.__init__(self)
         self.model_name = 'The atmospheric corrosion kinetics of low carbon steel in a tropical marine environment'
-        self.article_identifier = ['ma2010']
+        self.article_identifier = article_identifier
         self.steel = "Low Carbon Steel (Q235)"
         self.p = parameters
 
@@ -83,9 +83,9 @@ def get_exponent_value(year, table):
         return exponent_value
     
 
-def load_data(model_identifier):
-    table_1 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_1.csv', header=None)
-    table_2 = pd.read_csv('../data/tables/' + model_identifier +'_tables_table_2.csv', header=None)
+def load_data(article_identifier):
+    table_1 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_1.csv', header=None)
+    table_2 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_2.csv', header=None)
 
     return table_1, table_2
 
@@ -114,12 +114,12 @@ def get_input(symbol, limits):
     return value
 
 
-def AC_model_ma2010(model_identifier):
+def AC_model_ma2010(article_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    table_1, table_2 = load_data(model_identifier)
+    table_1, table_2 = load_data(article_identifier)
     parameters = {}
     parameters['corrosion_site'] = int(get_corrosion_site(table_2) + 1)
     limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
     parameters['distance'] = get_input('D', limits)
     
-    return tropical_marine_env(parameters), time
+    return tropical_marine_env(parameters, article_identifier), time

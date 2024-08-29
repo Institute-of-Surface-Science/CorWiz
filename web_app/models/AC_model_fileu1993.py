@@ -18,10 +18,10 @@ import numpy as np
 
 class i_the_prediction_of_atmospheric_corrosion_from_met(corrosion_model):
    
-    def __init__(self, parameters):
+    def __init__(self, parameters, article_identifier):
         corrosion_model.__init__(self)
         self.model_name = 'The prediction of atmospheric corrosion from meteorological and pollution parameters—I. Annual corrosion'
-        self.article_identifier = ['feliu1993']
+        self.article_identifier = article_identifier
         self.steel = "Carbon Steel"
         self.p = parameters
 
@@ -44,6 +44,8 @@ class i_the_prediction_of_atmospheric_corrosion_from_met(corrosion_model):
     
 
     def evaluate_exponent(self):
+        print('\n\n\n')
+        print(self.article_identifier)
         table_4 = pd.read_csv('../data/tables/' + self.article_identifier +'_tables_table_4.csv', header=None)
         if self.p['Atmosphere'] == 0:
             exponent = table_4.iloc[1, 1]
@@ -103,12 +105,12 @@ def display_formulas(parameters):
     st.write(r'Exponent, $n = 0.570 + 0.0057Cl^-T + 7.7 \times 10^{-4}D - 1.7 \times 10^{-3}A$')
 
 
-def AC_model_fileu1993(model_identifier):
+def AC_model_fileu1993(article_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    table_2, table_4 = load_data(model_identifier)
+    table_2, table_4 = load_data(article_identifier)
     atmosphere_types = get_atmosphere_types(table_4)
     atmosphere = st.selectbox('Select Atmosphere:', ((atmosphere_types)))
     parameters = get_parameters(table_2, atmosphere, atmosphere_types)
     display_formulas(parameters)
 
-    return i_the_prediction_of_atmospheric_corrosion_from_met(parameters), time
+    return i_the_prediction_of_atmospheric_corrosion_from_met(parameters, article_identifier), time

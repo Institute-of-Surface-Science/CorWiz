@@ -20,10 +20,10 @@ from .corrosion_model import corrosion_model
 class a_general_corrosion_function(corrosion_model):
 
 
-    def __init__(self, parameters):
+    def __init__(self, parameters, article_identifier):
         corrosion_model.__init__(self)
         self.model_name = 'A general corrosion function in terms of atmospheric pollutant concentrations and rain pH'
-        self.article_identifier = ['benarie1986']
+        self.article_identifier = article_identifier
         self.steel = "Carbon Steel"
         self.p = parameters
 
@@ -43,9 +43,9 @@ class a_general_corrosion_function(corrosion_model):
         return material_loss
     
 
-def load_data(model_identifier):
+def load_data(article_identifier):
 
-    return pd.read_csv('../data/tables/' + model_identifier +'_tables_table_2.csv', header=None)
+    return pd.read_csv('../data/tables/' + article_identifier +'_tables_table_2.csv', header=None)
 
 
 def get_corrosion_site(table_2):
@@ -62,11 +62,11 @@ def display_site_info(table_2, corrosion_site):
     st.write(r'$pH$ = ' + str(table_2.iloc[corrosion_site, 4]))
 
 
-def AC_model_benarie1986(model_identifier):
+def AC_model_benarie1986(article_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    table_2 = load_data(model_identifier)
+    table_2 = load_data(article_identifier)
     corrosion_site = get_corrosion_site(table_2)
     parameters = {'corrosion_site': int(corrosion_site)}
     display_site_info(table_2, corrosion_site)
     
-    return a_general_corrosion_function(parameters), time
+    return a_general_corrosion_function(parameters, article_identifier), time
