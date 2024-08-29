@@ -1330,12 +1330,12 @@
         },
         "streamlit": {
             "hashes": [
-                "sha256:0651240fccc569900cc9450390b0a67473fda55be65f317e46285f99e2bddf04",
-                "sha256:bc7e3813d94a39dda56f15678437eb37830973c601e8e574f2225a7bf188ea5a"
+                "sha256:0653ecfe86fef0f1608e3e082aef7eb335d8713f6f31e9c3b19486d1c67d7c41",
+                "sha256:c4bf36b3ef871499ed4594574834583113f93f077dd3035d516d295786f2ad63"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8' and python_full_version != '3.9.7'",
-            "version": "==1.37.1"
+            "version": "==1.38.0"
         },
         "streamlit-camera-input-live": {
             "hashes": [
