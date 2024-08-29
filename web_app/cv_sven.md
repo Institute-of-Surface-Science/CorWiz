@@ -61,7 +61,7 @@ Institute of Surface Science, Helmholtz Zentrum Hereon (2021-Present)
 
 ---
 
-## Publications (5 most important)
+## Publications
 
 1. Schlottke-Lakemper et al., 2017, A fully coupled hybrid computational aeroacoustics method on hierarchical Cartesian meshes, *Computers & Fluids*.
 
