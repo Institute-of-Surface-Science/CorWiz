@@ -13,17 +13,51 @@ def display_model_info(model: Model) -> None:
         st.markdown("#### Model Notes: \n" + model.special_note)
 
 
-def run_model(model_identifier: str, model_functions: dict, article_identifier: str):
-    """Runs the selected model using the provided identifier and article."""
+def run_model(model_identifier: str):
+    """Runs the selected model using the provided identifier."""
+    model_functions = {
+        'model_feliu1993': AC_model_fileu1993,
+        'din-corrosion-protection-model-iso-9223-compliant': AC_model_iso9223,
+        'model_ma2010': AC_model_ma2010,
+        'model_benarie1986': AC_model_benarie1986,
+        'model_soares1999': AC_model_soares1999,
+        'model_klinesmith2007': AC_model_klinesmith2007,
+        'model_ali2020': IC_model_ali2020,
+        'model_kovalenko2016': IC_model_kovalenko2016,
+        'model_garbatov2011': IC_model_garbatov2011,
+        'model_hicks2012': IC_model_hicks2012
+    }
+
+    # TODO: remove this crap
+    if model_identifier == 'din-corrosion-protection-model-iso-9223-compliant':
+        article_identifier = 'din-en-iso-92232012-05'
+    else:
+        # Extract the article identifier from the model identifier
+        article_identifier = model_identifier.split("_")[1]
+
     return model_functions[model_identifier](article_identifier)
 
 
 def plot_mass_loss_over_time(model, time_range):
-    """Generates and returns a Plotly figure for mass loss over time."""
+    """Generates and embeds a Plotly figure for mass loss over time into Streamlit."""
     t = np.linspace(0, time_range, 400)
     D = model.eval_material_loss(t)
-    fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [um]'}, title="Mass Loss Over Time", height=700)
-    return fig
+
+    fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [um]'}, title="Mass Loss Over Time",
+                  height=700)
+
+    plot_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
+
+    # Embed the figure in Streamlit using components.html since it doesn't work otherwise
+    components.html(
+        f"""
+        <div style="background-color: white; padding: 10px; border-radius: 10px;">
+            {plot_html}
+        </div>
+        """,
+        height=800,
+        scrolling=True
+    )
 
 
 def model_view(model_view_container):
@@ -47,58 +81,22 @@ def model_view(model_view_container):
         with main_view:
             image_column, data_column = st.columns((1, 1))
             with data_column:
-                model_categories = sorted(set(process_type for _, process_type in model_process_types))
+                # Get unique, sorted corrosion process types
+                model_categories = sorted({process_type for _, process_type in model_process_types})
+
                 model_category_selection = st.selectbox('**Corrosion Type**', model_categories)
 
-                # Filter models based on selected corrosion type
+                # Filter models by the corrosion type selection
                 filtered_models = [model for model, process_type in model_process_types if
                                    process_type == model_category_selection]
-
-                # Depending on the corrosion type, select the appropriate model functions
-                if model_category_selection == 'atmospheric corrosion':
-                    model_functions = {
-                        'model_feliu1993': AC_model_fileu1993,
-                        'din-corrosion-protection-model-iso-9223-compliant': AC_model_iso9223,
-                        'model_ma2010': AC_model_ma2010,
-                        'model_benarie1986': AC_model_benarie1986,
-                        'model_soares1999': AC_model_soares1999,
-                        'model_klinesmith2007': AC_model_klinesmith2007
-                    }
-                else:  # 'immersion corrosion'
-                    model_functions = {
-                        'model_ali2020': IC_model_ali2020,
-                        'model_kovalenko2016': IC_model_kovalenko2016,
-                        'model_garbatov2011': IC_model_garbatov2011,
-                        'model_hicks2012': IC_model_hicks2012
-                    }
-
-                # Select a specific model
-                model_names = [model.name for model in filtered_models]
-                selected_model_name = st.selectbox('**Model**', model_names)
-
-                # Find the selected model
-                selected_model = next(model for model in filtered_models if model.name == selected_model_name)
-                model_identifier = selected_model.kadi_identifier
-                article_identifier = selected_model.article_identifier
-
-                # Run the selected model
-                model, time = run_model(model_identifier, model_functions, article_identifier)
+                selected_model = st.selectbox('**Model**', filtered_models, format_func=lambda model: model.name)
+                model, time = run_model(selected_model.kadi_identifier)
 
             with image_column:
-                # Generate and display the plot
                 chart_container = st.container()
-                plot_html = plot_mass_loss_over_time(model, time).to_html(full_html=False, include_plotlyjs='cdn')
 
                 with chart_container:
-                    components.html(
-                        f"""
-                           <div style="background-color: white; padding: 10px; border-radius: 10px;">
-                               {plot_html}
-                           </div>
-                           """,
-                        height=800,
-                        scrolling=True
-                    )
+                    plot_mass_loss_over_time(model, time)
 
             with description_box:
                 description = st.expander("**Model Description**", expanded=False)
