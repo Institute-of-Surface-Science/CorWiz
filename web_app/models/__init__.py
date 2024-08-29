@@ -8,4 +8,4 @@ from .IC_model_ali2020 import IC_model_ali2020
 from .IC_model_kovalenko2016 import IC_model_kovalenko2016
 from .IC_model_garbatov2011 import IC_model_garbatov2011
 from .IC_model_hicks2012 import IC_model_hicks2012
-from .model import load_models_from_directory, ModelDetails
+from .model import load_models_from_directory, Model

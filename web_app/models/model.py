@@ -3,7 +3,7 @@ import json
 from typing import List, Dict, Any, Optional
 
 
-class ModelDetails:
+class Model:
     """Class representing the details of a single model extracted from a JSON file."""
 
     # Constants for JSON keys
@@ -66,7 +66,7 @@ class ModelDetails:
         print(f"Article Identifier: {self.article_identifier}")
 
 
-def load_models_from_directory(directory_path: str) -> List[ModelDetails]:
+def load_models_from_directory(directory_path: str) -> List[Model]:
     """Loads all models from JSON files in the specified directory."""
     if not os.path.isdir(directory_path):
         raise ValueError(f"The specified directory does not exist: {directory_path}")
@@ -78,7 +78,7 @@ def load_models_from_directory(directory_path: str) -> List[ModelDetails]:
     models = []
     for json_file in json_files:
         try:
-            model = ModelDetails(json_file)
+            model = Model(json_file)
             models.append(model)
         except ValueError as e:
             print(f"Warning: {e}")

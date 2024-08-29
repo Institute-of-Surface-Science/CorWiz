@@ -6,7 +6,7 @@ import streamlit.components.v1 as components
 
 from models import *
 
-def display_model_info(model: ModelDetails) -> None:
+def display_model_info(model: Model) -> None:
     """Displays the model description and notes."""
     st.markdown(model.description)
     if model.special_note:
