@@ -54,14 +54,14 @@ class Garbatov2011Model(CorrosionModel):
         return material_loss
 
 
-def IC_model_garbatov2011() -> Tuple[Garbatov2011Model, float]:
+def IC_model_garbatov2011(article_identifier: str) -> Tuple[Garbatov2011Model, float]:
     """
     Executes the Garbatov 2011 corrosion model.
 
     Returns:
         Tuple[Garbatov2011Model, float]: An instance of the Garbatov2011Model class and the duration for which the model is evaluated.
     """
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1)
+    time = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
 
     parameters = {
         'Temperature': st.number_input('Enter the Temperature [°C]:', min_value=-10.0, max_value=50.0, value=20.0, step=0.1),
