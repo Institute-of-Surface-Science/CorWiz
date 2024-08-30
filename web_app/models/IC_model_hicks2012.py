@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .corrosion_model import corrosion_model
+from .corrosion_model import CorrosionModel
 
 
 '''
@@ -14,10 +14,10 @@ from .corrosion_model import corrosion_model
     }
 '''
 
-class atmospheric_pollutant_and_ph_dependent_corrosion_r(corrosion_model):
+class atmospheric_pollutant_and_ph_dependent_corrosion_r(CorrosionModel):
 
     def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
+        CorrosionModel.__init__(self)
         self.model_name = 'Corrosion modeling in marine structures'
         self.article_identifier = article_identifier
         self.steel = "A328 sheet steel"

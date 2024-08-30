@@ -1,5 +1,5 @@
 import streamlit as st
-from .corrosion_model import corrosion_model
+from .corrosion_model import CorrosionModel
 import numpy as np
 
 
@@ -17,10 +17,10 @@ import numpy as np
 
 '''
 
-class coated_mass_loss_model(corrosion_model):
+class coated_mass_loss_model(CorrosionModel):
 
     def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
+        CorrosionModel.__init__(self)
         self.model_name = 'Reliability of maintained, corrosion protected plates subjected to non-linear corrosion and compressive loads'
         self.article_identifier = article_identifier
         self.steel = "Steel"

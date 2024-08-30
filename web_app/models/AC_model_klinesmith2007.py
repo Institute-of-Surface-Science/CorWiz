@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from .corrosion_model import corrosion_model
+from .corrosion_model import CorrosionModel
 import numpy as np
 
 
@@ -17,10 +17,10 @@ import numpy as np
     }
 '''
 
-class sophisticated_corrosion_rate(corrosion_model):
+class sophisticated_corrosion_rate(CorrosionModel):
 
     def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
+        CorrosionModel.__init__(self)
         self.model_name = 'Effect of environmental conditions on corrosion rates'
         self.article_identifier = article_identifier
         self.steel = "Carbon Steel"

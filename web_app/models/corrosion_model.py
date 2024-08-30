@@ -2,18 +2,46 @@ from .model import Model
 from typing import List, Dict, Union, Tuple
 
 
-class corrosion_model:
-    def __init__(self):
-        self.article_identifier = 'parent class'
-        self.model_name = 'parent class'
+class CorrosionModel:
+    """
+    A base class for corrosion models.
 
+    This class serves as a template for specific corrosion models, providing basic attributes
+    and methods that can be overridden by subclasses.
 
-    def eval_material_loss(self):
-        pass
+    Attributes:
+        article_identifier (str): Identifier for the article or dataset used by the model.
+        model_name (str): The name of the corrosion model.
+    """
 
+    def __init__(self, article_identifier: str = 'parent class', model_name: str = 'parent class'):
+        """
+        Initializes the base corrosion model with default or specified article identifier and model name.
 
-    def get_model_name(self):
+        Args:
+            article_identifier (str): Identifier for the article or dataset used by the model. Defaults to 'parent class'.
+            model_name (str): The name of the corrosion model. Defaults to 'parent class'.
+        """
+        self.article_identifier = article_identifier
+        self.model_name = model_name
+
+    def eval_material_loss(self, *args, **kwargs):
+        """
+        Placeholder method for evaluating material loss.
+
+        This method should be overridden by subclasses to provide specific implementations.
+        """
+        raise NotImplementedError("This method should be implemented by subclasses.")
+
+    def get_model_name(self) -> str:
+        """
+        Returns the name of the corrosion model.
+
+        Returns:
+            str: The name of the model.
+        """
         return self.model_name
+
 
 
 

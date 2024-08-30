@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .corrosion_model import corrosion_model
+from .corrosion_model import CorrosionModel
     
 
 '''
@@ -21,10 +21,10 @@ from .corrosion_model import corrosion_model
 
 '''
 
-class thermo_nutrient_variability_steel_corrosion_model(corrosion_model):
+class thermo_nutrient_variability_steel_corrosion_model(CorrosionModel):
 
     def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
+        CorrosionModel.__init__(self)
         self.model_name = 'Long-term immersion corrosion of steel subject to large annual variations in seawater temperature and nutrient concentration'
         self.article_identifier = article_identifier
         self.steel = "Mild steel"

@@ -1,72 +1,81 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .corrosion_model import corrosion_model
+from typing import Tuple, Optional
+from .corrosion_model import CorrosionModel
 
+class GeneralCorrosionModel(CorrosionModel):
+    """
+    A general corrosion function in terms of atmospheric pollutant concentrations and rain pH.
 
-'''
-    @article{benarie1986general,
-    title={A general corrosion function in terms of atmospheric pollutant concentrations and rain pH},
-    author={Benarie, Michel and Lipfert, Frederick L},
-    journal={Atmospheric Environment (1967)},
-    volume={20},
-    number={10},
-    pages={1947--1958},
-    year={1986},
-    publisher={Elsevier}
-    }
-'''
+    This model is based on the research by Benarie and Lipfert (1986) and predicts material loss over time.
 
-class a_general_corrosion_function(corrosion_model):
+    Reference:
+        Benarie, Michel, and Frederick L. Lipfert.
+        "A general corrosion function in terms of atmospheric pollutant concentrations and rain pH."
+        Atmospheric Environment (1967) 20, no. 10 (1986): 1947-1958. Elsevier.
+    """
 
-
-    def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
+    def __init__(self, parameters: dict, article_identifier: str):
+        super().__init__()
         self.model_name = 'A general corrosion function in terms of atmospheric pollutant concentrations and rain pH'
         self.article_identifier = article_identifier
         self.steel = "Carbon Steel"
-        self.p = parameters
+        self.parameters = parameters
+        self.table_2 = self._load_data()
 
-    
-    def eval_corrosion_speed_and_exponent(self):
-        table_2 = pd.read_csv('../data/tables/' + self.article_identifier +'_tables_table_2.csv', header=None)
-        A = float(table_2.iloc[self.p['corrosion_site'], 1])
-        b = float(table_2.iloc[self.p['corrosion_site'], 2])
+    def _load_data(self) -> pd.DataFrame:
+        """Loads the relevant data table based on the article identifier."""
+        data_path = f'../data/tables/{self.article_identifier}_tables_table_2.csv'
+        return pd.read_csv(data_path, header=None)
 
-        return A, b 
+    def select_corrosion_site(self) -> int:
+        """Displays a selection box for corrosion sites and returns the selected site index."""
+        corrosion_sites = self.table_2.iloc[1:, 0]
+        selected_site = st.selectbox('Select corrosion site:', corrosion_sites)
+        return corrosion_sites.tolist().index(selected_site) + 1
 
-    
-    def eval_material_loss(self, time):
+    def display_site_info(self, corrosion_site: int) -> None:
+        """Displays information about the selected corrosion site."""
+        st.write(f'Selected site: {self.table_2.iloc[corrosion_site, 0]}')
+        st.write(f'Weight loss per wetness year, $A$ = {self.table_2.iloc[corrosion_site, 1]}')
+        st.write(f'Exponent, $b$ = {self.table_2.iloc[corrosion_site, 2]}')
+        st.write(f'$SO_2$ + $Cl^-$ deposits [$mg m^{-2} d^{-1}$] = {self.table_2.iloc[corrosion_site, 3]}')
+        st.write(f'$pH$ = {self.table_2.iloc[corrosion_site, 4]}')
+
+    def eval_corrosion_speed_and_exponent(self) -> Tuple[float, float]:
+        """Evaluates and returns the corrosion speed (A) and exponent (b) for the selected site."""
+        A = float(self.table_2.iloc[self.parameters['corrosion_site'], 1])
+        b = float(self.table_2.iloc[self.parameters['corrosion_site'], 2])
+        return A, b
+
+    def eval_material_loss(self, time: float) -> np.ndarray:
+        """Evaluates and returns the material loss over time."""
         A, n = self.eval_corrosion_speed_and_exponent()
-        
-        material_loss = A*time**n
-        return material_loss
-    
-
-def load_data(article_identifier):
-
-    return pd.read_csv('../data/tables/' + article_identifier +'_tables_table_2.csv', header=None)
+        return A * time ** n
 
 
-def get_corrosion_site(table_2):
-    corrosion_site = st.selectbox('Select corrosion site:', ((table_2.iloc[1:, 0])))
+def AC_model_benarie1986(article_identifier: str) -> Tuple[GeneralCorrosionModel, float]:
+    """
+    Runs the Benarie 1986 corrosion model using the specified article identifier.
 
-    return table_2.iloc[1:, 0].tolist().index(corrosion_site) + 1
+    Args:
+        article_identifier (str): The identifier for the article and data tables.
 
+    Returns:
+        Tuple[GeneralCorrosionModel, float]: An instance of the GeneralCorrosionModel class and the duration for which the model is evaluated.
 
-def display_site_info(table_2, corrosion_site):
-    st.write('Selected site: ' + table_2.iloc[corrosion_site, 0])
-    st.write(r'Weight loss per wetness year, $A$ = ' + str(table_2.iloc[corrosion_site, 1]))
-    st.write(r'Exponent, $b$ = ' + str(table_2.iloc[corrosion_site, 2]))
-    st.write(r'$SO_2$ + $Cl^-$ deposits [$mg m^{-2} d^{-1}$] = ' + str(table_2.iloc[corrosion_site, 3]))
-    st.write(r'$pH$ = ' + str(table_2.iloc[corrosion_site, 4]))
+    Reference:
+        Benarie, Michel, and Frederick L. Lipfert.
+        "A general corrosion function in terms of atmospheric pollutant concentrations and rain pH."
+        Atmospheric Environment (1967) 20, no. 10 (1986): 1947-1958. Elsevier.
+    """
+    time_duration = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1)
+    model = GeneralCorrosionModel(parameters={}, article_identifier=article_identifier)
 
+    corrosion_site = model.select_corrosion_site()
+    model.parameters['corrosion_site'] = corrosion_site
 
-def AC_model_benarie1986(article_identifier):
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    table_2 = load_data(article_identifier)
-    corrosion_site = get_corrosion_site(table_2)
-    parameters = {'corrosion_site': int(corrosion_site)}
-    display_site_info(table_2, corrosion_site)
-    
-    return a_general_corrosion_function(parameters, article_identifier), time
+    model.display_site_info(corrosion_site)
+
+    return model, time_duration

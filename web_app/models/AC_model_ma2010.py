@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .corrosion_model import corrosion_model
+from .corrosion_model import CorrosionModel
 
 
 '''
@@ -17,10 +17,10 @@ from .corrosion_model import corrosion_model
     }
 '''
 
-class tropical_marine_env(corrosion_model):
+class tropical_marine_env(CorrosionModel):
 
     def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
+        CorrosionModel.__init__(self)
         self.model_name = 'The atmospheric corrosion kinetics of low carbon steel in a tropical marine environment'
         self.article_identifier = article_identifier
         self.steel = "Low Carbon Steel (Q235)"

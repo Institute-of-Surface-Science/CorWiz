@@ -1,12 +1,12 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .corrosion_model import corrosion_model
+from .corrosion_model import CorrosionModel
 
-class iso_9224(corrosion_model):
+class iso_9224(CorrosionModel):
 
     def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
+        CorrosionModel.__init__(self)
         self.model_name = 'ISO 9223:2012 and ISO 9224:2012'
         self.article_identifier = article_identifier
         self.steel = "Unalloyed Steel"

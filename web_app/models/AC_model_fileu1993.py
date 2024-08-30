@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from .corrosion_model import corrosion_model
+from .corrosion_model import CorrosionModel
 import numpy as np
 
 
@@ -16,10 +16,10 @@ import numpy as np
     publisher={Elsevier}
 '''
 
-class i_the_prediction_of_atmospheric_corrosion_from_met(corrosion_model):
+class i_the_prediction_of_atmospheric_corrosion_from_met(CorrosionModel):
    
     def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
+        CorrosionModel.__init__(self)
         self.model_name = 'The prediction of atmospheric corrosion from meteorological and pollution parameters—I. Annual corrosion'
         self.article_identifier = article_identifier
         self.steel = "Carbon Steel"
