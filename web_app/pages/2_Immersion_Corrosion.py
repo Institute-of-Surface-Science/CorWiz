@@ -64,9 +64,9 @@ with text_column:
              
         [8] https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5506901/
             
-        [9] https://www.researchgate.net/publication/375567525_Underwater_Cultural_Heritage_and_the_Sustainable_Development_Goals
+        [9] https://bluepapers.nl/index.php/bp/article/view/71
              
-        [10] https://www.researchgate.net/publication/326383712_Subsea_Pipeline_Corrosion_Estimation_by_Restoring_and_Enhancing_Degraded_Underwater_Images/figures?lo=1
+        [10] https://ieeexplore.ieee.org/document/8410876
     """)
 
 with image_column:

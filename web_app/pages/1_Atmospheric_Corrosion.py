@@ -62,11 +62,11 @@ with text_column:
             
         [8] https://www.corrosionpedia.com/5-most-common-types-of-metal-coatings-that-everyone-should-know-about/2/6894
              
-        [9] https://www.google.com/amp/s/www.azom.com/amp/article.aspx%3fArticleID=97
+        [9] https://www.corrosionpedia.com/2/1525/corrosion/system-dependent-corrosion-in-piping-systems
              
         [10] https://link.springer.com/chapter/10.1007/978-3-319-97625-9_12
              
-        [11] https://www.google.com/amp/s/www.worldpipelines.com/business-news/13012017/sulzer-comments-on-corrosion-and-erosion/amp/
+        [11] https://www.azom.com/article.aspx?ArticleID=97
              
         [12] https://www.corrosionpedia.com/2/1525/corrosion/system-dependent-corrosion-in-piping-systems
     """)
