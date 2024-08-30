@@ -1,98 +1,98 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
+from typing import Dict, Tuple
 from .corrosion_model import CorrosionModel
 
 
-'''
-    @article{Ali_2020, title={The empirical prediction of weight change and corrosion rate of low-carbon steel}, 
-    volume={6}, 
-    ISSN={2405-8440}, 
-    url={http://dx.doi.org/10.1016/j.heliyon.2020.e05050}, 
-    DOI={10.1016/j.heliyon.2020.e05050}, 
-    number={9}, 
-    journal={Heliyon}, 
-    publisher={Elsevier BV}, 
-    author={Ali, Nurdin and Fulazzaky, Mohamad Ali}, 
-    year={2020}, 
-    month=sep, 
-    pages={e05050} }
+class Ali2010Model(CorrosionModel):
+    """
+    A corrosion model based on the study by Ali and Fulazzaky (2020) which predicts the weight change
+    and corrosion rate of low-carbon steel.
 
-'''
+    Reference:
+        Ali, Nurdin, and Mohamad Ali Fulazzaky.
+        "The empirical prediction of weight change and corrosion rate of low-carbon steel."
+        Heliyon, 6(9), e05050 (2020). Elsevier.
+    """
 
-class empirical_prediction_model(CorrosionModel):
-
-    def __init__(self, parameters, article_identifier):
-        CorrosionModel.__init__(self)
-        self.model_name = 'The empirical prediction of weight change and corrosion rate of low-carbon steel'
-        self.article_identifier = article_identifier
+    def __init__(self, parameters: Dict[str, float]):
+        super().__init__(model_name='Empirical Prediction of Weight Change and Corrosion Rate of Low-Carbon Steel')
         self.steel = "Low carbon steel"
-        self.p = parameters
+        self.parameters = parameters
+        self.article_identifier = "ali2020"
 
-    
-    def eval_material_loss(self, time):
-        material_loss = (0.00006*self.p['C'] + 0.0008)*time + self.p['b']
+    def eval_material_loss(self, time: float) -> float:
+        """
+        Evaluates the material loss over time based on the provided parameters.
 
+        Args:
+            time (float): The time duration in years.
+
+        Returns:
+            float: The calculated material loss.
+        """
+        material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time + self.parameters['b']
         return material_loss
-    
-
-def get_constant_value(nacl_conc, table):
-    nacl_concs = np.array(table.iloc[1:, 0].astype(int))
-    constants = np.array(table.iloc[1:, 2].astype(float))
-    # Check if the year is exactly in the data
-    if nacl_conc in nacl_concs:
-        return constants[nacl_concs == nacl_conc][0]
-    else:
-        # Interpolate the exponent value for the given year
-        constant_value = np.interp(nacl_conc, nacl_concs, constants)
-        return constant_value
-    
-
-def load_data(article_identifier):
-    table_3 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_3.csv', header=None)
-
-    return table_3
 
 
-def get_input(symbol, limits):
-    limit = limits[symbol]
-    value = st.text_input(f"${symbol}$ - Enter {limit['desc']}  [ ${limit['unit']}$ ]:", value=limit['lower'])
-    
-    if value:
-        try:
-            value = float(value)
-            if value < limit['lower'] or value > limit['upper']:
-                st.error(f"Please enter a value between {limit['lower']} and {limit['upper']} ${limit['unit']}$")
-            else:
-                st.success(f"Value accepted: {value} ${limit['unit']}$")
-        except ValueError:
-            st.error("Please enter a valid number.")
+def get_parameters(limits: Dict[str, Dict[str, float]]) -> Dict[str, float]:
+    """
+    Retrieves the parameters required for the corrosion model based on user input.
 
-    return float(value)
+    Args:
+        limits (Dict[str, Dict[str, float]]): A dictionary containing parameter limits and descriptions.
 
-
-def get_parameters(limits):
+    Returns:
+        Dict[str, float]: A dictionary of parameters with their user-provided values.
+    """
     parameters = {}
-    for symbol in limits.keys():
-        parameters[symbol] = get_input(symbol, limits)
+    for symbol, limit in limits.items():
+        value = st.text_input(f"${symbol}$ - Enter {limit['desc']}  [ ${limit['unit']}$ ]:", value=limit['lower'])
+
+        if value:
+            try:
+                value = float(value)
+                if not (limit['lower'] <= value <= limit['upper']):
+                    st.error(f"Please enter a value between {limit['lower']} and {limit['upper']} ${limit['unit']}$")
+                else:
+                    st.success(f"Value accepted: {value} ${limit['unit']}$")
+                    parameters[symbol] = value
+            except ValueError:
+                st.error("Please enter a valid number.")
+                parameters[symbol] = limit['lower']
+        else:
+            parameters[symbol] = limit['lower']
 
     return parameters
 
 
-def display_formulas():
-    st.write(r'Mass loss due to corrosion, $W_L [um] = (0.00006C + 0.0008)t + b $ ')
+def IC_model_ali2020(article_identifier: str) -> Tuple[Ali2010Model, float]:
+    """
+    Executes the Ali 2020 corrosion model.
 
+    Returns:
+        Tuple[Ali2010Model, float]: An instance of the EmpiricalPredictionModel class and the duration for which the model is evaluated.
+    """
+    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1)
 
-def IC_model_ali2020(article_identifier):
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
     limits = {
-        'C': {'desc': 'Concentration of NaCl', 'lower': 0, 'upper': 5, 'unit': '%w/w'},
+        'C': {'desc': 'Concentration of NaCl', 'lower': 0.0, 'upper': 5.0, 'unit': '%w/w'},
     }
+
     parameters = get_parameters(limits)
 
-    table_3 = load_data(article_identifier)
+    # Load the data and calculate 'b' directly
+    table_3 = pd.read_csv('../data/tables/ali2020_tables_table_3.csv', header=None)
+    nacl_concs = np.array(table_3.iloc[1:, 0].astype(float))
+    constants = np.array(table_3.iloc[1:, 2].astype(float))
 
-    parameters['b'] = get_constant_value(parameters['C'], table_3)
+    # Interpolate or get the exact 'b' value
+    if parameters['C'] in nacl_concs:
+        parameters['b'] = constants[nacl_concs == parameters['C']][0]
+    else:
+        parameters['b'] = np.interp(parameters['C'], nacl_concs, constants)
 
-    display_formulas()
-    return empirical_prediction_model(parameters, article_identifier), time
+    st.write(r'Mass loss due to corrosion, $W_L [\mu m] = (0.00006C + 0.0008)t + b $')
+
+    return Ali2010Model(parameters), time
