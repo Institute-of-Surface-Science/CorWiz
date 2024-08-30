@@ -1,7 +1,15 @@
 import streamlit as st
 from streamlit_extras.stylable_container import stylable_container
+from streamlit_extras.add_vertical_space import add_vertical_space
 
 from helper import display_logo
+
+def add_footer():
+    with st.container():
+        add_vertical_space(20)
+
+    footer_container = stylable_container(key="footer-box", css_styles="""{background-color: white}""")
+    setup_footer(footer_container)
 
 
 def setup_footer(footer_container):
@@ -26,7 +34,7 @@ def setup_footer(footer_container):
                 display_logo(
                     url="https://www.helmholtz-metadaten.de",
                     img_src="./app/static/logos/hmc.png",
-                    width="80%",
+                    width="100%",
                     alt_text="Logo of the Helmholtz Metadata Colaboration www.helmholtz-metadaten.de",
                 )
 

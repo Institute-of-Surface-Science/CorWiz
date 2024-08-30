@@ -1,6 +1,6 @@
 import streamlit as st
 
-
+# TODO: add background color option
 def display_logo(url, img_src, alt_text, width="auto", height="auto"):
     simple_id = "img-" + img_src.replace("/", "").replace(".", "")
 
@@ -20,7 +20,6 @@ def display_logo(url, img_src, alt_text, width="auto", height="auto"):
         </div>
         """
     )
-
 
 def local_css(file_name):
     with open(file_name) as f:
