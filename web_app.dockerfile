@@ -47,4 +47,4 @@ HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 WORKDIR /app/web_app
 
 # Run the application
-ENTRYPOINT ["pipenv", "run", "streamlit", "run", "website.py", "--server.port=8501", "--server.address=0.0.0.0"]
+ENTRYPOINT ["pipenv", "run", "streamlit", "run", "Home.py", "--server.port=8501", "--server.address=0.0.0.0"]

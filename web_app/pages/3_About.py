@@ -12,7 +12,6 @@ from helper import display_logo
 add_header()
 
 st.markdown("# About")
-st.sidebar.markdown("# About")
 
 top_container = st.container()
 bottom_container = st.container()
