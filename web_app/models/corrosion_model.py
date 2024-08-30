@@ -33,15 +33,6 @@ class CorrosionModel:
         """
         raise NotImplementedError("This method should be implemented by subclasses.")
 
-    def get_model_name(self) -> str:
-        """
-        Returns the name of the corrosion model.
-
-        Returns:
-            str: The name of the model.
-        """
-        return self.model_name
-
 
 
 
