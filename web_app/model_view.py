@@ -16,7 +16,7 @@ def display_model_info(model: Model) -> None:
 def run_model(model_identifier: str):
     """Runs the selected model using the provided identifier."""
     model_functions = {
-        'model_feliu1993': AC_model_fileu1993,
+        'model_feliu1993': AC_model_feliu1993,
         'din-corrosion-protection-model-iso-9223-compliant': AC_model_iso9223,
         'model_ma2010': AC_model_ma2010,
         'model_benarie1986': AC_model_benarie1986,
@@ -91,7 +91,7 @@ def display_model_view(container):
                 selected_corrosion_type = st.selectbox('**Corrosion Type**', corrosion_types)
 
                 filtered_models = [model for model, process_type in model_process_pairs if process_type == selected_corrosion_type]
-                selected_model = st.selectbox('**Model**', filtered_models, format_func=lambda model: model.name)
+                selected_model = st.selectbox('**Model**', filtered_models, format_func=lambda model: model.name + " (" + model.kadi_identifier + ")")
 
                 model, time_range = run_model(selected_model.kadi_identifier)
 
