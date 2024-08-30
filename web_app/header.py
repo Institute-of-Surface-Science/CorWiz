@@ -3,6 +3,10 @@ from streamlit_extras.stylable_container import stylable_container
 
 from helper import display_logo
 
+def add_header():
+    header_container = st.container()
+    setup_header(header_container)
+
 
 def setup_header(header_container):
     with header_container:
