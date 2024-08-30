@@ -24,7 +24,7 @@ def setup_footer(footer_container):
                 st.markdown(
                     """
                     <div style='display: flex; align-items: center; justify-content: center; height: 100%; padding: 10px 0;'>
-                        <a href='/imprint' target='_self' style='display: flex; align-items: center; justify-content: center;'>
+                        <a href='/Imprint' target='_self' style='display: flex; align-items: center; justify-content: center;'>
                             <img src='./app/static/buttons/imprint.png' alt='Imprint' style='width: auto; height: 50px;'>
                         </a>
                     </div>
@@ -36,7 +36,7 @@ def setup_footer(footer_container):
                 st.markdown(
                     """
                     <div style='display: flex; align-items: center; justify-content: center; height: 100%; padding: 10px 0;'>
-                        <a href='/data_protection' target='_self' style='display: flex; align-items: center; justify-content: center;'>
+                        <a href='/Data_protection' target='_self' style='display: flex; align-items: center; justify-content: center;'>
                             <img src='./app/static/buttons/data_protection.png' alt='Data Protection' style='width: auto; height: 50px;'>
                         </a>
                     </div>
