@@ -81,8 +81,8 @@ def AC_model_soares1999(article_identifier: str) -> Tuple[Soares1999Model, float
 
     limits = {
         'd_inf': {'desc': 'Long term thickness of corrosion wastage', 'lower': 0.001, 'upper': 1000, 'unit': 'mm'},
-        't_c': {'desc': 'Coating life', 'lower': 0, 'upper': 100, 'unit': 'years'},
-        't_t': {'desc': 'Transition time', 'lower': 0, 'upper': 100, 'unit': 'years'}
+        't_c': {'desc': 'Coating life', 'lower': 0.01, 'upper': 100, 'unit': 'years'},
+        't_t': {'desc': 'Transition time', 'lower': 0.01, 'upper': 100, 'unit': 'years'}
     }
 
     parameters = get_parameters(limits)
