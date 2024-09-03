@@ -17,8 +17,8 @@ class Ma2010Model(CorrosionModel):
 
     DATA_FILE_PATH = '../data/tables/ma2010_tables_table_2.csv'
 
-    def __init__(self):
-        super().__init__(model_name='The Atmospheric Corrosion Kinetics of Low Carbon Steel in a Tropical Marine Environment')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Ma2010Model')
         self.parameters: Dict[str, float] = {}
         self.table_2 = self._load_data()
 

@@ -21,11 +21,10 @@ class Hicks2012Model(CorrosionModel):
         'table_8': '../data/tables/hicks2012_tables_table_8.csv'
     }
 
-    def __init__(self):
-        super().__init__(model_name='Risk Assessment Tool for Accelerated Corrosion in Port Infrastructure')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Hicks2012Model')
         self.steel = "A328 Sheet Steel"
         self.parameters: Dict[str, float] = {}
-        self._display_reference_values()
 
     def _display_reference_values(self) -> None:
         """Displays the reference values related to the study."""
@@ -53,6 +52,7 @@ class Hicks2012Model(CorrosionModel):
             'Dissolved Organic Carbon': st.number_input(r'Enter the Dissolved Organic Carbon content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="dissolved_organic_carbon"),
             'Dissolved Copper': st.number_input(r'Enter the Dissolved Copper content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="dissolved_copper")
         }
+        self._display_reference_values()
 
     def evaluate_material_loss(self, time: float) -> float:
         """

@@ -20,8 +20,8 @@ class ISO9223Model(CorrosionModel):
         'table_9224_3': '../data/tables/din-en-iso-92232012-05_tables_9224_table_3.csv'
     }
 
-    def __init__(self):
-        super().__init__(model_name='ISO 9223:2012 and ISO 9224:2012')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='ISO9223Model')
         self.parameters: Dict[str, float] = {}
         self.table_2, self.table_3, self.table_b3, self.table_b4, self.table_c1, self.table_9224_3 = self._load_data()
 

@@ -17,8 +17,8 @@ class Ali2010Model(CorrosionModel):
 
     DATA_FILE_PATH = '../data/tables/ali2020_tables_table_3.csv'
 
-    def __init__(self):
-        super().__init__(model_name='Empirical Prediction of Weight Change and Corrosion Rate of Low-Carbon Steel')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Ali2010Model')
         self.parameters: Dict[str, float] = {}
         self.table_3 = self._load_data()
 

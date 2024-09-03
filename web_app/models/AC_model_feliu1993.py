@@ -18,8 +18,8 @@ class Feliu1993Model(CorrosionModel):
     DATA_FILE_PATH_2 = '../data/tables/feliu1993_tables_table_2.csv'
     DATA_FILE_PATH_4 = '../data/tables/feliu1993_tables_table_4.csv'
 
-    def __init__(self):
-        super().__init__(model_name='Feliu1993 Corrosion Model')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Feliu1993Model')
         self.parameters: Dict[str, float] = {}
         self.table_2, self.table_4 = self._load_data()
 

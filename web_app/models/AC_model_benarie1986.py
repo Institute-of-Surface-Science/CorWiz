@@ -18,8 +18,8 @@ class Benarie1986Model(CorrosionModel):
     DATA_FILE_PATH = '../data/tables/benarie1986_tables_table_2.csv'
     DEFAULT_CORROSION_SITE_KEY = 'corrosion_site'
 
-    def __init__(self):
-        super().__init__(model_name='Benarie1986 Corrosion Model')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Feliu1993Model')
         self.parameters: Dict[str, float] = {}
         self.table_2 = self._load_data()
 

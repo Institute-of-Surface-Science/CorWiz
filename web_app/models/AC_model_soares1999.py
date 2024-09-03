@@ -14,8 +14,8 @@ class Soares1999Model(CorrosionModel):
         Marine Structures, 12(6), 425-445 (1999). Elsevier.
     """
 
-    def __init__(self):
-        super().__init__(model_name='Reliability of Maintained, Corrosion Protected Plates')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Soares1999Model')
         self.parameters: Dict[str, float] = {}
 
     def display_parameters(self) -> None:

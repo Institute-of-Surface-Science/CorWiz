@@ -16,8 +16,8 @@ class Kovalenko2016Model(CorrosionModel):
 
     DATA_FILE_PATH = '../data/tables/kovalenko2016_tables_table_3.csv'
 
-    def __init__(self):
-        super().__init__(model_name='Long-term Immersion Corrosion of Steel in Variable Seawater Conditions')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Kovalenko2016Model')
         self.parameters: Dict[str, float] = {}
         self.table = self._load_data()
 

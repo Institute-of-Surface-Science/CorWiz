@@ -1,28 +1,29 @@
+import os
+import json
+from typing import List, Dict, Union, Tuple, Optional
 from .model import Model
-from typing import List, Union, Tuple
 
 
-class CorrosionModel:
+class CorrosionModel(Model):
     """
-    A base class for corrosion models.
+    A base class for corrosion models, inheriting from the Model class.
 
     This class serves as a template for specific corrosion models, providing basic attributes
     and methods that can be overridden by subclasses.
 
     Attributes:
-        article_identifier (str): Identifier for the article or dataset used by the model.
         model_name (str): The name of the corrosion model.
     """
 
-    def __init__(self, article_identifier: str = 'parent class', model_name: str = 'parent class'):
+    def __init__(self, json_file_path: str, model_name: str = 'parent class'):
         """
-        Initializes the base corrosion model with default or specified article identifier and model name.
+        Initializes the corrosion model with a JSON file and a specified model name.
 
         Args:
-            article_identifier (str): Identifier for the article or dataset used by the model. Defaults to 'parent class'.
+            json_file_path (str): Path to the JSON file containing model details.
             model_name (str): The name of the corrosion model. Defaults to 'parent class'.
         """
-        self.article_identifier = article_identifier
+        super().__init__(json_file_path)  # Initialize the Model base class
         self.model_name = model_name
 
     def evaluate_material_loss(self, *args, **kwargs):
@@ -32,8 +33,6 @@ class CorrosionModel:
         This method should be overridden by subclasses to provide specific implementations.
         """
         raise NotImplementedError("This method should be implemented by subclasses.")
-
-
 
 
 class CorrosionProcessTypeError(Exception):
@@ -93,3 +92,5 @@ def get_corrosion_process_type(models: Union[Model, List[Model]]) -> Union[Tuple
 
     else:
         raise TypeError("Input must be a Model instance or a list of Model instances.")
+
+

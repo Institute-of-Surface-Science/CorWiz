@@ -2,8 +2,11 @@ import numpy as np
 import streamlit as st
 import plotly.express as px
 import streamlit.components.v1 as components
+import json
+import os
 
 from models import *
+from typing import Union, List
 
 def display_model_info(model: Model) -> None:
     """Displays the model description and notes."""
@@ -11,9 +14,20 @@ def display_model_info(model: Model) -> None:
     if model.special_note:
         st.markdown("#### Model Notes: \n" + model.special_note)
 
-def create_model(model_identifier: str):
-    """Runs the selected model using the provided identifier."""
-    model_functions = {
+def load_corrosion_models_from_directory(directory_paths: Union[str, List[str]]) -> List[CorrosionModel]:
+    """Loads all corrosion models from JSON files in the specified directory or directories.
+
+    Args:
+        directory_paths (Union[str, List[str]]): A single directory path or a list of directory paths.
+
+    Returns:
+        List[CorrosionModel]: A list of CorrosionModel instances loaded from the JSON files in the specified directory or directories.
+
+    Raises:
+        ValueError: If a directory does not exist or no JSON files are found.
+    """
+    # Mapping from identifiers to their respective corrosion model classes
+    model_classes = {
         'model_benarie1986': Benarie1986Model,
         'model_feliu1993': Feliu1993Model,
         'din-corrosion-protection-model-iso-9223-compliant': ISO9223Model,
@@ -26,7 +40,38 @@ def create_model(model_identifier: str):
         'model_kovalenko2016': Kovalenko2016Model,
     }
 
-    return  model_functions[model_identifier]()
+    if isinstance(directory_paths, str):
+        directory_paths = [directory_paths]  # Convert to a list for uniform processing
+
+    corrosion_models = []
+    for directory_path in directory_paths:
+        if not os.path.isdir(directory_path):
+            raise ValueError(f"The specified directory does not exist: {directory_path}")
+
+        json_files = [os.path.join(directory_path, f) for f in os.listdir(directory_path) if f.endswith('.json')]
+        if not json_files:
+            raise ValueError(f"No JSON files found in the specified directory: {directory_path}")
+
+        for json_file in json_files:
+            try:
+                # Load the JSON data
+                with open(json_file, 'r', encoding='utf-8') as file:
+                    data = json.load(file)
+
+                # Determine the model identifier
+                model_identifier = data.get('identifier', '')
+
+                # Match the identifier with the corresponding class
+                if model_identifier in model_classes:
+                    corrosion_model = model_classes[model_identifier](json_file)
+                    corrosion_models.append(corrosion_model)
+                else:
+                    print(f"Warning: No matching corrosion model class for identifier '{model_identifier}' in file {json_file}")
+
+            except (ValueError, json.JSONDecodeError) as e:
+                print(f"Warning: Error processing JSON file at {json_file}: {str(e)}")
+
+    return corrosion_models
 
 def plot_mass_loss_over_time(model, time_range):
     """Generates and embeds a Plotly figure for mass loss over time into Streamlit."""
@@ -61,7 +106,7 @@ def display_model_view(container):
         '../data/kadi4mat_json/atmospheric_corrosion_models/'
     ]
 
-    models = load_models_from_directory(model_directories)
+    models = load_corrosion_models_from_directory(model_directories)
 
     with container:
         st.write("---")
@@ -84,11 +129,10 @@ def display_model_view(container):
 
                 time_range = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
 
-                model = create_model(selected_model.kadi_identifier)
-                model.display_parameters()
+                selected_model.display_parameters()
 
             with plot_column:
-                plot_mass_loss_over_time(model, time_range)
+                plot_mass_loss_over_time(selected_model, time_range)
 
         with description_content:
             description_expander = st.expander("**Model Description**", expanded=False)

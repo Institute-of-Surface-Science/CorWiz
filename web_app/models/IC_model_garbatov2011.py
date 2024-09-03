@@ -15,8 +15,8 @@ class Garbatov2011Model(CorrosionModel):
         Marine Technology and Engineering, 2011.
     """
 
-    def __init__(self):
-        super().__init__(model_name='Corrosion Modeling in Marine Structures')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Garbatov2011Model')
         self.parameters: Dict[str, float] = {}
 
     def display_parameters(self) -> None:
