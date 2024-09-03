@@ -4,7 +4,7 @@ from .AC_model_iso9223 import run_iso9223_model
 from .AC_model_klinesmith2007 import run_klinesmith2007_model
 from .AC_model_ma2010 import run_ma2010_model
 from .AC_model_soares1999 import run_soares1999_model
-from .IC_model_ali2020 import IC_model_ali2020
+from .IC_model_ali2020 import run_ali2020_model
 from .IC_model_garbatov2011 import IC_model_garbatov2011
 from .IC_model_hicks2012 import IC_model_hicks2012
 from .IC_model_kovalenko2016 import IC_model_kovalenko2016
