@@ -17,7 +17,6 @@ class Garbatov2011Model(CorrosionModel):
 
     def __init__(self, parameters: Optional[Dict[str, float]] = None):
         super().__init__(model_name='Corrosion Modeling in Marine Structures')
-        self.steel = "Mild Carbon Steel"
         self.parameters = parameters if parameters else self._get_parameters()
 
     def _get_parameters(self) -> Dict[str, float]:

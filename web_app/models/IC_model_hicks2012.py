@@ -1,9 +1,8 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 from .corrosion_model import CorrosionModel
-
 
 class Hicks2012Model(CorrosionModel):
     """
@@ -16,11 +15,40 @@ class Hicks2012Model(CorrosionModel):
         Great Lakes Maritime Research Institute, 2012.
     """
 
-    def __init__(self, parameters: Dict[str, float]):
+    def __init__(self, parameters: Optional[Dict[str, float]] = None):
         super().__init__(model_name='Risk Assessment Tool for Accelerated Corrosion in Port Infrastructure')
         self.steel = "A328 Sheet Steel"
-        self.parameters = parameters
-        self.article_identifier = "hicks2012"
+        self.parameters = parameters if parameters else self._get_parameters()
+        self._display_reference_values()
+
+    def _get_parameters(self) -> Dict[str, float]:
+        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
+        parameters = {
+            'Alkalinity': st.number_input(r'Enter the Alkalinity [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="alkalinity"),
+            'Chloride': st.number_input(r'Enter the Chloride content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="chloride"),
+            'Sulfate': st.number_input(r'Enter the Sulfate content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="sulfate"),
+            'Larson Skold Index': st.number_input(r'Enter the Larson Skold Index:', min_value=0.0, value=0.1, step=0.1, key="larson_skold"),
+            'Conductivity': st.number_input(r'Enter the Conductivity [$\mu D cm^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="conductivity"),
+            'pH': st.number_input(r'Enter the pH:', min_value=0.0, value=7.0, step=0.1, key="ph"),
+            'Dissolved Oxygen': st.number_input(r'Enter the Dissolved Oxygen content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="dissolved_oxygen"),
+            'Dissolved Organic Carbon': st.number_input(r'Enter the Dissolved Organic Carbon content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="dissolved_organic_carbon"),
+            'Dissolved Copper': st.number_input(r'Enter the Dissolved Copper content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="dissolved_copper")
+        }
+
+        return parameters
+
+    def _display_reference_values(self) -> None:
+        """Displays the reference values related to the study."""
+        with st.expander("Reference Values"):
+            # Display relevant data tables
+            st.title('Statistical relationship between the long-term rate of steel corrosion (mm/yr) and various water quality parameters measured during 2010 at ten sites in the Duluth-Superior Harbor.')
+            st.table(pd.read_csv('../data/tables/hicks2012_tables_table_2.csv'))
+
+            st.title('Water quality measurements made from 9-10 August 2010 in the Duluth-Superior Harbor.')
+            st.table(pd.read_csv('../data/tables/hicks2012_tables_table_7.csv'))
+
+            st.title('Water quality measurements made from 26-27 July 2011 in the Duluth-Superior Harbor and three harbors on the north shore of Lake Superior.')
+            st.table(pd.read_csv('../data/tables/hicks2012_tables_table_8.csv'))
 
     def eval_material_loss(self, time: float) -> float:
         """
@@ -60,48 +88,15 @@ class Hicks2012Model(CorrosionModel):
         return material_loss
 
 
-def get_parameters() -> Dict[str, float]:
+# Example of usage
+def run_hicks2012_model() -> Tuple[Hicks2012Model, float]:
     """
-    Retrieves the parameters required for the Hicks 2012 corrosion model based on user input.
-
-    Returns:
-        Dict[str, float]: A dictionary of parameters with their user-provided values.
-    """
-    parameters = {
-        'Alkalinity': st.number_input(r'Enter the Alkalinity [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1),
-        'Chloride': st.number_input(r'Enter the Chloride content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1),
-        'Sulfate': st.number_input(r'Enter the Sulfate content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1),
-        'Larson Skold Index': st.number_input(r'Enter the Larson Skold Index:', min_value=0.0, value=0.1, step=0.1),
-        'Conductivity': st.number_input(r'Enter the Conductivity [$\mu D cm^{-1}$]:', min_value=0.0, value=0.1, step=0.1),
-        'pH': st.number_input(r'Enter the pH:', min_value=0.0, value=7.0, step=0.1),
-        'Dissolved Oxygen': st.number_input(r'Enter the Dissolved Oxygen content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1),
-        'Dissolved Organic Carbon': st.number_input(r'Enter the Dissolved Organic Carbon content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1),
-        'Dissolved Copper': st.number_input(r'Enter the Dissolved Copper content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1)
-    }
-
-    return parameters
-
-
-def IC_model_hicks2012() -> Tuple[Hicks2012Model, float]:
-    """
-    Executes the Hicks 2012 corrosion model.
+    Runs the Hicks 2012 corrosion model.
 
     Returns:
         Tuple[Hicks2012Model, float]: An instance of the Hicks2012Model class and the duration for which the model is evaluated.
     """
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1)
+    time_duration = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1, key="duration")
+    model = Hicks2012Model()
 
-    parameters = get_parameters()
-
-    with st.expander("Reference Values"):
-        # Display relevant data tables
-        st.title('Statistical relationship between the long-term rate of steel corrosion (mm/yr) and various water quality parameters measured during 2010 at ten sites in the Duluth-Superior Harbor.')
-        st.table(pd.read_csv('../data/tables/hicks2012_tables_table_2.csv'))
-
-        st.title('Water quality measurements made from 9-10 August 2010 in the Duluth-Superior Harbor.')
-        st.table(pd.read_csv('../data/tables/hicks2012_tables_table_7.csv'))
-
-        st.title('Water quality measurements made from 26-27 July 2011 in the Duluth-Superior Harbor and three harbors on the north shore of Lake Superior.')
-        st.table(pd.read_csv('../data/tables/hicks2012_tables_table_8.csv'))
-
-    return Hicks2012Model(parameters), time
+    return model, time_duration
