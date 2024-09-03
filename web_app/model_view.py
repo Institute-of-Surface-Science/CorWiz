@@ -20,7 +20,7 @@ def run_model(model_identifier: str):
         'model_feliu1993': run_feliu1993_model,
         'din-corrosion-protection-model-iso-9223-compliant': run_iso9223_model,
         'model_klinesmith2007': run_klinesmith2007_model,
-        'model_ma2010': AC_model_ma2010,
+        'model_ma2010': run_ma2010_model,
         'model_soares1999': AC_model_soares1999,
         'model_ali2020': IC_model_ali2020,
         'model_kovalenko2016': IC_model_kovalenko2016,

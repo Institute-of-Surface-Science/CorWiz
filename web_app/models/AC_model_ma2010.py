@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 from .corrosion_model import CorrosionModel
 
 
@@ -16,12 +16,44 @@ class Ma2010Model(CorrosionModel):
         Corrosion Science, 52(5), 1796-1800 (2010). Elsevier.
     """
 
-    def __init__(self, parameters: Dict[str, float]):
+    DATA_FILE_PATH = '../data/tables/ma2010_tables_table_2.csv'
+
+    def __init__(self, parameters: Optional[Dict[str, float]] = None):
         super().__init__(
             model_name='The Atmospheric Corrosion Kinetics of Low Carbon Steel in a Tropical Marine Environment')
         self.steel = "Low Carbon Steel (Q235)"
-        self.parameters = parameters
-        self.article_identifier = "ma2010"
+        self.parameters = parameters if parameters else self._get_parameters()
+
+    def _get_parameters(self) -> Dict[str, float]:
+        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
+        table_2 = pd.read_csv(self.DATA_FILE_PATH, header=None)
+
+        # Display the table and allow user to select the corrosion site
+        st.table(table_2)
+        corrosion_sites = table_2.iloc[1:, 0].tolist()
+        corrosion_site = st.selectbox('Select corrosion site:', corrosion_sites)
+        corrosion_site_index = corrosion_sites.index(corrosion_site) + 1
+
+        limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
+
+        parameters = {
+            'corrosion_site': corrosion_site_index,
+        }
+
+        # Collect user input for the distance parameter
+        for symbol, limit in limits.items():
+            value = st.number_input(
+                f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:",
+                min_value=float(limit['lower']),
+                max_value=float(limit['upper']),
+                value=float(limit['lower']),
+                step=0.01,
+                key=f"input_{symbol}"
+            )
+            if symbol == 'D':
+                parameters['distance'] = value
+
+        return parameters
 
     def eval_material_loss(self, time: float) -> float:
         """Calculates the material loss over time based on the provided environmental parameters."""
@@ -57,67 +89,15 @@ class Ma2010Model(CorrosionModel):
         return A * time ** n
 
 
-def get_parameters(article_identifier: str, limits: Dict[str, Dict[str, float]]) -> Dict[str, float]:
+# Example of usage
+def run_ma2010_model() -> Tuple[Ma2010Model, float]:
     """
-    Loads data, retrieves the corrosion site, and gathers parameters required for the corrosion model based on user input.
-
-    Args:
-        article_identifier (str): The identifier for the article.
-        limits (Dict[str, Dict[str, float]]): A dictionary containing parameter limits and descriptions.
+    Runs the Ma 2010 corrosion model.
 
     Returns:
-        Dict[str, float]: A dictionary of parameters with their user-provided values.
+        Tuple[Ma2010Model, float]: An instance of the Ma2010Model class and the duration for which the model is evaluated.
     """
-    # Load data
-    table_2 = pd.read_csv(f'../data/tables/{article_identifier}_tables_table_2.csv', header=None)
+    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
+    model = Ma2010Model()
 
-    # Initialize parameters dictionary
-    parameters = {}
-
-    # Display the corrosion site selection box
-    st.table(table_2)
-    corrosion_site = st.selectbox('Select corrosion site:', table_2.iloc[1:, 0])
-    parameters['corrosion_site'] = int(table_2.iloc[1:, 0].tolist().index(corrosion_site) + 1)
-
-    # Collect user inputs for other parameters
-    for symbol, limit in limits.items():
-        value = st.text_input(f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:", value=limit['lower'])
-
-        if value:
-            try:
-                value = float(value)
-                if not (limit['lower'] <= value <= limit['upper']):
-                    st.error(f"Please enter a value between {limit['lower']} and {limit['upper']} {limit['unit']}.")
-                else:
-                    st.success(f"Value accepted: {value} {limit['unit']}")
-                    # Map 'D' to 'distance'
-                    if symbol == 'D':
-                        parameters['distance'] = value
-                    else:
-                        parameters[symbol] = value
-            except ValueError:
-                st.error("Please enter a valid number.")
-        else:
-            if symbol == 'D':
-                parameters['distance'] = limit['lower']  # Assign a default value if no input is provided
-            else:
-                parameters[symbol] = limit['lower']
-
-    return parameters
-
-
-
-def AC_model_ma2010() -> Tuple[Ma2010Model, float]:
-    """
-    Executes the Ma 2010 corrosion model.
-
-    Returns:
-        Tuple[Ma2010Model, float]: An instance of the TropicalMarineEnvironmentModel class
-                                                      and the duration for which the model is evaluated.
-    """
-    time = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
-    limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
-
-    parameters = get_parameters("ma2010", limits)
-
-    return Ma2010Model(parameters), time
+    return model, time_duration
