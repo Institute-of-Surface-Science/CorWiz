@@ -1,9 +1,8 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 from .corrosion_model import CorrosionModel
-
 
 class Garbatov2011Model(CorrosionModel):
     """
@@ -16,11 +15,40 @@ class Garbatov2011Model(CorrosionModel):
         Marine Technology and Engineering, 2011.
     """
 
-    def __init__(self, parameters: Dict[str, float]):
+    def __init__(self, parameters: Optional[Dict[str, float]] = None):
         super().__init__(model_name='Corrosion Modeling in Marine Structures')
         self.steel = "Mild Carbon Steel"
-        self.parameters = parameters
-        self.article_identifier = "garbatov2011"
+        self.parameters = parameters if parameters else self._get_parameters()
+
+    def _get_parameters(self) -> Dict[str, float]:
+        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
+        parameters = {
+            'Temperature': st.number_input(
+                'Enter the Temperature [°C]:',
+                min_value=-10.0,
+                max_value=50.0,
+                value=20.0,
+                step=0.1,
+                key="temperature"
+            ),
+            'Dissolved Oxygen Concentration': st.number_input(
+                'Enter the Dissolved Oxygen Concentration [ml/l]:',
+                min_value=0.0,
+                max_value=14.6,
+                value=6.0,
+                step=0.1,
+                key="oxygen_concentration"
+            ),
+            'Flow Velocity': st.number_input(
+                'Enter the Flow Velocity [m/s]:',
+                min_value=0.0,
+                max_value=10.0,
+                value=1.0,
+                step=0.1,
+                key="flow_velocity"
+            )
+        }
+        return parameters
 
     def eval_material_loss(self, time: float) -> float:
         """
@@ -54,19 +82,15 @@ class Garbatov2011Model(CorrosionModel):
         return material_loss
 
 
-def IC_model_garbatov2011() -> Tuple[Garbatov2011Model, float]:
+# Example of usage
+def run_garbatov2011_model() -> Tuple[Garbatov2011Model, float]:
     """
-    Executes the Garbatov 2011 corrosion model.
+    Runs the Garbatov 2011 corrosion model.
 
     Returns:
         Tuple[Garbatov2011Model, float]: An instance of the Garbatov2011Model class and the duration for which the model is evaluated.
     """
-    time = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
+    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
+    model = Garbatov2011Model()
 
-    parameters = {
-        'Temperature': st.number_input('Enter the Temperature [°C]:', min_value=-10.0, max_value=50.0, value=20.0, step=0.1),
-        'Dissolved Oxygen Concentration': st.number_input('Enter the Dissolved Oxygen Concentration [ml/l]:', min_value=0.0, max_value=14.6, value=6.0, step=0.1),
-        'Flow Velocity': st.number_input('Enter the Flow Velocity [m/s]:', min_value=0.0, max_value=10.0, value=1.0, step=0.1)
-    }
-
-    return Garbatov2011Model(parameters), time
+    return model, time_duration

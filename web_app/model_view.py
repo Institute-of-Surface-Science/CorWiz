@@ -23,9 +23,9 @@ def run_model(model_identifier: str):
         'model_ma2010': run_ma2010_model,
         'model_soares1999': run_soares1999_model,
         'model_ali2020': run_ali2020_model,
+        'model_garbatov2011': run_garbatov2011_model,
+        'model_hicks2012': IC_model_hicks2012,
         'model_kovalenko2016': IC_model_kovalenko2016,
-        'model_garbatov2011': IC_model_garbatov2011,
-        'model_hicks2012': IC_model_hicks2012
     }
 
     return model_functions[model_identifier]()
