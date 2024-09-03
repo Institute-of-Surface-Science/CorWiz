@@ -1,6 +1,6 @@
 from .AC_model_benarie1986 import run_benarie1986_model
 from .AC_model_feliu1993 import run_feliu1993_model
-from .AC_model_iso9223 import AC_model_iso9223
+from .AC_model_iso9223 import run_iso9223_model
 from .AC_model_klinesmith2007 import AC_model_klinesmith2007
 from .AC_model_ma2010 import AC_model_ma2010
 from .AC_model_soares1999 import AC_model_soares1999

@@ -16,10 +16,10 @@ def display_model_info(model: Model) -> None:
 def run_model(model_identifier: str):
     """Runs the selected model using the provided identifier."""
     model_functions = {
-        'model_feliu1993': run_feliu1993_model,
-        'din-corrosion-protection-model-iso-9223-compliant': AC_model_iso9223,
-        'model_ma2010': AC_model_ma2010,
         'model_benarie1986': run_benarie1986_model,
+        'model_feliu1993': run_feliu1993_model,
+        'din-corrosion-protection-model-iso-9223-compliant': run_iso9223_model,
+        'model_ma2010': AC_model_ma2010,
         'model_soares1999': AC_model_soares1999,
         'model_klinesmith2007': AC_model_klinesmith2007,
         'model_ali2020': IC_model_ali2020,
