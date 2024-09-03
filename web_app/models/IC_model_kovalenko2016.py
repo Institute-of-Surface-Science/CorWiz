@@ -1,57 +1,71 @@
 import pandas as pd
 import streamlit as st
-import numpy as np
-from .corrosion_model import corrosion_model
-    
+from typing import Dict, Tuple, Optional
+from .corrosion_model import CorrosionModel
 
-'''
-    @article{Kovalenko_2016, 
-    title={Long-term immersion corrosion of steel subject to large annual variations in seawater temperature and nutrient concentration}, 
-    volume={13}, 
-    ISSN={1744-8980}, 
-    url={http://dx.doi.org/10.1080/15732479.2016.1229797}, 
-    DOI={10.1080/15732479.2016.1229797}, 
-    number={8}, 
-    journal={Structure and Infrastructure Engineering}, 
-    publisher={Informa UK Limited}, 
-    author={Kovalenko, Roman and Melchers, Robert E. and Chernov, Boris}, 
-    year={2016}, 
-    month=sep, 
-    pages={978–987} }
+class Kovalenko2016Model(CorrosionModel):
+    """
+    A corrosion model based on the study by Kovalenko et al. (2016) which evaluates long-term immersion corrosion
+    of steel subjected to large annual variations in seawater temperature and nutrient concentration.
 
-'''
+    Reference:
+        Kovalenko, Roman, Robert E. Melchers, and Boris Chernov.
+        "Long-term immersion corrosion of steel subject to large annual variations in seawater temperature and nutrient concentration."
+        Structure and Infrastructure Engineering, 13(8), 978-987 (2016). Informa UK Limited.
+    """
 
-class thermo_nutrient_variability_steel_corrosion_model(corrosion_model):
+    DATA_FILE_PATH = '../data/tables/kovalenko2016_tables_table_3.csv'
 
-    def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
-        self.model_name = 'Long-term immersion corrosion of steel subject to large annual variations in seawater temperature and nutrient concentration'
-        self.article_identifier = article_identifier
-        self.steel = "Mild steel"
-        self.p = parameters
+    def __init__(self, parameters: Optional[Dict[str, float]] = None):
+        super().__init__(model_name='Long-term Immersion Corrosion of Steel in Variable Seawater Conditions')
+        self.parameters = parameters if parameters else self._get_parameters()
 
-    
-    def eval_material_loss(self, time):
-        material_loss = self.p['c_s'] + time*self.p['r_s']
-        return material_loss
+    def _get_parameters(self) -> Dict[str, float]:
+        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
+        table = pd.read_csv(self.DATA_FILE_PATH, header=None)
+
+        # Display the condition reference table
+        self.display_condition_reference_table(table)
+
+        # Select condition based on user input
+        condition_index = st.selectbox('Select the Temperature and Dissolved Inorganic Nitrogen condition:', table.iloc[1:, 0])
+        condition_index = int(condition_index)
+
+        # Extract the relevant parameters based on the selected condition
+        parameters = {
+            'c_s': float(table.iloc[condition_index, 3]),
+            'r_s': float(table.iloc[condition_index, 4])
+        }
+
+        return parameters
+
+    def display_condition_reference_table(self, table: pd.DataFrame) -> None:
+        """Displays the condition reference table."""
+        with st.expander("Condition Reference Table"):
+            st.table(table.iloc[:, 1:-2])
+
+    def eval_material_loss(self, time: float) -> float:
+        """
+        Evaluates the material loss over time based on the provided parameters.
+
+        Args:
+            time (float): The time duration in years.
+
+        Returns:
+            float: The calculated material loss.
+        """
+        return self.parameters['c_s'] + time * self.parameters['r_s']
 
 
-def load_data(article_identifier):
-    table_3 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_3.csv', header=None)
+# Example of usage
+def run_kovalenko2016_model() -> Tuple[Kovalenko2016Model, float]:
+    """
+    Runs the Kovalenko 2016 corrosion model.
 
-    return table_3
+    Returns:
+        Tuple[Kovalenko2016Model, float]: An instance of the Kovalenko2016Model class and the duration for which the model is evaluated.
+    """
+    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
+    model = Kovalenko2016Model()
 
-
-def IC_model_kovalenko2016(article_identifier):
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    table_3 = load_data(article_identifier)
-    st.table(table_3.iloc[:, 1:-2 ])
-
-    parameters = {}
-
-    parameters['Condition'] = int(st.selectbox('Select the Temperature and Dissolved Inorganic Nitrogen', (table_3.iloc[1:, 0])))
-
-    parameters['c_s'] = float(table_3.iloc[parameters['Condition'], 3])
-    parameters['r_s'] = float(table_3.iloc[parameters['Condition'], 4])
-    
-    return thermo_nutrient_variability_steel_corrosion_model(parameters, article_identifier), time
+    return model, time_duration
