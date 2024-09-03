@@ -1,5 +1,5 @@
 from .model import Model
-from typing import List, Dict, Union, Tuple
+from typing import List, Union, Tuple
 
 
 class CorrosionModel:
