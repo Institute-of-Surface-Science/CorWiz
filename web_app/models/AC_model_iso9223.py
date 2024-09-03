@@ -2,7 +2,6 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 from scipy.interpolate import interp1d
-from .corrosion_model import corrosion_model
 from typing import Tuple, Optional
 from .corrosion_model import CorrosionModel
 
