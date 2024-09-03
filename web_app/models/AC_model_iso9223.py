@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Tuple, Optional
+from typing import Dict, Tuple
 from .corrosion_model import CorrosionModel
 
 class ISO9223Model(CorrosionModel):
@@ -20,11 +20,10 @@ class ISO9223Model(CorrosionModel):
         'table_9224_3': '../data/tables/din-en-iso-92232012-05_tables_9224_table_3.csv'
     }
 
-    def __init__(self, parameters: Optional[dict] = None):
+    def __init__(self):
         super().__init__(model_name='ISO 9223:2012 and ISO 9224:2012')
-        self.parameters = parameters if parameters else {}
+        self.parameters: Dict[str, float] = {}
         self.table_2, self.table_3, self.table_b3, self.table_b4, self.table_c1, self.table_9224_3 = self._load_data()
-        self._initialize_model()
 
     def _load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """Loads the relevant data tables for the ISO 9224 model."""
@@ -37,8 +36,8 @@ class ISO9223Model(CorrosionModel):
             pd.read_csv(self.DATA_FILE_PATHS['table_9224_3'], header=None)
         )
 
-    def _initialize_model(self) -> None:
-        """Initializes the model by setting up the parameters and selecting corrosion type."""
+    def display_parameters(self) -> None:
+        """Displays the parameters selection interface for the user."""
         with st.expander("Description Corrosion Type"):
             st.table(self.table_c1)
 
@@ -110,7 +109,7 @@ class ISO9223Model(CorrosionModel):
         else:
             return float(st.number_input('Enter exponent:', key="manual_exponent"))
 
-    def eval_material_loss(self, time: float) -> float:
+    def evaluate_material_loss(self, time: float) -> float:
         """Calculates and returns the material loss over time based on the provided parameters."""
 
         # Calculate corrosion speed if not provided

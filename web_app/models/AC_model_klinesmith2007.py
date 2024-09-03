@@ -4,7 +4,6 @@ import numpy as np
 from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 
-
 class KlineSmith2007Model(CorrosionModel):
     """
     A corrosion model based on the study by Klinesmith et al. (2007) which evaluates the effect of environmental
@@ -18,11 +17,11 @@ class KlineSmith2007Model(CorrosionModel):
 
     DATA_FILE_PATH = '../data/tables/klinesmith2007_tables_table_2.csv'
 
-    def __init__(self, parameters: Optional[Dict[str, float]] = None):
+    def __init__(self):
         super().__init__(model_name='Effect of Environmental Conditions on Corrosion Rates')
         self.specimen_type = self._select_specimen_type()
-        self.parameters = parameters if parameters else self._get_parameters()
         self.coefficients = self._load_coefficients()
+        self.parameters = {}
 
     def _select_specimen_type(self) -> str:
         """Allows the user to select the specimen type dynamically from the CSV file."""
@@ -42,8 +41,8 @@ class KlineSmith2007Model(CorrosionModel):
 
         return coefficients
 
-    def _get_parameters(self) -> Dict[str, float]:
-        """Prompts the user to input values for all parameters within defined limits and returns a dictionary of the parameters."""
+    def display_parameters(self) -> None:
+        """Prompts the user to input values for all parameters within defined limits."""
         limits = {
             'T': {'desc': 'Temperature', 'lower': -17.1, 'upper': 28.7, 'unit': '°C'},
             'TOW': {'desc': 'Time of Wetness', 'lower': 0.01, 'upper': 1.0, 'unit': 'annual fraction'},
@@ -51,9 +50,8 @@ class KlineSmith2007Model(CorrosionModel):
             'Cl': {'desc': 'Cl⁻ Deposit', 'lower': 0.4, 'upper': 760.5, 'unit': 'mg/(m²⋅d)'}
         }
 
-        parameters = {}
         for symbol, limit in limits.items():
-            value = st.number_input(
+            self.parameters[symbol] = st.number_input(
                 f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:",
                 min_value=limit['lower'],
                 max_value=limit['upper'],
@@ -61,21 +59,18 @@ class KlineSmith2007Model(CorrosionModel):
                 step=0.01,
                 key=f"input_{symbol}"
             )
-            parameters[symbol] = value
 
-        return parameters
-
-    def eval_material_loss(self, time: float) -> float:
+    def evaluate_material_loss(self, time: float) -> float:
         """Calculates the material loss over time based on the provided environmental parameters."""
         coeffs = self.coefficients
 
         # Calculate material loss using the model equation
         material_loss = (
-                coeffs['A'] * (time ** coeffs['B']) *
-                ((self.parameters['TOW'] * 365 * 24 / coeffs['C']) ** coeffs['D']) *
-                (1 + (self.parameters['SO2'] / coeffs['E']) ** coeffs['F']) *
-                (1 + (self.parameters['Cl'] / coeffs['G']) ** coeffs['H']) *
-                (np.exp(coeffs['J'] * (self.parameters['T'] + coeffs['T0'])))
+            coeffs['A'] * (time ** coeffs['B']) *
+            ((self.parameters['TOW'] * 365 * 24 / coeffs['C']) ** coeffs['D']) *
+            (1 + (self.parameters['SO2'] / coeffs['E']) ** coeffs['F']) *
+            (1 + (self.parameters['Cl'] / coeffs['G']) ** coeffs['H']) *
+            (np.exp(coeffs['J'] * (self.parameters['T'] + coeffs['T0'])))
         )
 
         return material_loss

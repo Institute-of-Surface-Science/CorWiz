@@ -16,35 +16,35 @@ class Kovalenko2016Model(CorrosionModel):
 
     DATA_FILE_PATH = '../data/tables/kovalenko2016_tables_table_3.csv'
 
-    def __init__(self, parameters: Optional[Dict[str, float]] = None):
+    def __init__(self):
         super().__init__(model_name='Long-term Immersion Corrosion of Steel in Variable Seawater Conditions')
-        self.parameters = parameters if parameters else self._get_parameters()
+        self.parameters: Dict[str, float] = {}
+        self.table = self._load_data()
 
-    def _get_parameters(self) -> Dict[str, float]:
-        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
-        table = pd.read_csv(self.DATA_FILE_PATH, header=None)
+    def _load_data(self) -> pd.DataFrame:
+        """Loads the relevant data table for the Kovalenko2016 model."""
+        return pd.read_csv(self.DATA_FILE_PATH, header=None)
 
-        # Display the condition reference table
-        self.display_condition_reference_table(table)
+    def display_parameters(self) -> None:
+        """Prompts the user to input values for all parameters and selects the appropriate condition."""
+        self._display_condition_reference_table()
 
         # Select condition based on user input
-        condition_index = st.selectbox('Select the Temperature and Dissolved Inorganic Nitrogen condition:', table.iloc[1:, 0])
+        condition_index = st.selectbox('Select the Temperature and Dissolved Inorganic Nitrogen condition:', self.table.iloc[1:, 0])
         condition_index = int(condition_index)
 
         # Extract the relevant parameters based on the selected condition
-        parameters = {
-            'c_s': float(table.iloc[condition_index, 3]),
-            'r_s': float(table.iloc[condition_index, 4])
+        self.parameters = {
+            'c_s': float(self.table.iloc[condition_index, 3]),
+            'r_s': float(self.table.iloc[condition_index, 4])
         }
 
-        return parameters
-
-    def display_condition_reference_table(self, table: pd.DataFrame) -> None:
+    def _display_condition_reference_table(self) -> None:
         """Displays the condition reference table."""
         with st.expander("Condition Reference Table"):
-            st.table(table.iloc[:, 1:-2])
+            st.table(self.table.iloc[:, 1:-2])
 
-    def eval_material_loss(self, time: float) -> float:
+    def evaluate_material_loss(self, time: float) -> float:
         """
         Evaluates the material loss over time based on the provided parameters.
 
@@ -55,4 +55,3 @@ class Kovalenko2016Model(CorrosionModel):
             float: The calculated material loss.
         """
         return self.parameters['c_s'] + time * self.parameters['r_s']
-

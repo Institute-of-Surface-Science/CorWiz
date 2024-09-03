@@ -15,13 +15,13 @@ class Garbatov2011Model(CorrosionModel):
         Marine Technology and Engineering, 2011.
     """
 
-    def __init__(self, parameters: Optional[Dict[str, float]] = None):
+    def __init__(self):
         super().__init__(model_name='Corrosion Modeling in Marine Structures')
-        self.parameters = parameters if parameters else self._get_parameters()
+        self.parameters: Dict[str, float] = {}
 
-    def _get_parameters(self) -> Dict[str, float]:
-        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
-        parameters = {
+    def display_parameters(self) -> None:
+        """Prompts the user to input values for all parameters and stores them in the parameters dictionary."""
+        self.parameters = {
             'Temperature': st.number_input(
                 'Enter the Temperature [°C]:',
                 min_value=-10.0,
@@ -47,9 +47,8 @@ class Garbatov2011Model(CorrosionModel):
                 key="flow_velocity"
             )
         }
-        return parameters
 
-    def eval_material_loss(self, time: float) -> float:
+    def evaluate_material_loss(self, time: float) -> float:
         """
         Evaluates the material loss over time based on the provided parameters.
 
@@ -79,4 +78,3 @@ class Garbatov2011Model(CorrosionModel):
         material_loss = corrosion_rate * time
 
         return material_loss
-

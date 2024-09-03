@@ -1,4 +1,3 @@
-
 import numpy as np
 import streamlit as st
 import plotly.express as px
@@ -12,8 +11,7 @@ def display_model_info(model: Model) -> None:
     if model.special_note:
         st.markdown("#### Model Notes: \n" + model.special_note)
 
-
-def run_model(model_identifier: str):
+def create_model(model_identifier: str):
     """Runs the selected model using the provided identifier."""
     model_functions = {
         'model_benarie1986': Benarie1986Model,
@@ -28,13 +26,12 @@ def run_model(model_identifier: str):
         'model_kovalenko2016': Kovalenko2016Model,
     }
 
-    return model_functions[model_identifier]()
-
+    return  model_functions[model_identifier]()
 
 def plot_mass_loss_over_time(model, time_range):
     """Generates and embeds a Plotly figure for mass loss over time into Streamlit."""
     t = np.linspace(0, time_range, 400)
-    D = model.eval_material_loss(t)
+    D = model.evaluate_material_loss(t)
 
     fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [um]'}, title="Mass Loss Over Time",
                   height=700)
@@ -51,7 +48,6 @@ def plot_mass_loss_over_time(model, time_range):
         height=800,
         scrolling=True
     )
-
 
 def display_model_view(container):
     """
@@ -88,7 +84,8 @@ def display_model_view(container):
 
                 time_range = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
 
-                model = run_model(selected_model.kadi_identifier)
+                model = create_model(selected_model.kadi_identifier)
+                model.display_parameters()
 
             with plot_column:
                 plot_mass_loss_over_time(model, time_range)

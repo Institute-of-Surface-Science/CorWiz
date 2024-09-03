@@ -15,15 +15,34 @@ class Hicks2012Model(CorrosionModel):
         Great Lakes Maritime Research Institute, 2012.
     """
 
-    def __init__(self, parameters: Optional[Dict[str, float]] = None):
+    DATA_FILE_PATHS = {
+        'table_2': '../data/tables/hicks2012_tables_table_2.csv',
+        'table_7': '../data/tables/hicks2012_tables_table_7.csv',
+        'table_8': '../data/tables/hicks2012_tables_table_8.csv'
+    }
+
+    def __init__(self):
         super().__init__(model_name='Risk Assessment Tool for Accelerated Corrosion in Port Infrastructure')
         self.steel = "A328 Sheet Steel"
-        self.parameters = parameters if parameters else self._get_parameters()
+        self.parameters: Dict[str, float] = {}
         self._display_reference_values()
 
-    def _get_parameters(self) -> Dict[str, float]:
-        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
-        parameters = {
+    def _display_reference_values(self) -> None:
+        """Displays the reference values related to the study."""
+        with st.expander("Reference Values"):
+            # Display relevant data tables
+            st.title('Statistical relationship between the long-term rate of steel corrosion (mm/yr) and various water quality parameters measured during 2010 at ten sites in the Duluth-Superior Harbor.')
+            st.table(pd.read_csv(self.DATA_FILE_PATHS['table_2']))
+
+            st.title('Water quality measurements made from 9-10 August 2010 in the Duluth-Superior Harbor.')
+            st.table(pd.read_csv(self.DATA_FILE_PATHS['table_7']))
+
+            st.title('Water quality measurements made from 26-27 July 2011 in the Duluth-Superior Harbor and three harbors on the north shore of Lake Superior.')
+            st.table(pd.read_csv(self.DATA_FILE_PATHS['table_8']))
+
+    def display_parameters(self) -> None:
+        """Prompts the user to input values for all parameters and stores them in the parameters dictionary."""
+        self.parameters = {
             'Alkalinity': st.number_input(r'Enter the Alkalinity [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="alkalinity"),
             'Chloride': st.number_input(r'Enter the Chloride content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="chloride"),
             'Sulfate': st.number_input(r'Enter the Sulfate content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="sulfate"),
@@ -35,22 +54,7 @@ class Hicks2012Model(CorrosionModel):
             'Dissolved Copper': st.number_input(r'Enter the Dissolved Copper content [$mg L^{-1}$]:', min_value=0.0, value=0.1, step=0.1, key="dissolved_copper")
         }
 
-        return parameters
-
-    def _display_reference_values(self) -> None:
-        """Displays the reference values related to the study."""
-        with st.expander("Reference Values"):
-            # Display relevant data tables
-            st.title('Statistical relationship between the long-term rate of steel corrosion (mm/yr) and various water quality parameters measured during 2010 at ten sites in the Duluth-Superior Harbor.')
-            st.table(pd.read_csv('../data/tables/hicks2012_tables_table_2.csv'))
-
-            st.title('Water quality measurements made from 9-10 August 2010 in the Duluth-Superior Harbor.')
-            st.table(pd.read_csv('../data/tables/hicks2012_tables_table_7.csv'))
-
-            st.title('Water quality measurements made from 26-27 July 2011 in the Duluth-Superior Harbor and three harbors on the north shore of Lake Superior.')
-            st.table(pd.read_csv('../data/tables/hicks2012_tables_table_8.csv'))
-
-    def eval_material_loss(self, time: float) -> float:
+    def evaluate_material_loss(self, time: float) -> float:
         """
         Evaluates the material loss over time based on the provided parameters.
 
@@ -86,4 +90,3 @@ class Hicks2012Model(CorrosionModel):
         material_loss = corrosion_rate * time
 
         return material_loss
-

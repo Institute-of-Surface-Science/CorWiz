@@ -25,7 +25,7 @@ class CorrosionModel:
         self.article_identifier = article_identifier
         self.model_name = model_name
 
-    def eval_material_loss(self, *args, **kwargs):
+    def evaluate_material_loss(self, *args, **kwargs):
         """
         Placeholder method for evaluating material loss.
 
