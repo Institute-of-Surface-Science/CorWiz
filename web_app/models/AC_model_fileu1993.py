@@ -44,8 +44,6 @@ class i_the_prediction_of_atmospheric_corrosion_from_met(corrosion_model):
     
 
     def evaluate_exponent(self):
-        print('\n\n\n')
-        print(self.article_identifier)
         table_4 = pd.read_csv('../data/tables/' + self.article_identifier +'_tables_table_4.csv', header=None)
         if self.p['Atmosphere'] == 0:
             exponent = table_4.iloc[1, 1]

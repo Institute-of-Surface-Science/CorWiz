@@ -27,25 +27,29 @@ class empirical_prediction_model(corrosion_model):
         self.model_name = 'The empirical prediction of weight change and corrosion rate of low-carbon steel'
         self.article_identifier = article_identifier
         self.steel = "Low carbon steel"
+        self.mass_loss_unit = '(mg)'
         self.p = parameters
 
     
     def eval_material_loss(self, time):
-        material_loss = (0.00006*self.p['C'] + 0.0008)*time + self.p['b']
+        material_loss = (0.00006*self.p['C'] + 0.0008)*(time*365*24) + self.p['b']
 
         return material_loss
     
 
 def get_constant_value(nacl_conc, table):
     nacl_concs = np.array(table.iloc[1:, 0].astype(int))
-    constants = np.array(table.iloc[1:, 2].astype(float))
-    # Check if the year is exactly in the data
+    constant_a = np.array(table.iloc[1:, 1].astype(float))
+    constant_b = np.array(table.iloc[1:, 2].astype(float))
+    
     if nacl_conc in nacl_concs:
-        return constants[nacl_concs == nacl_conc][0]
+        print(constant_a[nacl_concs == nacl_conc][0], constant_b[nacl_concs == nacl_conc][0])
+        return constant_a[nacl_concs == nacl_conc][0], constant_b[nacl_concs == nacl_conc][0]
     else:
-        # Interpolate the exponent value for the given year
-        constant_value = np.interp(nacl_conc, nacl_concs, constants)
-        return constant_value
+        constant_a = np.interp(nacl_conc, nacl_concs, constant_a)
+        constant_b = np.interp(nacl_conc, nacl_concs, constant_b)
+        print(constant_a, constant_b)
+        return constant_a, constant_b
     
 
 def load_data(article_identifier):
@@ -86,13 +90,13 @@ def display_formulas():
 def IC_model_ali2020(article_identifier):
     time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
     limits = {
-        'C': {'desc': 'Concentration of NaCl', 'lower': 0, 'upper': 5, 'unit': '%w/w'},
+        'C': {'desc': 'Concentration of NaCl', 'lower': 0, 'upper': 5, 'unit': '\%w/w'},
     }
     parameters = get_parameters(limits)
 
     table_3 = load_data(article_identifier)
 
-    parameters['b'] = get_constant_value(parameters['C'], table_3)
+    parameters['a'], parameters['b'] = get_constant_value(parameters['C'], table_3)
 
     display_formulas()
     return empirical_prediction_model(parameters, article_identifier), time
