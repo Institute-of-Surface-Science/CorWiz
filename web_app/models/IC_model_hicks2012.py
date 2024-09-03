@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 
 class Hicks2012Model(CorrosionModel):
@@ -87,16 +87,3 @@ class Hicks2012Model(CorrosionModel):
 
         return material_loss
 
-
-# Example of usage
-def run_hicks2012_model() -> Tuple[Hicks2012Model, float]:
-    """
-    Runs the Hicks 2012 corrosion model.
-
-    Returns:
-        Tuple[Hicks2012Model, float]: An instance of the Hicks2012Model class and the duration for which the model is evaluated.
-    """
-    time_duration = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1, key="duration")
-    model = Hicks2012Model()
-
-    return model, time_duration

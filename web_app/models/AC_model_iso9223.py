@@ -4,7 +4,7 @@ import numpy as np
 from typing import Tuple, Optional
 from .corrosion_model import CorrosionModel
 
-class ISO9224Model(CorrosionModel):
+class ISO9223Model(CorrosionModel):
     """
     A corrosion model based on ISO 9223:2012 and ISO 9224:2012 standards.
 
@@ -135,16 +135,3 @@ class ISO9224Model(CorrosionModel):
                                                            time - 20))
 
         return material_loss
-
-
-# Example of usage
-def run_iso9223_model() -> Tuple[ISO9224Model, float]:
-    """
-    Runs the ISO 9224 corrosion model.
-
-    Returns:
-        Tuple[ISO9224Model, float]: An instance of the ISO9224Model class and the duration for which the model is evaluated.
-    """
-    model = ISO9224Model()
-    time_duration = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1)
-    return model, time_duration

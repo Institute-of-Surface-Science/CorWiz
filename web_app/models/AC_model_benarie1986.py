@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Optional, Tuple
+from typing import Optional
 from .corrosion_model import CorrosionModel
 
 
@@ -71,17 +71,3 @@ class Benarie1986Model(CorrosionModel):
         A = float(self.table_2.iloc[site_index, 1])
         n = float(self.table_2.iloc[site_index, 2])
         return A * time ** n
-
-
-# TODO: will be removed
-def run_benarie1986_model() -> Tuple[Benarie1986Model, float]:
-    """
-    Runs the Benarie1986 corrosion model.
-
-    Returns:
-        Tuple[Benarie1986Model, float]: An instance of the Benarie1986Model class and the duration for which the model is evaluated.
-    """
-    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
-    model = Benarie1986Model()
-
-    return model, time_duration

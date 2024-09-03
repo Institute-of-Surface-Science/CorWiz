@@ -94,16 +94,3 @@ class Feliu1993Model(CorrosionModel):
         material_loss = annual_corrosion * np.power(time, exponent)
         return material_loss
 
-
-# Example of usage
-def run_feliu1993_model() -> Tuple[Feliu1993Model, float]:
-    """
-    Runs the Feliu1993 corrosion model.
-
-    Returns:
-        Tuple[Feliu1993Model, float]: An instance of the Feliu1993Model class and the duration for which the model is evaluated.
-    """
-    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
-    model = Feliu1993Model()
-
-    return model, time_duration

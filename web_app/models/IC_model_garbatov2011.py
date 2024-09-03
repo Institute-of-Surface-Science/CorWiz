@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 
 class Garbatov2011Model(CorrosionModel):
@@ -80,16 +80,3 @@ class Garbatov2011Model(CorrosionModel):
 
         return material_loss
 
-
-# Example of usage
-def run_garbatov2011_model() -> Tuple[Garbatov2011Model, float]:
-    """
-    Runs the Garbatov 2011 corrosion model.
-
-    Returns:
-        Tuple[Garbatov2011Model, float]: An instance of the Garbatov2011Model class and the duration for which the model is evaluated.
-    """
-    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
-    model = Garbatov2011Model()
-
-    return model, time_duration
