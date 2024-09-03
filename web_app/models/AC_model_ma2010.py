@@ -21,7 +21,6 @@ class Ma2010Model(CorrosionModel):
     def __init__(self, parameters: Optional[Dict[str, float]] = None):
         super().__init__(
             model_name='The Atmospheric Corrosion Kinetics of Low Carbon Steel in a Tropical Marine Environment')
-        self.steel = "Low Carbon Steel (Q235)"
         self.parameters = parameters if parameters else self._get_parameters()
 
     def _get_parameters(self) -> Dict[str, float]:

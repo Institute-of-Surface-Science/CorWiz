@@ -21,7 +21,7 @@ def run_model(model_identifier: str):
         'din-corrosion-protection-model-iso-9223-compliant': run_iso9223_model,
         'model_klinesmith2007': run_klinesmith2007_model,
         'model_ma2010': run_ma2010_model,
-        'model_soares1999': AC_model_soares1999,
+        'model_soares1999': run_soares1999_model,
         'model_ali2020': IC_model_ali2020,
         'model_kovalenko2016': IC_model_kovalenko2016,
         'model_garbatov2011': IC_model_garbatov2011,
