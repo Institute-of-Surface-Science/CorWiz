@@ -54,7 +54,7 @@ class Garbatov2011Model(CorrosionModel):
         return material_loss
 
 
-def IC_model_garbatov2011(article_identifier: str) -> Tuple[Garbatov2011Model, float]:
+def IC_model_garbatov2011() -> Tuple[Garbatov2011Model, float]:
     """
     Executes the Garbatov 2011 corrosion model.
 

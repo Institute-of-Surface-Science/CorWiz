@@ -166,7 +166,7 @@ def get_corrosion_speed(corrosion_type_index: int, table_2: pd.DataFrame) -> flo
     return corrosion_speed
 
 
-def AC_model_iso9223(article_identifier: str) -> Tuple[ISO9224Model, float]:
+def AC_model_iso9223() -> Tuple[ISO9224Model, float]:
     """
     Executes the ISO 9224 corrosion model.
 

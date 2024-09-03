@@ -107,7 +107,7 @@ def get_parameters(article_identifier: str, limits: Dict[str, Dict[str, float]])
 
 
 
-def AC_model_ma2010(article_identifier: str) -> Tuple[Ma2010Model, float]:
+def AC_model_ma2010() -> Tuple[Ma2010Model, float]:
     """
     Executes the Ma 2010 corrosion model.
 

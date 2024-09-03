@@ -67,7 +67,7 @@ def get_parameters(limits: Dict[str, Dict[str, float]]) -> Dict[str, float]:
     return parameters
 
 
-def IC_model_ali2020(article_identifier: str) -> Tuple[Ali2010Model, float]:
+def IC_model_ali2020() -> Tuple[Ali2010Model, float]:
     """
     Executes the Ali 2020 corrosion model.
 

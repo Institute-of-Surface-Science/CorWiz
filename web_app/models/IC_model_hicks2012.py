@@ -82,7 +82,7 @@ def get_parameters() -> Dict[str, float]:
     return parameters
 
 
-def IC_model_hicks2012(article_identifier: str) -> Tuple[Hicks2012Model, float]:
+def IC_model_hicks2012() -> Tuple[Hicks2012Model, float]:
     """
     Executes the Hicks 2012 corrosion model.
 

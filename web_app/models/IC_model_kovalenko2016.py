@@ -64,7 +64,7 @@ def get_parameters(article_identifier: str) -> Dict[str, float]:
     return parameters
 
 
-def IC_model_kovalenko2016(article_identifier: str) -> Tuple[Kovalenko2016Model, float]:
+def IC_model_kovalenko2016() -> Tuple[Kovalenko2016Model, float]:
     """
     Executes the Kovalenko 2016 corrosion model.
 

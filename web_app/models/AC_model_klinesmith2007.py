@@ -71,7 +71,7 @@ def get_parameters(limits: Dict[str, Dict[str, float]]) -> Dict[str, float]:
     return parameters
 
 
-def AC_model_klinesmith2007(article_identifier: str) -> Tuple[KlineSmith2007Model, float]:
+def AC_model_klinesmith2007() -> Tuple[KlineSmith2007Model, float]:
     """
     Executes the Klinesmith 2007 corrosion model.
 

@@ -70,7 +70,7 @@ def get_parameters(limits: Dict[str, Dict[str, float]]) -> Dict[str, float]:
     return parameters
 
 
-def AC_model_soares1999(article_identifier: str) -> Tuple[Soares1999Model, float]:
+def AC_model_soares1999() -> Tuple[Soares1999Model, float]:
     """
     Executes the Soares 1999 corrosion model.
 

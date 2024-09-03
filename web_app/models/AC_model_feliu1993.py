@@ -64,7 +64,7 @@ class Feliu1993Model(CorrosionModel):
         return material_loss
 
 
-def AC_model_feliu1993(article_identifier: str) -> Tuple[Feliu1993Model, float]:
+def AC_model_feliu1993() -> Tuple[Feliu1993Model, float]:
     """
     Executes the Feliu1993 corrosion model.
 
