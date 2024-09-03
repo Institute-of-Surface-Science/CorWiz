@@ -78,5 +78,5 @@ class Garbatov2011Model(CorrosionModel):
         # Calculate the material loss over time
         material_loss = corrosion_rate * time
 
-        return material_loss
+        return material_loss 
 
