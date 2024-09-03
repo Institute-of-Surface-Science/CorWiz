@@ -7,6 +7,6 @@ from .AC_model_soares1999 import run_soares1999_model
 from .IC_model_ali2020 import run_ali2020_model
 from .IC_model_garbatov2011 import run_garbatov2011_model
 from .IC_model_hicks2012 import run_hicks2012_model
-from .IC_model_kovalenko2016 import IC_model_kovalenko2016
+from .IC_model_kovalenko2016 import run_kovalenko2016_model
 from .model import load_models_from_directory, Model
 from .corrosion_model import get_corrosion_process_type, CorrosionProcessTypeError
