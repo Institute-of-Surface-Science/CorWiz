@@ -1,81 +1,95 @@
 import streamlit as st
 import pandas as pd
-from .corrosion_model import corrosion_model
 import numpy as np
+from typing import Dict, Tuple, Optional
+from .corrosion_model import CorrosionModel
 
 
-'''
-    @article{klinesmith2007effect,
-    title={Effect of environmental conditions on corrosion rates},
-    author={Klinesmith, Dawn E and McCuen, Richard H and Albrecht, Pedro},
-    journal={Journal of Materials in Civil Engineering},
-    volume={19},
-    number={2},
-    pages={121--129},
-    year={2007},
-    publisher={American Society of Civil Engineers}
-    }
-'''
+class KlineSmith2007Model(CorrosionModel):
+    """
+    A corrosion model based on the study by Klinesmith et al. (2007) which evaluates the effect of environmental
+    conditions on corrosion rates.
 
-class sophisticated_corrosion_rate(corrosion_model):
+    Reference:
+        Klinesmith, Dawn E., McCuen, Richard H., and Albrecht, Pedro.
+        "Effect of environmental conditions on corrosion rates."
+        Journal of Materials in Civil Engineering, 19(2), 121-129 (2007). ASCE.
+    """
 
-    def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
-        self.model_name = 'Effect of environmental conditions on corrosion rates'
-        self.article_identifier = article_identifier
-        self.steel = "Carbon Steel"
-        self.p = parameters
+    DATA_FILE_PATH = '../data/tables/klinesmith2007_tables_table_2.csv'
 
-    
-    def eval_material_loss(self, time):
-        
-        table_2 = pd.read_csv('../data/tables/' + self.article_identifier +'_tables_table_2.csv', header=None)
-        A = float(table_2.iloc[1, 2])
-        B = float(table_2.iloc[1, 3])
-        C = float(table_2.iloc[1, 4])
-        D = float(table_2.iloc[1, 5])
-        E = float(table_2.iloc[1, 6])
-        F = float(table_2.iloc[1, 7])
-        G = float(table_2.iloc[1, 8])
-        H = float(table_2.iloc[1, 9])
-        J = float(table_2.iloc[1, 10])
-        T0 = float(table_2.iloc[1, 11])
+    def __init__(self, parameters: Optional[Dict[str, float]] = None):
+        super().__init__(model_name='Effect of Environmental Conditions on Corrosion Rates')
+        self.specimen_type = self._select_specimen_type()
+        self.parameters = parameters if parameters else self._get_parameters()
+        self.coefficients = self._load_coefficients()
 
-        material_loss = A*(time**B)*((self.p['TOW']*365*24/C)**D)*(1+(self.p['SO2']/E)**F)*(1+(self.p['Cl']/G)**H)*(np.exp(J*(self.p['T']+T0)))
+    def _select_specimen_type(self) -> str:
+        """Allows the user to select the specimen type dynamically from the CSV file."""
+        table_2 = pd.read_csv(self.DATA_FILE_PATH)
+        specimen_types = table_2['Specimen'].str.strip().unique()  # Extract and clean up specimen types
+        return st.selectbox('Select specimen type:', specimen_types)
+
+    def _load_coefficients(self) -> Dict[str, float]:
+        """Loads coefficients dynamically from the CSV file based on the selected specimen type."""
+        table_2 = pd.read_csv(self.DATA_FILE_PATH)
+
+        # Select the row corresponding to the selected specimen type
+        row = table_2.loc[table_2['Specimen'].str.strip() == self.specimen_type].iloc[0]
+
+        # Automatically map all relevant columns to coefficients
+        coefficients = {col: float(row[col]) for col in table_2.columns[2:]}
+
+        return coefficients
+
+    def _get_parameters(self) -> Dict[str, float]:
+        """Prompts the user to input values for all parameters within defined limits and returns a dictionary of the parameters."""
+        limits = {
+            'T': {'desc': 'Temperature', 'lower': -17.1, 'upper': 28.7, 'unit': '°C'},
+            'TOW': {'desc': 'Time of Wetness', 'lower': 0.01, 'upper': 1.0, 'unit': 'annual fraction'},
+            'SO2': {'desc': 'SO₂ Deposit', 'lower': 0.7, 'upper': 150.4, 'unit': 'mg/(m²⋅d)'},
+            'Cl': {'desc': 'Cl⁻ Deposit', 'lower': 0.4, 'upper': 760.5, 'unit': 'mg/(m²⋅d)'}
+        }
+
+        parameters = {}
+        for symbol, limit in limits.items():
+            value = st.number_input(
+                f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:",
+                min_value=limit['lower'],
+                max_value=limit['upper'],
+                value=limit['lower'],
+                step=0.01,
+                key=f"input_{symbol}"
+            )
+            parameters[symbol] = value
+
+        return parameters
+
+    def eval_material_loss(self, time: float) -> float:
+        """Calculates the material loss over time based on the provided environmental parameters."""
+        coeffs = self.coefficients
+
+        # Calculate material loss using the model equation
+        material_loss = (
+                coeffs['A'] * (time ** coeffs['B']) *
+                ((self.parameters['TOW'] * 365 * 24 / coeffs['C']) ** coeffs['D']) *
+                (1 + (self.parameters['SO2'] / coeffs['E']) ** coeffs['F']) *
+                (1 + (self.parameters['Cl'] / coeffs['G']) ** coeffs['H']) *
+                (np.exp(coeffs['J'] * (self.parameters['T'] + coeffs['T0'])))
+        )
+
         return material_loss
-    
 
-def get_input(symbol, limits):
-    limit = limits[symbol]
-    value = st.text_input(f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:", value=limit['lower'])
-    
-    if value:
-        try:
-            value = float(value)
-            if value < limit['lower'] or value > limit['upper']:
-                st.error(f"Please enter a value between {limit['lower']} and {limit['upper']} {limit['unit']}.")
-            else:
-                st.success(f"Value accepted: {value} {limit['unit']}")
-        except ValueError:
-            st.error("Please enter a valid number.")
 
-    return float(value)
+# Example of usage
+def run_klinesmith2007_model() -> Tuple[KlineSmith2007Model, float]:
+    """
+    Runs the KlineSmith 2007 corrosion model.
 
-def get_parameters(limits):
-    parameters = {}
-    for symbol in limits.keys():
-        parameters[symbol] = get_input(symbol, limits)
+    Returns:
+        Tuple[KlineSmith2007Model, float]: An instance of the KlineSmith2007Model class and the duration for which the model is evaluated.
+    """
+    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
+    model = KlineSmith2007Model()
 
-    return parameters
-
-def AC_model_klinesmith2007(article_identifier):
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    limits = {
-        'T': {'desc': 'Temperature', 'lower': -17.1, 'upper': 28.7, 'unit': '°C'},
-        'TOW': {'desc': 'Time of wetness', 'lower': 0, 'upper': 1, 'unit': 'annual fraction'},
-        'SO2': {'desc': 'SO₂-Deposit', 'lower': 0.7, 'upper': 150.4, 'unit': 'mg/(m²⋅d)'},
-        'Cl': {'desc': 'Cl⁻-Deposit', 'lower': 0.4, 'upper': 760.5, 'unit': 'mg/(m²⋅d)'}
-    }
-    parameters = get_parameters(limits)
-
-    return sophisticated_corrosion_rate(parameters, article_identifier), time
+    return model, time_duration

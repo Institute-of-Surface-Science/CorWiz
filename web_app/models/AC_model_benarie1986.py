@@ -1,72 +1,87 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .corrosion_model import corrosion_model
+from typing import Optional, Tuple
+from .corrosion_model import CorrosionModel
 
 
-'''
-    @article{benarie1986general,
-    title={A general corrosion function in terms of atmospheric pollutant concentrations and rain pH},
-    author={Benarie, Michel and Lipfert, Frederick L},
-    journal={Atmospheric Environment (1967)},
-    volume={20},
-    number={10},
-    pages={1947--1958},
-    year={1986},
-    publisher={Elsevier}
-    }
-'''
+class Benarie1986Model(CorrosionModel):
+    """
+    A corrosion model based on the research by Benarie and Lipfert (1986) which predicts material loss over time.
 
-class a_general_corrosion_function(corrosion_model):
+    Reference:
+        Benarie, Michel, and Frederick L. Lipfert.
+        "A general corrosion function in terms of atmospheric pollutant concentrations and rain pH."
+        Atmospheric Environment (1967) 20, no. 10 (1986): 1947-1958. Elsevier.
+    """
+
+    DATA_FILE_PATH = '../data/tables/benarie1986_tables_table_2.csv'
+    DEFAULT_CORROSION_SITE_KEY = 'corrosion_site'
+
+    def __init__(self, parameters: Optional[dict] = None):
+        super().__init__(model_name='Benarie1986 Corrosion Model')
+        self.parameters = parameters if parameters else {}
+        self.table_2 = pd.read_csv(self.DATA_FILE_PATH, header=None)
+        self._initialize_model()
+
+    def _initialize_model(self) -> None:
+        """Initializes the model by selecting a corrosion site and displaying site information."""
+        corrosion_sites = self.table_2.iloc[1:, 0]
+        selected_site = st.selectbox('Select corrosion site:', corrosion_sites)
+        corrosion_site_index = corrosion_sites.tolist().index(selected_site) + 1
+        self.parameters[self.DEFAULT_CORROSION_SITE_KEY] = corrosion_site_index
+        self._display_site_info(corrosion_site_index)
+
+    def _display_site_info(self, corrosion_site: int) -> None:
+        """Displays detailed information about the selected corrosion site."""
+        site_info = self.table_2.iloc[corrosion_site, :5]
+        site_name, weight_loss, exponent, so2_cl_deposits, ph_value = site_info
+
+        st.markdown(f"### Selected Site: **{site_name}**")
+        st.markdown(
+            f"""
+            The following parameters have been selected for the site **{site_name}**. These parameters are used in the corrosion model to predict the material loss over time.
+
+            **Weight Loss per Wetness Year ($A$):**
+            - The rate of material loss due to corrosion, expressed in micrometers per year (\u03BCm/year).  
+            - **Value:** {weight_loss} \u03BCm/year
+
+            **Exponent ($b$):**
+            - The exponent used in the corrosion rate equation, which modifies the time dependency of the corrosion process.
+            - **Value:** {exponent}
+
+            **$SO_2$ + $Cl^-$ Deposits:**
+            - The combined deposition rate of sulfur dioxide and chloride ions, expressed in milligrams per square meter per day (mg/m²/day). This value reflects the environmental aggressiveness.
+            - **Value:** {so2_cl_deposits} mg/m²/day
+
+            **$pH$ of the Environment:**
+            - The acidity or alkalinity of the environment, which can significantly influence the corrosion rate.
+            - **Value:** {ph_value}
+            """
+        )
+
+    def eval_material_loss(self, time: float) -> np.ndarray:
+        """
+        Calculates and returns the material loss over time for the selected corrosion site.
+
+        This method also retrieves the necessary parameters (corrosion speed and exponent)
+        for the calculation based on the selected site.
+        """
+        site_index = self.parameters[self.DEFAULT_CORROSION_SITE_KEY]
+        A = float(self.table_2.iloc[site_index, 1])
+        n = float(self.table_2.iloc[site_index, 2])
+        return A * time ** n
 
 
-    def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
-        self.model_name = 'A general corrosion function in terms of atmospheric pollutant concentrations and rain pH'
-        self.article_identifier = article_identifier
-        self.steel = "Carbon Steel"
-        self.p = parameters
+# TODO: will be removed
+def run_benarie1986_model() -> Tuple[Benarie1986Model, float]:
+    """
+    Runs the Benarie1986 corrosion model.
 
-    
-    def eval_corrosion_speed_and_exponent(self):
-        table_2 = pd.read_csv('../data/tables/' + self.article_identifier +'_tables_table_2.csv', header=None)
-        A = float(table_2.iloc[self.p['corrosion_site'], 1])
-        b = float(table_2.iloc[self.p['corrosion_site'], 2])
+    Returns:
+        Tuple[Benarie1986Model, float]: An instance of the Benarie1986Model class and the duration for which the model is evaluated.
+    """
+    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
+    model = Benarie1986Model()
 
-        return A, b 
-
-    
-    def eval_material_loss(self, time):
-        A, n = self.eval_corrosion_speed_and_exponent()
-        
-        material_loss = A*time**n
-        return material_loss
-    
-
-def load_data(article_identifier):
-
-    return pd.read_csv('../data/tables/' + article_identifier +'_tables_table_2.csv', header=None)
-
-
-def get_corrosion_site(table_2):
-    corrosion_site = st.selectbox('Select corrosion site:', ((table_2.iloc[1:, 0])))
-
-    return table_2.iloc[1:, 0].tolist().index(corrosion_site) + 1
-
-
-def display_site_info(table_2, corrosion_site):
-    st.write('Selected site: ' + table_2.iloc[corrosion_site, 0])
-    st.write(r'Weight loss per wetness year, $A$ = ' + str(table_2.iloc[corrosion_site, 1]))
-    st.write(r'Exponent, $b$ = ' + str(table_2.iloc[corrosion_site, 2]))
-    st.write(r'$SO_2$ + $Cl^-$ deposits [$mg m^{-2} d^{-1}$] = ' + str(table_2.iloc[corrosion_site, 3]))
-    st.write(r'$pH$ = ' + str(table_2.iloc[corrosion_site, 4]))
-
-
-def AC_model_benarie1986(article_identifier):
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    table_2 = load_data(article_identifier)
-    corrosion_site = get_corrosion_site(table_2)
-    parameters = {'corrosion_site': int(corrosion_site)}
-    display_site_info(table_2, corrosion_site)
-    
-    return a_general_corrosion_function(parameters, article_identifier), time
+    return model, time_duration

@@ -2,8 +2,12 @@ import streamlit as st
 from streamlit_extras.stylable_container import stylable_container
 
 from helper import display_logo
+from helper import local_css
 
 def add_header():
+    st.set_page_config(page_title="CorWiz", page_icon=":material/rainy:", layout="wide", initial_sidebar_state="auto")
+    local_css('style/style.css')
+
     header_container = st.container()
     setup_header(header_container)
 

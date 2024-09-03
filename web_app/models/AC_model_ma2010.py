@@ -1,125 +1,102 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .corrosion_model import corrosion_model
+from typing import Dict, Tuple, Optional
+from .corrosion_model import CorrosionModel
 
 
-'''
-    @article{ma2010atmospheric,
-    title={The atmospheric corrosion kinetics of low carbon steel in a tropical marine environment},
-    author={Ma, Yuantai and Li, Ying and Wang, Fuhui},
-    journal={Corrosion Science},
-    volume={52},
-    number={5},
-    pages={1796--1800},
-    year={2010},
-    publisher={Elsevier}
-    }
-'''
+class Ma2010Model(CorrosionModel):
+    """
+    A corrosion model based on the study by Ma et al. (2010) which evaluates the atmospheric corrosion kinetics
+    of low carbon steel in a tropical marine environment.
 
-class tropical_marine_env(corrosion_model):
+    Reference:
+        Ma, Yuantai, Li, Ying, and Wang, Fuhui.
+        "The atmospheric corrosion kinetics of low carbon steel in a tropical marine environment."
+        Corrosion Science, 52(5), 1796-1800 (2010). Elsevier.
+    """
 
-    def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
-        self.model_name = 'The atmospheric corrosion kinetics of low carbon steel in a tropical marine environment'
-        self.article_identifier = article_identifier
-        self.steel = "Low Carbon Steel (Q235)"
-        self.p = parameters
+    DATA_FILE_PATH = '../data/tables/ma2010_tables_table_2.csv'
 
-    
-    def eval_corrosion_speed_and_exponent(self):
-    # Define the distance points and their corresponding log(A) and n values
+    def __init__(self, parameters: Optional[Dict[str, float]] = None):
+        super().__init__(
+            model_name='The Atmospheric Corrosion Kinetics of Low Carbon Steel in a Tropical Marine Environment')
+        self.parameters = parameters if parameters else self._get_parameters()
+
+    def _get_parameters(self) -> Dict[str, float]:
+        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
+        table_2 = pd.read_csv(self.DATA_FILE_PATH, header=None)
+
+        # Display the table and allow user to select the corrosion site
+        st.table(table_2)
+        corrosion_sites = table_2.iloc[1:, 0].tolist()
+        corrosion_site = st.selectbox('Select corrosion site:', corrosion_sites)
+        corrosion_site_index = corrosion_sites.index(corrosion_site) + 1
+
+        limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
+
+        parameters = {
+            'corrosion_site': corrosion_site_index,
+        }
+
+        # Collect user input for the distance parameter
+        for symbol, limit in limits.items():
+            value = st.number_input(
+                f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:",
+                min_value=float(limit['lower']),
+                max_value=float(limit['upper']),
+                value=float(limit['lower']),
+                step=0.01,
+                key=f"input_{symbol}"
+            )
+            if symbol == 'D':
+                parameters['distance'] = value
+
+        return parameters
+
+    def eval_material_loss(self, time: float) -> float:
+        """Calculates the material loss over time based on the provided environmental parameters."""
+
+        # Define the distance points and their corresponding log(A) and n values
         distances = [25, 95, 375]
-        
-        # Site I values
         log_A_site_I = [0.13548, 0.52743, 0.44306]
         n_site_I = [2.86585, 2.18778, 1.55029]
-        
-        # Site II values
         log_A_site_II = [1.5095, 1.5981, 1.26836]
         n_site_II = [1.15232, 1.05915, 0.76748]
-        
-        # Select the site data
-        if self.p['corrosion_site'] == 1:
+
+        if self.parameters['corrosion_site'] == 1:
             log_A_values = log_A_site_I
             n_values = n_site_I
-        elif self.p['corrosion_site'] == 2:
+        elif self.parameters['corrosion_site'] == 2:
             log_A_values = log_A_site_II
             n_values = n_site_II
-        
-        # Find the position for interpolation
+
         for i in range(len(distances) - 1):
-            if distances[i] <= self.p['distance'] <= distances[i + 1]:
-                # Linear interpolation for log(A)
-                log_A = log_A_values[i] + (log_A_values[i + 1] - log_A_values[i]) * (self.p['distance'] - distances[i]) / (distances[i + 1] - distances[i])
-                # Linear interpolation for n
-                n = n_values[i] + (n_values[i + 1] - n_values[i]) * (self.p['distance'] - distances[i]) / (distances[i + 1] - distances[i])
-                return np.exp(log_A), n
-        
-        # If the distance is exactly at one of the boundary points
-        if self.p['distance'] == distances[0]:
-            return np.exp(log_A_values[0]), n_values[0]
-        elif self.p['distance'] == distances[-1]:
-            return np.exp(log_A_values[-1]), n_values[-1]
+            if distances[i] <= self.parameters['distance'] <= distances[i + 1]:
+                log_A = log_A_values[i] + (log_A_values[i + 1] - log_A_values[i]) * \
+                        (self.parameters['distance'] - distances[i]) / (distances[i + 1] - distances[i])
+                n = n_values[i] + (n_values[i + 1] - n_values[i]) * \
+                    (self.parameters['distance'] - distances[i]) / (distances[i + 1] - distances[i])
+                A = np.exp(log_A)
+                return A * time ** n
+
+        if self.parameters['distance'] == distances[0]:
+            A, n = np.exp(log_A_values[0]), n_values[0]
+        elif self.parameters['distance'] == distances[-1]:
+            A, n = np.exp(log_A_values[-1]), n_values[-1]
+
+        return A * time ** n
 
 
-    def eval_material_loss(self, time):
+# Example of usage
+def run_ma2010_model() -> Tuple[Ma2010Model, float]:
+    """
+    Runs the Ma 2010 corrosion model.
 
-        A, n = self.eval_corrosion_speed_and_exponent()
+    Returns:
+        Tuple[Ma2010Model, float]: An instance of the Ma2010Model class and the duration for which the model is evaluated.
+    """
+    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
+    model = Ma2010Model()
 
-        material_loss = A*time**n
-        return material_loss
-    
-
-def get_exponent_value(year, table):
-    years = np.array(table[0].astype(int))
-    exponents = np.array(table[1].astype(float))
-    # Check if the year is exactly in the data
-    if year in years:
-        return exponents[years == year][0]
-    else:
-        # Interpolate the exponent value for the given year
-        exponent_value = np.interp(year, years, exponents)
-        return exponent_value
-    
-
-def load_data(article_identifier):
-    table_1 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_1.csv', header=None)
-    table_2 = pd.read_csv('../data/tables/' + article_identifier +'_tables_table_2.csv', header=None)
-
-    return table_1, table_2
-
-
-def get_corrosion_site(table_2):
-    st.table(table_2)
-    corrosion_site = st.selectbox('Select corrosion site:', ((table_2.iloc[1:, 0])))
-
-    return table_2.iloc[1:, 0].tolist().index(corrosion_site)
-
-
-def get_input(symbol, limits):
-    limit = limits[symbol]
-    value = st.text_input(f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:", value=limit['lower'])
-    
-    if value:
-        try:
-            value = float(value)
-            if value < limit['lower'] or value > limit['upper']:
-                st.error(f"Please enter a value between {limit['lower']} and {limit['upper']} {limit['unit']}.")
-            else:
-                st.success(f"Value accepted: {value} {limit['unit']}")
-        except ValueError:
-            st.error("Please enter a valid number.")
-
-    return value
-
-
-def AC_model_ma2010(article_identifier):
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
-    table_1, table_2 = load_data(article_identifier)
-    parameters = {}
-    parameters['corrosion_site'] = int(get_corrosion_site(table_2) + 1)
-    limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
-    parameters['distance'] = get_input('D', limits)
-    
-    return tropical_marine_env(parameters, article_identifier), time
+    return model, time_duration

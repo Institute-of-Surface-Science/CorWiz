@@ -1,137 +1,105 @@
-import os
-import json
+
 import numpy as np
 import streamlit as st
 import plotly.express as px
 import streamlit.components.v1 as components
 
-from models import (
-    AC_model_fileu1993, AC_model_iso9223, AC_model_ma2010,
-    AC_model_benarie1986, AC_model_soares1999, AC_model_klinesmith2007,
-    IC_model_ali2020, IC_model_kovalenko2016, IC_model_garbatov2011,
-    IC_model_hicks2012
-)
+from models import *
+
+def display_model_info(model: Model) -> None:
+    """Displays the model description and notes."""
+    st.markdown(model.description)
+    if model.special_note:
+        st.markdown("#### Model Notes: \n" + model.special_note)
 
 
-def extract_model_details_from_json(directory_path):
-    """Extracts model details from JSON files in the specified directory."""
-    model_details = {
-        'names': [],
-        'kadi_identifiers': [],
-        'descriptions': [],
-        'special_notes': [],
-        'parameters': [],
-        'formulas': [],
-        'article_identifiers': []
+def run_model(model_identifier: str):
+    """Runs the selected model using the provided identifier."""
+    model_functions = {
+        'model_benarie1986': run_benarie1986_model,
+        'model_feliu1993': run_feliu1993_model,
+        'din-corrosion-protection-model-iso-9223-compliant': run_iso9223_model,
+        'model_klinesmith2007': run_klinesmith2007_model,
+        'model_ma2010': run_ma2010_model,
+        'model_soares1999': run_soares1999_model,
+        'model_ali2020': run_ali2020_model,
+        'model_garbatov2011': run_garbatov2011_model,
+        'model_hicks2012': run_hicks2012_model,
+        'model_kovalenko2016': run_kovalenko2016_model,
     }
 
-    for file_name in os.listdir(directory_path):
-        if file_name.endswith('.json'):
-            json_file_path = os.path.join(directory_path, file_name)
-            with open(json_file_path, 'r', encoding='utf-8') as file:
-                data = json.load(file)
+    return model_functions[model_identifier]()
 
-            model_details['names'].append(data.get('title', ''))
-            model_details['kadi_identifiers'].append(data.get('identifier', ''))
-            model_details['descriptions'].append(data.get('description', ''))
-            model_details['special_notes'].append(data.get('special notes', ''))
-            model_details['article_identifiers'].append(data.get('links', [{}])[0].get('record_to', {}).get('identifier', ''))
-
-            extras = data.get('extras', [])
-            parameters = next((item['value'] for item in extras if item['key'] == 'Parameters'), '')
-            formula = next((item['value'] for item in extras if item['key'] == 'Formula'), '')
-
-            model_details['parameters'].append(parameters)
-            model_details['formulas'].append(formula)
-
-    return model_details
-
-
-def display_model_info(model_info, model_name):
-    # st.markdown("#### Model developed by: \n" + model_info['model_developers'][model_info['model_names'].index(model)])
-    st.markdown(str(model_info['descriptions'][model_info['names'].index(model_name)]))
-    try:
-        st.markdown("#### Model Notes: \n" + model_info['special_notes'][model_info['names'].index(model_name)])
-    except:
-        pass
-
-
-def run_model(model_identifier, model_functions, article_identifier):
-    return  model_functions[model_identifier](article_identifier)
 
 def plot_mass_loss_over_time(model, time_range):
-    """Generates and returns a Plotly figure for mass loss over time."""
+    """Generates and embeds a Plotly figure for mass loss over time into Streamlit."""
     t = np.linspace(0, time_range, 400)
     D = model.eval_material_loss(t)
-    fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [um]'}, title="Mass Loss Over Time", height=700)
-    return fig
+
+    fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [um]'}, title="Mass Loss Over Time",
+                  height=700)
+
+    plot_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
+
+    # Embed the figure in Streamlit using components.html since it doesn't work otherwise
+    components.html(
+        f"""
+        <div style="background-color: white; padding: 10px; border-radius: 10px;">
+            {plot_html}
+        </div>
+        """,
+        height=800,
+        scrolling=True
+    )
 
 
-def model_view(model_view_container):
-    immersion_corrosion_models = extract_model_details_from_json('../data/kadi4mat_json/immersion_corrosion_models/')
-    atmospheric_corrosion_models = extract_model_details_from_json(
-        '../data/kadi4mat_json/atmospheric_corrosion_models/')
+def display_model_view(container):
+    """
+    Displays the model view interface for selecting and analyzing corrosion mass loss models.
 
-    with model_view_container:
+    Args:
+        container (st.container): The Streamlit container in which the model view interface will be displayed.
+    """
+    model_directories = [
+        '../data/kadi4mat_json/immersion_corrosion_models/',
+        '../data/kadi4mat_json/atmospheric_corrosion_models/'
+    ]
+
+    models = load_models_from_directory(model_directories)
+
+    with container:
         st.write("---")
         st.header("Corrosion Mass Loss Models")
 
-        main_view = st.container()
-        description_box = st.container()
-        model_info = None
-        selected_model_name = None
+        main_content = st.container()
+        description_content = st.container()
 
-        with main_view:
-            image_column, data_column = st.columns((1, 1))
-            with data_column:
-                model_categories = ['Atmospheric corrosion', 'Immersion corrosion']
+        model_process_pairs = get_corrosion_process_type(models)
 
-                model_category_selection = st.selectbox('**Corrosion Type**', model_categories)
+        with main_content:
+            plot_column, selection_column = st.columns((1, 1))
 
-                if model_category_selection == 'Atmospheric corrosion':
-                    model_info = atmospheric_corrosion_models
-                    model_functions = {'model_feliu1993': AC_model_fileu1993,
-                                       'din-corrosion-protection-model-iso-9223-compliant': AC_model_iso9223,
-                                       'model_ma2010': AC_model_ma2010,
-                                       'model_benarie1986': AC_model_benarie1986,
-                                       'model_soares1999': AC_model_soares1999,
-                                       'model_klinesmith2007': AC_model_klinesmith2007}
-                else:
-                    model_info = immersion_corrosion_models
-                    model_functions = {'model_ali2020': IC_model_ali2020,
-                                       'model_kovalenko2016': IC_model_kovalenko2016,
-                                       'model_garbatov2011': IC_model_garbatov2011,
-                                       'model_hicks2012': IC_model_hicks2012}
+            with selection_column:
+                corrosion_types = sorted({process_type for _, process_type in model_process_pairs})
+                selected_corrosion_type = st.selectbox('**Corrosion Type**', corrosion_types)
 
-                selected_model_name = st.selectbox('**Model**', model_info['names'])
+                filtered_models = [model for model, process_type in model_process_pairs if process_type == selected_corrosion_type]
+                selected_model = st.selectbox('**Model**', filtered_models, format_func=lambda model: model.name + " (" + model.kadi_identifier + ")")
 
-                model_identifier = model_info['kadi_identifiers'][model_info['names'].index(selected_model_name)]
-                article_identifier = model_info['article_identifiers'][model_info['names'].index(selected_model_name)]
-                formulas = model_info['formulas'][model_info['names'].index(selected_model_name)]
+                model, time_range = run_model(selected_model.kadi_identifier)
 
-                model, time = run_model(model_identifier, model_functions, article_identifier)
+            with plot_column:
+                plot_mass_loss_over_time(model, time_range)
 
-            with image_column:
-                chart_container = st.container()
-                plot_html = plot_mass_loss_over_time(model, time).to_html(full_html=False, include_plotlyjs='cdn')
+        with description_content:
+            description_expander = st.expander("**Model Description**", expanded=False)
 
-                with chart_container:
-                    components.html(
-                        f"""
-                           <div style="background-color: white; padding: 10px; border-radius: 10px;">
-                               {plot_html}
-                           </div>
-                           """,
-                        height=800,
-                        scrolling=True
-                    )
-
-        with description_box:
-            description = st.expander("**Model Description**", expanded=False)
-
-            with description:
-                display_model_info(model_info, selected_model_name)
+            with description_expander:
+                display_model_info(selected_model)
 
                 st.write("### Model Formulas")
-                for formula in formulas:
-                    st.write(r'' + formula['key'] + ': ' + formula['value'])
+                if isinstance(selected_model.formula, list):
+                    for formula in selected_model.formula:
+                        st.markdown(f"**{formula['key']}**: {formula['value']}")
+                elif isinstance(selected_model.formula, str):
+                    st.markdown(selected_model.formula)

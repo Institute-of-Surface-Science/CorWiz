@@ -1,54 +1,95 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from .corrosion_model import corrosion_model
+from typing import Dict, Tuple, Optional
+from .corrosion_model import CorrosionModel
 
+class Garbatov2011Model(CorrosionModel):
+    """
+    A corrosion model based on the study by Garbatov et al. (2011) which predicts material loss
+    in marine structures.
 
-'''
-    @article{garbatov2011corrosion,
-    title={Corrosion modeling in marine structures},
-    author={Garbatov, Y and Zayed, A and Soares, C Guedes},
-    journal={Marine Technology and Engineering},
-    year={2011}
-    }
-'''
+    Reference:
+        Garbatov, Y., Zayed, A., and Soares, C. Guedes.
+        "Corrosion modeling in marine structures."
+        Marine Technology and Engineering, 2011.
+    """
 
-class immersion_corrosion_predictive_model_incorporating(corrosion_model):
+    def __init__(self, parameters: Optional[Dict[str, float]] = None):
+        super().__init__(model_name='Corrosion Modeling in Marine Structures')
+        self.parameters = parameters if parameters else self._get_parameters()
 
-    def __init__(self, parameters, article_identifier):
-        corrosion_model.__init__(self)
-        self.model_name = 'Corrosion modeling in marine structures'
-        self.article_identifier = article_identifier
-        self.steel = "Mild carbon steel"
-        self.p = parameters
+    def _get_parameters(self) -> Dict[str, float]:
+        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
+        parameters = {
+            'Temperature': st.number_input(
+                'Enter the Temperature [°C]:',
+                min_value=-10.0,
+                max_value=50.0,
+                value=20.0,
+                step=0.1,
+                key="temperature"
+            ),
+            'Dissolved Oxygen Concentration': st.number_input(
+                'Enter the Dissolved Oxygen Concentration [ml/l]:',
+                min_value=0.0,
+                max_value=14.6,
+                value=6.0,
+                step=0.1,
+                key="oxygen_concentration"
+            ),
+            'Flow Velocity': st.number_input(
+                'Enter the Flow Velocity [m/s]:',
+                min_value=0.0,
+                max_value=10.0,
+                value=1.0,
+                step=0.1,
+                key="flow_velocity"
+            )
+        }
+        return parameters
 
-    
-    def eval_material_loss(self, time):
-        
-        d_Temperature = 0.0014*self.p['Temperature'] + 0.0154
-        f_Temperature = self.p['Temperature']/15.5
+    def eval_material_loss(self, time: float) -> float:
+        """
+        Evaluates the material loss over time based on the provided parameters.
 
-        d_Dissolved_Oxygen = 0.0268*self.p['Dissolved Oxygen Concentration'] + 0.0086
-        f_Dissolved_Oxygen = 0.9483*self.p['Dissolved Oxygen Concentration'] + 0.0517
+        Args:
+            time (float): The time duration in years.
 
-        d_Flow_Velocity = 0.9338*(1 - np.exp(-0.4457*(self.p['Flow Velocity'] + 0.2817)))
-        f_Flow_Velocity = 1.0978*(1 - np.exp(-2.2927*(self.p['Flow Velocity'] + 0.0548)))
+        Returns:
+            float: The calculated material loss.
+        """
+        # Calculate the effects of temperature, dissolved oxygen concentration, and flow velocity
+        d_temperature = 0.0014 * self.parameters['Temperature'] + 0.0154
+        f_temperature = self.parameters['Temperature'] / 15.5
 
-        self.p['Nominal Corrosion Rate'] = d_Temperature + d_Dissolved_Oxygen + d_Flow_Velocity
+        d_dissolved_oxygen = 0.0268 * self.parameters['Dissolved Oxygen Concentration'] + 0.0086
+        f_dissolved_oxygen = 0.9483 * self.parameters['Dissolved Oxygen Concentration'] + 0.0517
 
-        corrosion_rate = f_Temperature*f_Dissolved_Oxygen*f_Flow_Velocity*self.p['Nominal Corrosion Rate']
+        d_flow_velocity = 0.9338 * (1 - np.exp(-0.4457 * (self.parameters['Flow Velocity'] + 0.2817)))
+        f_flow_velocity = 1.0978 * (1 - np.exp(-2.2927 * (self.parameters['Flow Velocity'] + 0.0548)))
 
-        material_loss = corrosion_rate*time
+        # Calculate the nominal corrosion rate
+        nominal_corrosion_rate = d_temperature + d_dissolved_oxygen + d_flow_velocity
+
+        # Calculate the overall corrosion rate
+        corrosion_rate = f_temperature * f_dissolved_oxygen * f_flow_velocity * nominal_corrosion_rate
+
+        # Calculate the material loss over time
+        material_loss = corrosion_rate * time
 
         return material_loss
 
-def IC_model_garbatov2011(article_identifier):
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
 
-    parameters = {}
-    
-    parameters['Temperature'] = st.number_input('Enter the Temperature [°C]:', 0.1) 
-    parameters['Dissolved Oxygen Concentration'] = st.number_input('Enter the Dissolved Oxygen [ml l^{-1}]:', 0.1) 
-    parameters['Flow Velocity'] = st.number_input('Enter the Flow Velocity [m s^{-1}]:', 0.1) 
+# Example of usage
+def run_garbatov2011_model() -> Tuple[Garbatov2011Model, float]:
+    """
+    Runs the Garbatov 2011 corrosion model.
 
-    return immersion_corrosion_predictive_model_incorporating(parameters, article_identifier), time
+    Returns:
+        Tuple[Garbatov2011Model, float]: An instance of the Garbatov2011Model class and the duration for which the model is evaluated.
+    """
+    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
+    model = Garbatov2011Model()
+
+    return model, time_duration
