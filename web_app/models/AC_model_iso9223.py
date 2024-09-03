@@ -22,7 +22,6 @@ class ISO9224Model(CorrosionModel):
 
     def __init__(self, parameters: Optional[dict] = None):
         super().__init__(model_name='ISO 9223:2012 and ISO 9224:2012')
-        self.steel = "Unalloyed Steel"
         self.parameters = parameters if parameters else {}
         self.table_2, self.table_3, self.table_b3, self.table_b4, self.table_c1, self.table_9224_3 = self._load_data()
         self._initialize_model()
