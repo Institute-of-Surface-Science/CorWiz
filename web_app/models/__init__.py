@@ -1,12 +1,12 @@
-from .AC_model_feliu1993 import AC_model_feliu1993
-from .AC_model_iso9223 import AC_model_iso9223
-from .AC_model_ma2010 import AC_model_ma2010
 from .AC_model_benarie1986 import run_benarie1986_model
-from .AC_model_soares1999 import AC_model_soares1999
+from .AC_model_feliu1993 import run_feliu1993_model
+from .AC_model_iso9223 import AC_model_iso9223
 from .AC_model_klinesmith2007 import AC_model_klinesmith2007
+from .AC_model_ma2010 import AC_model_ma2010
+from .AC_model_soares1999 import AC_model_soares1999
 from .IC_model_ali2020 import IC_model_ali2020
-from .IC_model_kovalenko2016 import IC_model_kovalenko2016
 from .IC_model_garbatov2011 import IC_model_garbatov2011
 from .IC_model_hicks2012 import IC_model_hicks2012
+from .IC_model_kovalenko2016 import IC_model_kovalenko2016
 from .model import load_models_from_directory, Model
 from .corrosion_model import get_corrosion_process_type, CorrosionProcessTypeError
