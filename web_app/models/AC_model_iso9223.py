@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
+from scipy.interpolate import interp1d
 from .corrosion_model import corrosion_model
 
 class iso_9224(corrosion_model):
@@ -11,7 +12,23 @@ class iso_9224(corrosion_model):
         self.article_identifier = article_identifier
         self.steel = "Unalloyed Steel"
         self.p = parameters
+        self.mass_loss_unit = '(kg) (m^{-2})'
         self.correlation_speed_provided = 'corrosion_speed' in parameters
+
+
+    def g_to_um_map(self, corrosion_speed):
+        A = np.array([10, 200, 400, 650, 1500, 500])
+        B = np.array([1.3, 25, 50, 80, 200, 700])
+        interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
+
+        return interp_function(corrosion_speed)
+    
+    def um_to_g_map(self, corrosion_speed):
+        A = np.array([1.3, 25, 50, 80, 200, 700])
+        B = np.array([10, 200, 400, 650, 1500, 500])
+        interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
+
+        return interp_function(corrosion_speed)
 
     
     def eval_corrosion_speed(self):
@@ -21,22 +38,25 @@ class iso_9224(corrosion_model):
         else:
             fst = -0.054*(self.p['T'] - 10)
 
-        corrosion_speed = 1.77*self.p['Pd']**0.52*np.e**(0.02*self.p['RH'] + fst) + 0.102*self.p['Sd']**0.62*np.e**(0.033*self.p['RH'] + 0.04*self.p['T'])
+        corrosion_speed = 1.77*(self.p['Pd']/365)**0.52*np.e**(0.02*self.p['RH'] + fst) + 0.102*(self.p['Sd']/365)**0.62*np.e**(0.033*self.p['RH'] + 0.04*self.p['T'])
+        corrosion_speed /= 1000  #Convert to grams from milli grams
+
+        corrosion_speed = self.g_to_um_map(corrosion_speed)
+
         return corrosion_speed
 
 
     def eval_material_loss(self, time):
         
         if self.correlation_speed_provided:
-            corrosion_speed = self.p['corrosion_speed']
+            corrosion_speed = self.g_to_um_map(self.p['corrosion_speed'])
+            material_loss = time*corrosion_speed
         else:
             corrosion_speed = self.eval_corrosion_speed()
-        
-        if np.max(time) < 20:
             material_loss = self.p['exponent']*corrosion_speed*time**(self.p['exponent'] - 1)
-        else:
-            material_loss = corrosion_speed*(20**self.p['exponent'] + self.p['exponent']*20**(self.p['exponent'] - 1)*(time - 20))
 
+        st.write('Corrosion speed = ' + str(corrosion_speed))
+        
         return material_loss
     
 
@@ -85,8 +105,6 @@ def get_corrosion_speed(corrosion_type, table_2):
     else:
         corrosion_speed = (float(table_2.iloc[corrosion_type+1, 2]) + float(table_2.iloc[corrosion_type+1, 3]))/2
 
-    st.write('Corrosion speed = ' + str(corrosion_speed))
-
     return corrosion_speed
 
 
@@ -123,13 +141,17 @@ def get_exponent(time, table_9224_3):
 
 
 def AC_model_iso9223(article_identifier):
-    time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1) 
     table_2, table_3, table_b3, table_b4, table_c1, table_9224_3 = load_data(article_identifier)
     st.table(table_c1)
     corrosion_type = st.selectbox('Select corrosion type?', ((get_corrosion_type(table_c1))))
     corrosion_type = get_corrosion_type(table_c1).index(corrosion_type)
     parameters = {}
     if corrosion_type < 6:
+        limits = {
+        'time': {'desc': 'Time', 'lower': 1, 'upper': 20, 'unit': 'years'}
+        }
+        for symbol in limits.keys():
+            parameters[symbol] = get_input(symbol, limits)
         parameters['corrosion_speed'] = get_corrosion_speed(corrosion_type, table_2)
     else:
         st.table(table_3)
@@ -140,6 +162,7 @@ def AC_model_iso9223(article_identifier):
         st.write(r'### Classification of contamination by sulfur-containing substances, represented by $Cl^-$')
 
         limits = {
+        'time': {'desc': 'Time', 'lower': 1, 'upper': 20, 'unit': 'years'},
         'T': {'desc': 'Temperature', 'lower': -17.1, 'upper': 28.7, 'unit': '°C'},
         'RH': {'desc': 'Relative Humidity', 'lower': 34, 'upper': 93, 'unit': '%'},
         'Pd': {'desc': 'SO₂-Deposit', 'lower': 0.7, 'upper': 150.4, 'unit': 'mg/(m²⋅d)'},
@@ -147,6 +170,7 @@ def AC_model_iso9223(article_identifier):
         }
         for symbol in limits.keys():
             parameters[symbol] = get_input(symbol, limits)
-    parameters['exponent'] = get_exponent(time, table_9224_3)
+            
+    parameters['exponent'] = get_exponent(parameters['time'], table_9224_3)
     
-    return iso_9224(parameters, article_identifier), time
+    return iso_9224(parameters, article_identifier), parameters['time']
