@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 
 class Ali2010Model(CorrosionModel):
@@ -67,16 +67,3 @@ class Ali2010Model(CorrosionModel):
         material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time + self.parameters['b']
         return material_loss
 
-
-# Example of usage
-def run_ali2020_model() -> Tuple[Ali2010Model, float]:
-    """
-    Runs the Ali 2020 corrosion model.
-
-    Returns:
-        Tuple[Ali2010Model, float]: An instance of the Ali2010Model class and the duration for which the model is evaluated.
-    """
-    time_duration = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1, key="duration")
-    model = Ali2010Model()
-
-    return model, time_duration

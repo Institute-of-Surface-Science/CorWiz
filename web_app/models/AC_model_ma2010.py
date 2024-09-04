@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 
 
@@ -87,16 +87,3 @@ class Ma2010Model(CorrosionModel):
 
         return A * time ** n
 
-
-# Example of usage
-def run_ma2010_model() -> Tuple[Ma2010Model, float]:
-    """
-    Runs the Ma 2010 corrosion model.
-
-    Returns:
-        Tuple[Ma2010Model, float]: An instance of the Ma2010Model class and the duration for which the model is evaluated.
-    """
-    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
-    model = Ma2010Model()
-
-    return model, time_duration

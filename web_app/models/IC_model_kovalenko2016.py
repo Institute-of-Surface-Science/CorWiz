@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 
 class Kovalenko2016Model(CorrosionModel):
@@ -56,16 +56,3 @@ class Kovalenko2016Model(CorrosionModel):
         """
         return self.parameters['c_s'] + time * self.parameters['r_s']
 
-
-# Example of usage
-def run_kovalenko2016_model() -> Tuple[Kovalenko2016Model, float]:
-    """
-    Runs the Kovalenko 2016 corrosion model.
-
-    Returns:
-        Tuple[Kovalenko2016Model, float]: An instance of the Kovalenko2016Model class and the duration for which the model is evaluated.
-    """
-    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
-    model = Kovalenko2016Model()
-
-    return model, time_duration

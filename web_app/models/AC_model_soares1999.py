@@ -1,6 +1,6 @@
 import streamlit as st
 import numpy as np
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 
 class Soares1999Model(CorrosionModel):
@@ -58,16 +58,3 @@ class Soares1999Model(CorrosionModel):
         )
         return material_loss
 
-
-# Example of usage
-def run_soares1999_model() -> Tuple[Soares1999Model, float]:
-    """
-    Runs the Soares 1999 corrosion model.
-
-    Returns:
-        Tuple[Soares1999Model, float]: An instance of the Soares1999Model class and the duration for which the model is evaluated.
-    """
-    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
-    model = Soares1999Model()
-
-    return model, time_duration
