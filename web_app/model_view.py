@@ -3,7 +3,7 @@ import streamlit as st
 import plotly.express as px
 import streamlit.components.v1 as components
 import pandas as pd
-
+import io
 from models import *
 from typing import Union, List
 
@@ -32,9 +32,8 @@ def display_model_info(model: Model) -> None:
         st.markdown("#### Model Notes: \n" + model.special_note)
 
 
-def plot_mass_loss_over_time(models, current_model, time_range):
-    """Generates and embeds a Plotly Express figure for mass loss over time, with distinct model instances and colors."""
-
+def generate_plot(models, current_model, time_range):
+    """Generates and returns a Plotly Express figure for mass loss over time."""
     t = np.linspace(0, time_range, 400)
 
     # Initialize a list for plotting
@@ -94,7 +93,11 @@ def plot_mass_loss_over_time(models, current_model, time_range):
         legend_title="Models"  # Properly label the legend
     )
 
-    # Embed the figure in Streamlit using components.html
+    return fig
+
+
+def display_plot_html(fig):
+    """Displays the generated Plotly figure as HTML in Streamlit."""
     plot_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
     components.html(
         f"""
@@ -121,7 +124,8 @@ def display_model_view(container):
 
     models = load_corrosion_models_from_directory(model_directories, corwiz_models)
 
-    global plot_data  # Keep track of added models for plotting
+    global plot_data
+    fig = None
 
     with container:
         st.write("---")
@@ -155,7 +159,8 @@ def display_model_view(container):
                 selected_model.display_parameters()
 
                 # Create two columns for buttons to be side by side
-                add_button, reset_button = st.columns([1, 1])
+                add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 3])
+                fig = generate_plot(plot_data, selected_model, time_range)
 
                 with add_button:
                     if st.button("Add", key="add_button"):
@@ -165,9 +170,21 @@ def display_model_view(container):
                     if st.button("Reset", key="reset_button"):
                         plot_data = []  # Reset the list of models
 
+                with download_button:
+                    if fig is not None:
+                        buffer = io.BytesIO()
+                        fig.write_image(buffer, format="png")
+                        buffer.seek(0)
+
+                        st.download_button(
+                            label="Download plot as PNG",
+                            data=buffer,
+                            file_name="corrosion_plot.png",
+                            mime="image/png"
+                        )
+
             with plot_column:
-                # Always plot the current model with any additional models
-                plot_mass_loss_over_time(plot_data, selected_model, time_range)
+                display_plot_html(fig)
 
         with description_content:
             description_expander = st.expander("**Model Description**", expanded=False)
