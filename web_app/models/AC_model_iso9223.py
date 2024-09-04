@@ -4,6 +4,7 @@ import numpy as np
 from typing import Dict, Tuple
 from .corrosion_model import CorrosionModel
 
+
 class ISO9223Model(CorrosionModel):
     """
     A corrosion model based on ISO 9223:2012 and ISO 9224:2012 standards.
@@ -52,8 +53,6 @@ class ISO9223Model(CorrosionModel):
         else:
             self._handle_custom_corrosion_type()
 
-        self.parameters['exponent'] = self._determine_exponent()
-
     def _handle_predefined_corrosion_type(self, corrosion_type_index: int) -> None:
         """Handles predefined corrosion types by setting the corrosion speed."""
         corrosion_speed_options = ['Use lower limit', 'Use upper limit', 'Use average']
@@ -91,26 +90,31 @@ class ISO9223Model(CorrosionModel):
             value = st.text_input(f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:", value=limit['lower'])
             self.parameters[symbol] = float(value)
 
-    def _determine_exponent(self) -> float:
+    def _determine_exponent(self, time: float) -> float:
         """Determines or interpolates the exponent to be used in the material loss calculation."""
         exponent_types = ['Use DIN recommended time exponents measured from the ISO CORRAG program', 'Enter manually']
         exponent_type = st.selectbox('Please select the time exponent', exponent_types)
 
-        if exponent_type == exponent_types[0]:
-            time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1,
-                                   key="duration_years")
-            years = np.array(self.table_9224_3.iloc[6:, 0].astype(int))
-            exponents = np.array(self.table_9224_3.iloc[6:, 1].astype(float))
+        years = np.array(self.table_9224_3.iloc[6:, 0].astype(int))  # Assuming this is a 1D array of year values
+        exponents = np.array(self.table_9224_3.iloc[6:, 1].astype(float))  # Corresponding exponents
 
-            if time in years:
-                return float(exponents[years == time][0])
+        if exponent_type == exponent_types[0]:
+            # In case `time` is an array, we'll take the maximum time value for determining the exponent
+            max_time = np.max(time) if isinstance(time, np.ndarray) else time
+
+            # Interpolate to find the corresponding exponent based on the max_time
+            if max_time in years:
+                return float(exponents[years == max_time][0])
             else:
-                return float(np.interp(time, years, exponents))
+                return float(np.interp(max_time, years, exponents))
         else:
+            # For manual input, return a single float value as the exponent
             return float(st.number_input('Enter exponent:', key="manual_exponent"))
 
     def evaluate_material_loss(self, time: float) -> float:
         """Calculates and returns the material loss over time based on the provided parameters."""
+
+        self.parameters['exponent'] = self._determine_exponent(time)
 
         # Calculate corrosion speed if not provided
         if 'corrosion_speed' in self.parameters:
@@ -123,7 +127,7 @@ class ISO9223Model(CorrosionModel):
 
             corrosion_speed = (1.77 * self.parameters['Pd'] ** 0.52 * np.exp(0.02 * self.parameters['RH'] + fst) +
                                0.102 * self.parameters['Sd'] ** 0.62 * np.exp(
-                                   0.033 * self.parameters['RH'] + 0.04 * self.parameters['T']))
+                        0.033 * self.parameters['RH'] + 0.04 * self.parameters['T']))
 
         # Calculate material loss over time
         if np.max(time) < 20:
@@ -131,6 +135,6 @@ class ISO9223Model(CorrosionModel):
         else:
             material_loss = corrosion_speed * (20 ** self.parameters['exponent'] +
                                                self.parameters['exponent'] * 20 ** (self.parameters['exponent'] - 1) * (
-                                                           time - 20))
+                                                       time - 20))
 
         return material_loss
