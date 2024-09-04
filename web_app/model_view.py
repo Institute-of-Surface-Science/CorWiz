@@ -2,6 +2,7 @@ import numpy as np
 import streamlit as st
 import plotly.express as px
 import streamlit.components.v1 as components
+import pandas as pd
 
 from models import *
 from typing import Union, List
@@ -32,24 +33,65 @@ def display_model_info(model: Model) -> None:
 
 
 def plot_mass_loss_over_time(models, current_model, time_range):
-    """Generates and embeds a Plotly Express figure for mass loss over time into Streamlit."""
-    t = np.linspace(0, time_range, 400)
-    D = current_model.evaluate_material_loss(t)
-    model_name = current_model.model_name
+    """Generates and embeds a Plotly Express figure for mass loss over time, with distinct model instances and colors."""
 
-    # Initialize the figure with the current model's data
-    fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [μm]'}, title="Mass Loss Over Time")
-    fig.update_traces(name=model_name)
+    t = np.linspace(0, time_range, 400)
+
+    # Initialize a list for plotting
+    plot_df = []
+
+    # Plot the current model's data first
+    D = current_model.evaluate_material_loss(t)
+    current_model_data = pd.DataFrame(
+        {'Time': t, 'Mass Loss': D, 'Model': f"{current_model.model_name} (live)"})
+    plot_df.append(current_model_data)
+
+    # Collect all y-values to check for max/min difference for log scaling
+    all_y_values = [D]
 
     # Plot the additional models
+    model_counter = 1
     for model in models:
         D = model.evaluate_material_loss(t)
-        model_name = model.model_name  # Get the model name for each additional model
-        fig.add_scatter(x=t, y=D, mode='lines', name=model_name)
+        model_data = pd.DataFrame({'Time': t, 'Mass Loss': D, 'Model': f"{model.model_name} ({model_counter})"})
+        plot_df.append(model_data)
+        all_y_values.append(D)
+        model_counter += 1
+
+    # Combine all data into a single DataFrame
+    plot_df = pd.concat(plot_df)
+
+    # Flatten the list of y-values to check the ratio between max/min values
+    all_y_values_flat = np.concatenate(all_y_values)
+
+    # Filter out non-positive values to avoid errors with log scaling
+    positive_y_values = all_y_values_flat[all_y_values_flat > 0]
+
+    # Determine whether to use a log scale
+    if len(positive_y_values) > 0:
+        max_value = np.max(positive_y_values)
+        min_value = np.min(positive_y_values)
+        yaxis_type = "log" if max_value / min_value > 100 else "linear"
+    else:
+        yaxis_type = "linear"
+
+    px.defaults.template = "plotly_white"
+
+    # Plot using Plotly Express and use 'Model' for distinct colors and labels
+    fig = px.line(
+        plot_df,
+        x='Time',
+        y='Mass Loss',
+        color='Model',  # Use 'Model' for coloring and labeling the lines
+        labels={'Time': 'Time [years]', 'Mass Loss': 'Mass loss [um]'},
+        title="Mass Loss Over Time",
+        height=700
+    )
 
     fig.update_layout(
-        height=700,
-        showlegend=True,
+        yaxis_type=yaxis_type,
+        showlegend=True,  # Ensure the legend is displayed
+        legend_title="Models"  # Properly label the legend
     )
 
     # Embed the figure in Streamlit using components.html
