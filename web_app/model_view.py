@@ -16,16 +16,16 @@ def display_model_info(model: Model) -> None:
 def run_model(model_identifier: str):
     """Runs the selected model using the provided identifier."""
     model_functions = {
-        'model_benarie1986': run_benarie1986_model,
-        'model_feliu1993': run_feliu1993_model,
-        'din-corrosion-protection-model-iso-9223-compliant': run_iso9223_model,
-        'model_klinesmith2007': run_klinesmith2007_model,
-        'model_ma2010': run_ma2010_model,
-        'model_soares1999': run_soares1999_model,
-        'model_ali2020': run_ali2020_model,
-        'model_garbatov2011': run_garbatov2011_model,
-        'model_hicks2012': run_hicks2012_model,
-        'model_kovalenko2016': run_kovalenko2016_model,
+        'model_benarie1986': Benarie1986Model,
+        'model_feliu1993': Feliu1993Model,
+        'din-corrosion-protection-model-iso-9223-compliant': ISO9223Model,
+        'model_klinesmith2007': KlineSmith2007Model,
+        'model_ma2010': Ma2010Model,
+        'model_soares1999': Soares1999Model,
+        'model_ali2020': Ali2010Model,
+        'model_garbatov2011': Garbatov2011Model,
+        'model_hicks2012': Hicks2012Model,
+        'model_kovalenko2016': Kovalenko2016Model,
     }
 
     return model_functions[model_identifier]()
@@ -86,7 +86,9 @@ def display_model_view(container):
                 filtered_models = [model for model, process_type in model_process_pairs if process_type == selected_corrosion_type]
                 selected_model = st.selectbox('**Model**', filtered_models, format_func=lambda model: model.name + " (" + model.kadi_identifier + ")")
 
-                model, time_range = run_model(selected_model.kadi_identifier)
+                time_range = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
+
+                model = run_model(selected_model.kadi_identifier)
 
             with plot_column:
                 plot_mass_loss_over_time(model, time_range)

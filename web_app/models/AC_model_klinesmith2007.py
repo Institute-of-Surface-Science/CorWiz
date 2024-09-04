@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 
 
@@ -79,17 +79,3 @@ class KlineSmith2007Model(CorrosionModel):
         )
 
         return material_loss
-
-
-# Example of usage
-def run_klinesmith2007_model() -> Tuple[KlineSmith2007Model, float]:
-    """
-    Runs the KlineSmith 2007 corrosion model.
-
-    Returns:
-        Tuple[KlineSmith2007Model, float]: An instance of the KlineSmith2007Model class and the duration for which the model is evaluated.
-    """
-    time_duration = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5, key="duration")
-    model = KlineSmith2007Model()
-
-    return model, time_duration
