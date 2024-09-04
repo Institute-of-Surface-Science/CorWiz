@@ -126,21 +126,21 @@ class ISO9224Model(CorrosionModel):
                    0.102 * self.parameters['Sd'] ** 0.62 * np.exp(
                        0.033 * self.parameters['RH'] + 0.04 * self.parameters['T']))
             corrosion_speed /= 1000  #Convert to grams from milli grams
-            corrosion_speed = self.g_to_um_map(corrosion_speed)
+            corrosion_speed = self.grams_to_um_map(corrosion_speed)
             material_loss = self.parameters['exponent'] * corrosion_speed * time ** (self.parameters['exponent'] - 1)
 
         st.write('Corrosion speed = ' + str(corrosion_speed))
         
         return material_loss
     
-    def g_to_um_map(self, corrosion_speed):
+    def grams_to_um_map(self, corrosion_speed):
         A = np.array([10, 200, 400, 650, 1500, 500])
         B = np.array([1.3, 25, 50, 80, 200, 700])
         interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
 
         return interp_function(corrosion_speed)
     
-    def um_to_g_map(self, corrosion_speed):
+    def um_to_grams_map(self, corrosion_speed):
         A = np.array([1.3, 25, 50, 80, 200, 700])
         B = np.array([10, 200, 400, 650, 1500, 500])
         interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
