@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
+from scipy.interpolate import interp1d
 from typing import Tuple, Optional
 from .corrosion_model import CorrosionModel
 
@@ -112,29 +113,47 @@ class ISO9224Model(CorrosionModel):
 
     def eval_material_loss(self, time: float) -> float:
         """Calculates and returns the material loss over time based on the provided parameters."""
-
         # Calculate corrosion speed if not provided
         if 'corrosion_speed' in self.parameters:
-            corrosion_speed = self.parameters['corrosion_speed']
+            corrosion_speed = self.g_to_um_map(self.parameters['corrosion_speed'])
+            material_loss = time*corrosion_speed
         else:
             if self.parameters['T'] <= 10:
                 fst = 0.15 * (self.parameters['T'] - 10)
             else:
                 fst = -0.054 * (self.parameters['T'] - 10)
-
             corrosion_speed = (1.77 * self.parameters['Pd'] ** 0.52 * np.exp(0.02 * self.parameters['RH'] + fst) +
-                               0.102 * self.parameters['Sd'] ** 0.62 * np.exp(
-                                   0.033 * self.parameters['RH'] + 0.04 * self.parameters['T']))
-
-        # Calculate material loss over time
-        if np.max(time) < 20:
+                   0.102 * self.parameters['Sd'] ** 0.62 * np.exp(
+                       0.033 * self.parameters['RH'] + 0.04 * self.parameters['T']))
+            corrosion_speed /= 1000  #Convert to grams from milli grams
+            corrosion_speed = self.grams_to_um_map(corrosion_speed)
             material_loss = self.parameters['exponent'] * corrosion_speed * time ** (self.parameters['exponent'] - 1)
-        else:
-            material_loss = corrosion_speed * (20 ** self.parameters['exponent'] +
-                                               self.parameters['exponent'] * 20 ** (self.parameters['exponent'] - 1) * (
-                                                           time - 20))
 
+        st.write('Corrosion speed = ' + str(corrosion_speed))
+        
         return material_loss
+    
+    def grams_to_um_map(self, corrosion_speed):
+        '''Table 2 of DIN 9223:2012-05 document compares the corrosion speed in 
+        two units of measures, namely g/(m^2.a) to  um/a, where a is years. A 
+        linear relationship is observed between the two units of measure and utilised 
+        here for mapping corrosion speed from g/(m^2.a) to um/a'''
+        A = np.array([10, 200, 400, 650, 1500, 500])
+        B = np.array([1.3, 25, 50, 80, 200, 700])
+        interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
+
+        return interp_function(corrosion_speed)
+    
+    def um_to_grams_map(self, corrosion_speed):
+        '''Table 2 of DIN 9223:2012-05 document compares the corrosion speed in 
+        two units of measures, namely g/(m^2.a) to  um/a, where a is years. A 
+        linear relationship is observed between the two units of measure and utilised 
+        here for mapping corrosion speed from um/a to g/(m^2.a)'''
+        A = np.array([1.3, 25, 50, 80, 200, 700])
+        B = np.array([10, 200, 400, 650, 1500, 500])
+        interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
+
+        return interp_function(corrosion_speed)
 
 
 # Example of usage
