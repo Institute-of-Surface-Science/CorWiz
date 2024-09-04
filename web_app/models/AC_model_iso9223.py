@@ -115,7 +115,7 @@ class ISO9224Model(CorrosionModel):
         """Calculates and returns the material loss over time based on the provided parameters."""
         # Calculate corrosion speed if not provided
         if 'corrosion_speed' in self.parameters:
-            corrosion_speed = self.g_to_um_map(self.parameters['corrosion_speed'])
+            corrosion_speed = self.grams_to_um_map(self.parameters['corrosion_speed'])
             material_loss = time*corrosion_speed
         else:
             if self.parameters['T'] <= 10:
