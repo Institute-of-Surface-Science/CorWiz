@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple, Optional
 from scipy.interpolate import interp1d
 from .corrosion_model import CorrosionModel
 
@@ -24,45 +24,39 @@ class ISO9223Model(CorrosionModel):
     def __init__(self, json_file_path: str):
         super().__init__(json_file_path=json_file_path, model_name='ISO9223Model')
         self.parameters: Dict[str, float] = {}
-        self.exponent = None  # Store the determined exponent here.
-        self.corrosion_speed = None  # Store the corrosion speed.
+        self.use_tabulated_exponent: bool = False  # Track whether to use tabulated exponents
         self.table_2, self.table_3, self.table_b3, self.table_b4, self.table_c1, self.table_9224_3 = self._load_data()
 
     def _load_data(self) -> Tuple[pd.DataFrame, ...]:
         """Loads and returns all relevant data tables for the ISO 9224 model."""
         return tuple(pd.read_csv(self.DATA_FILE_PATHS[key], header=None) for key in self.DATA_FILE_PATHS)
 
-    def display_parameters(self, time: float) -> None:
-        """
-        Displays the parameter selection interface for the user and computes the exponent based on the passed time.
-
-        Args:
-            time (float): The time in years, which affects the exponent calculation.
-        """
+    def display_parameters(self) -> None:
+        """Displays the parameter selection interface for the user."""
         with st.expander("Description Corrosion Type"):
             st.table(self.table_c1)
 
         corrosion_types = self.table_c1.iloc[1:, 1].tolist()
         corrosion_types.append("Manually enter Cl⁻ and SO₂ annual deposits, relative humidity, and temperature")
 
-        corrosion_type = st.selectbox('Select corrosion type:', corrosion_types, key=f"corrosion_type_{self.model_name}")
+        corrosion_type = st.selectbox('Select corrosion type:', corrosion_types)
         corrosion_type_index = corrosion_types.index(corrosion_type)
 
         if corrosion_type_index < 6:
             corrosion_speed_options = ['Use lower limit', 'Use upper limit', 'Use average']
-            selected_option = st.selectbox('Select corrosion speed option:', corrosion_speed_options, key=f"corrosion_speed_option_{self.model_name}")
+            selected_option = st.selectbox('Select corrosion speed option:', corrosion_speed_options)
 
             lower_limit = float(self.table_2.iloc[corrosion_type_index + 1, 2])
             upper_limit = float(self.table_2.iloc[corrosion_type_index + 1, 3])
 
             if selected_option == 'Use lower limit':
-                self.corrosion_speed = lower_limit
+                self.parameters['corrosion_speed'] = lower_limit
             elif selected_option == 'Use upper limit':
-                self.corrosion_speed = upper_limit
+                self.parameters['corrosion_speed'] = upper_limit
             else:
-                self.corrosion_speed = (lower_limit + upper_limit) / 2
+                self.parameters['corrosion_speed'] = (lower_limit + upper_limit) / 2
 
-            st.write(f"Corrosion speed selected: {self.corrosion_speed:.2f} μm/year")
+            st.write(f"Corrosion speed selected: {self.parameters['corrosion_speed']:.2f} μm/year")
         else:
             with st.expander("Typical Values:"):
                 st.table(self.table_3)
@@ -79,63 +73,53 @@ class ISO9223Model(CorrosionModel):
             }
 
             for symbol, limit in limits.items():
-                self.parameters[symbol] = st.number_input(
-                    f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:",
-                    value=limit['lower'], min_value=limit['lower'], max_value=limit['upper'],
-                    key=f"input_{symbol}_{self.model_name}"
-                )
+                value = st.number_input(f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:",
+                                        value=limit['lower'], min_value=limit['lower'], max_value=limit['upper'])
+                self.parameters[symbol] = float(value)
 
-            # Calculate corrosion speed for custom types
+        # Determine whether to use tabulated exponents or manual input
+        exponent_types = ['Use DIN recommended time exponents measured from the ISO CORRAG program', 'Enter manually']
+        selected_type = st.selectbox('Please select the time exponent', exponent_types)
+
+        if selected_type == exponent_types[0]:
+            self.use_tabulated_exponent = True
+        else:
+            self.use_tabulated_exponent = False
+            self.parameters['exponent'] = st.number_input('Enter exponent:', key="manual_exponent")
+
+    def _determine_tabulated_exponent(self, time: float) -> float:
+        """Determines the tabulated exponent based on the provided time."""
+        years = self.table_9224_3.iloc[6:, 0].astype(int).values  # 'table_9224_3'
+        exponents = self.table_9224_3.iloc[6:, 1].astype(float).values
+
+        max_time = np.max(time) if isinstance(time, np.ndarray) else time
+
+        if max_time in years:
+            return float(exponents[years == max_time][0])
+        else:
+            return float(np.interp(max_time, years, exponents))
+
+    def evaluate_material_loss(self, time: float) -> float:
+        """Calculates and returns the material loss over time based on the provided parameters."""
+
+        # Re-determine the exponent if using tabulated values and the time has changed
+        if self.use_tabulated_exponent:
+            self.parameters['exponent'] = self._determine_tabulated_exponent(time)
+
+        if 'corrosion_speed' in self.parameters:
+            corrosion_speed = self.parameters['corrosion_speed']
+        else:
             if self.parameters['T'] <= 10:
                 temperature_factor = 0.15 * (self.parameters['T'] - 10)
             else:
                 temperature_factor = -0.054 * (self.parameters['T'] - 10)
 
-            self.corrosion_speed = (
+            corrosion_speed = (
                 1.77 * self.parameters['Pd'] ** 0.52 * np.exp(0.02 * self.parameters['RH'] + temperature_factor) +
                 0.102 * self.parameters['Sd'] ** 0.62 * np.exp(0.033 * self.parameters['RH'] + 0.04 * self.parameters['T'])
             )
 
-        # Exponent selection (time exponent is based on passed time)
-        self.exponent = self._determine_exponent(time)
-
-    def _determine_exponent(self, time: float) -> float:
-        """
-        Determines or interpolates the time exponent for the material loss calculation based on the passed time.
-
-        Args:
-            time (float): The time in years, which affects the exponent calculation.
-        """
-        exponent_types = ['Use DIN recommended time exponents measured from the ISO CORRAG program', 'Enter manually']
-        selected_type = st.selectbox('Please select the time exponent', exponent_types, key=f"exponent_select_{self.model_name}")
-
-        years = self.table_9224_3.iloc[6:, 0].astype(int).values  # 'table_9224_3'
-        exponents = self.table_9224_3.iloc[6:, 1].astype(float).values
-
-        if selected_type == exponent_types[0]:
-            # Interpolate or use the closest available exponent based on the given time.
-            if time in years:
-                return float(exponents[years == time][0])
-            else:
-                return float(np.interp(time, years, exponents))
-        else:
-            return float(st.number_input('Enter exponent:', key=f"manual_exponent_{self.model_name}"))
-
-    def evaluate_material_loss(self, time: Union[float, np.ndarray]) -> np.ndarray:
-        """
-        Calculates and returns the material loss over time based on the pre-selected parameters.
-
-        Args:
-            time (Union[float, np.ndarray]): The time in years (can be a scalar or an array).
-
-        Returns:
-            np.ndarray: The calculated material loss over time.
-        """
-        # Ensure corrosion_speed and exponent have been set
-        if self.corrosion_speed is None or self.exponent is None:
-            raise ValueError("Corrosion speed and exponent must be set before evaluating material loss. Call display_parameters() first.")
-
-        return self.exponent * self.corrosion_speed * np.power(time, self.exponent - 1)
+        return self.parameters['exponent'] * corrosion_speed * time ** (self.parameters['exponent'] - 1)
 
     def grams_to_um_map(self, corrosion_speed: float) -> float:
         """Maps corrosion speed from g/(m²⋅a) to μm/a."""

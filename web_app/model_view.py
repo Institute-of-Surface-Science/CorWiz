@@ -152,7 +152,7 @@ def display_model_view(container):
                                              key="time_range_input")
 
                 # Display parameters and compute corrosion speed and exponent using the selected time
-                selected_model.display_parameters(time_range)
+                selected_model.display_parameters()
 
                 # Create two columns for buttons to be side by side
                 add_button, reset_button = st.columns([1, 1])
