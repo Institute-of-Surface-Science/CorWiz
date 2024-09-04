@@ -163,11 +163,11 @@ def display_model_view(container):
                 fig = generate_plot(plot_data, selected_model, time_range)
 
                 with add_button:
-                    if st.button("Add", key="add_button"):
+                    if st.button("Add to Plot", key="add_button"):
                         plot_data.append(selected_model)  # Add the current model to the list of models to plot
 
                 with reset_button:
-                    if st.button("Reset", key="reset_button"):
+                    if st.button("Reset Plot", key="reset_button"):
                         plot_data = []  # Reset the list of models
 
                 with download_button:
