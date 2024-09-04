@@ -2,8 +2,6 @@ import numpy as np
 import streamlit as st
 import plotly.express as px
 import streamlit.components.v1 as components
-import json
-import os
 
 from models import *
 from typing import Union, List
@@ -22,6 +20,10 @@ corwiz_models = {
     'model_kovalenko2016': Kovalenko2016Model,
 }
 
+# Keep track of all models added for plotting
+plot_data = []
+
+
 def display_model_info(model: Model) -> None:
     """Displays the model description and notes."""
     st.markdown(model.description)
@@ -29,17 +31,29 @@ def display_model_info(model: Model) -> None:
         st.markdown("#### Model Notes: \n" + model.special_note)
 
 
-def plot_mass_loss_over_time(model, time_range):
-    """Generates and embeds a Plotly figure for mass loss over time into Streamlit."""
+def plot_mass_loss_over_time(models, current_model, time_range):
+    """Generates and embeds a Plotly Express figure for mass loss over time into Streamlit."""
     t = np.linspace(0, time_range, 400)
-    D = model.evaluate_material_loss(t)
+    D = current_model.evaluate_material_loss(t)
+    model_name = current_model.model_name
 
-    fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [um]'}, title="Mass Loss Over Time",
-                  height=700)
+    # Initialize the figure with the current model's data
+    fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [μm]'}, title="Mass Loss Over Time")
+    fig.update_traces(name=model_name)
 
+    # Plot the additional models
+    for model in models:
+        D = model.evaluate_material_loss(t)
+        model_name = model.model_name  # Get the model name for each additional model
+        fig.add_scatter(x=t, y=D, mode='lines', name=model_name)
+
+    fig.update_layout(
+        height=700,
+        showlegend=True,
+    )
+
+    # Embed the figure in Streamlit using components.html
     plot_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
-
-    # Embed the figure in Streamlit using components.html since it doesn't work otherwise
     components.html(
         f"""
         <div style="background-color: white; padding: 10px; border-radius: 10px;">
@@ -49,6 +63,7 @@ def plot_mass_loss_over_time(model, time_range):
         height=800,
         scrolling=True
     )
+
 
 def display_model_view(container):
     """
@@ -64,6 +79,8 @@ def display_model_view(container):
 
     models = load_corrosion_models_from_directory(model_directories, corwiz_models)
 
+    global plot_data  # Keep track of added models for plotting
+
     with container:
         st.write("---")
         st.header("Corrosion Mass Loss Models")
@@ -78,17 +95,37 @@ def display_model_view(container):
 
             with selection_column:
                 corrosion_types = sorted({process_type for _, process_type in model_process_pairs})
-                selected_corrosion_type = st.selectbox('**Corrosion Type**', corrosion_types)
+                selected_corrosion_type = st.selectbox('**Corrosion Type**', corrosion_types,
+                                                       key="corrosion_type_selectbox")
 
-                filtered_models = [model for model, process_type in model_process_pairs if process_type == selected_corrosion_type]
-                selected_model = st.selectbox('**Model**', filtered_models, format_func=lambda model: model.name + " (" + model.kadi_identifier + ")")
+                filtered_models = [model for model, process_type in model_process_pairs if
+                                   process_type == selected_corrosion_type]
+                selected_model = st.selectbox(
+                    '**Model**', filtered_models,
+                    format_func=lambda model: model.name + " (" + model.kadi_identifier + ")", key="model_selectbox"
+                )
 
-                time_range = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
+                # Capture the time range input
+                time_range = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5,
+                                             key="time_range_input")
 
-                selected_model.display_parameters()
+                # Display parameters and compute corrosion speed and exponent using the selected time
+                selected_model.display_parameters(time_range)
+
+                # Create two columns for buttons to be side by side
+                add_button, reset_button = st.columns([1, 1])
+
+                with add_button:
+                    if st.button("Add", key="add_button"):
+                        plot_data.append(selected_model)  # Add the current model to the list of models to plot
+
+                with reset_button:
+                    if st.button("Reset", key="reset_button"):
+                        plot_data = []  # Reset the list of models
 
             with plot_column:
-                plot_mass_loss_over_time(selected_model, time_range)
+                # Always plot the current model with any additional models
+                plot_mass_loss_over_time(plot_data, selected_model, time_range)
 
         with description_content:
             description_expander = st.expander("**Model Description**", expanded=False)
