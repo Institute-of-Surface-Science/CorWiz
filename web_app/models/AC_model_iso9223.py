@@ -134,6 +134,10 @@ class ISO9224Model(CorrosionModel):
         return material_loss
     
     def grams_to_um_map(self, corrosion_speed):
+        '''Table 2 of DIN 9223:2012-05 document compares the corrosion speed in 
+        two units of measures, namely g/(m^2.a) to  um/a, where a is years. A 
+        linear relationship is observed between the two units of measure and utilised 
+        here for mapping corrosion speed from g/(m^2.a) to um/a'''
         A = np.array([10, 200, 400, 650, 1500, 500])
         B = np.array([1.3, 25, 50, 80, 200, 700])
         interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
@@ -141,6 +145,10 @@ class ISO9224Model(CorrosionModel):
         return interp_function(corrosion_speed)
     
     def um_to_grams_map(self, corrosion_speed):
+        '''Table 2 of DIN 9223:2012-05 document compares the corrosion speed in 
+        two units of measures, namely g/(m^2.a) to  um/a, where a is years. A 
+        linear relationship is observed between the two units of measure and utilised 
+        here for mapping corrosion speed from um/a to g/(m^2.a)'''
         A = np.array([1.3, 25, 50, 80, 200, 700])
         B = np.array([10, 200, 400, 650, 1500, 500])
         interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
