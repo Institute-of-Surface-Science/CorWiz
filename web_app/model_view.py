@@ -157,6 +157,10 @@ def display_model_view(container):
                 # Display parameters and compute corrosion speed and exponent using the selected time
                 selected_model.display_parameters()
 
+                # Display the location associated with the model on the map 
+                if selected_model.MODEL_COORDINATES != None:
+                    st.map(selected_model.MODEL_COORDINATES)
+
                 # Create two columns for buttons to be side by side
                 add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 3])
                 fig = generate_plot(plot_data, selected_model, time_range)

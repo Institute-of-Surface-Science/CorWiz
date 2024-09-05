@@ -34,7 +34,12 @@ class Benarie1986Model(CorrosionModel):
         selected_site = st.selectbox('Select corrosion site:', corrosion_sites)
         corrosion_site_index = corrosion_sites.tolist().index(selected_site) + 1
         self.parameters[self.DEFAULT_CORROSION_SITE_KEY] = corrosion_site_index
-        self._show_map(self.parameters)
+        coordinates = pd.read_csv(self.COORDINATES_FILE_PATH, header=None)
+        coordinates = coordinates.iloc[self.parameters[self.DEFAULT_CORROSION_SITE_KEY], 1:]
+        self.MODEL_COORDINATES = pd.DataFrame({
+            'lat': [float(coordinates.iloc[0])],
+            'lon': [float(coordinates.iloc[1])]
+        })
         self._display_site_info(corrosion_site_index)
 
     def _display_site_info(self, corrosion_site: int) -> None:

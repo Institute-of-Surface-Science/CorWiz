@@ -15,6 +15,8 @@ class CorrosionModel(Model):
         model_name (str): The name of the corrosion model.
     """
 
+    MODEL_COORDINATES = None # Initialize the coordinates associated with the model to be None
+
     def __init__(self, json_file_path: str, model_name: str = 'parent class'):
         """
         Initializes the corrosion model with a JSON file and a specified model name.
