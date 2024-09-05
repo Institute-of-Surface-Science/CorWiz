@@ -16,6 +16,7 @@ class Benarie1986Model(CorrosionModel):
     """
 
     DATA_FILE_PATH = '../data/tables/benarie1986_tables_table_2.csv'
+    COORDINATES_FILE_PATH = '../data/tables/benarie1986_coordinates.csv'
     DEFAULT_CORROSION_SITE_KEY = 'corrosion_site'
 
     def __init__(self, parameters: Optional[dict] = None):
@@ -30,6 +31,7 @@ class Benarie1986Model(CorrosionModel):
         selected_site = st.selectbox('Select corrosion site:', corrosion_sites)
         corrosion_site_index = corrosion_sites.tolist().index(selected_site) + 1
         self.parameters[self.DEFAULT_CORROSION_SITE_KEY] = corrosion_site_index
+        self._show_map(self.parameters)
         self._display_site_info(corrosion_site_index)
 
     def _display_site_info(self, corrosion_site: int) -> None:
@@ -59,6 +61,16 @@ class Benarie1986Model(CorrosionModel):
             - **Value:** {ph_value}
             """
         )
+
+    def _show_map(self, parameters) -> None:
+         # Show the selected location on a map
+        coordinates = pd.read_csv(self.COORDINATES_FILE_PATH, header=None)
+        coordinates = coordinates.iloc[parameters['corrosion_site'], 1:]
+        coordiantes = pd.DataFrame({
+            'lat': [float(coordinates.iloc[0])],
+            'lon': [float(coordinates.iloc[1])]
+        })
+        st.map(coordiantes)
 
     def eval_material_loss(self, time: float) -> np.ndarray:
         """

@@ -17,11 +17,13 @@ class Ma2010Model(CorrosionModel):
     """
 
     DATA_FILE_PATH = '../data/tables/ma2010_tables_table_2.csv'
+    COORDINATES_FILE_PATH = '../data/tables/ma2010_coordinates.csv'
 
     def __init__(self, parameters: Optional[Dict[str, float]] = None):
         super().__init__(
             model_name='The Atmospheric Corrosion Kinetics of Low Carbon Steel in a Tropical Marine Environment')
         self.parameters = parameters if parameters else self._get_parameters()
+        self._show_map(self.parameters)
 
     def _get_parameters(self) -> Dict[str, float]:
         """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
@@ -32,12 +34,10 @@ class Ma2010Model(CorrosionModel):
         corrosion_sites = table_2.iloc[1:, 0].tolist()
         corrosion_site = st.selectbox('Select corrosion site:', corrosion_sites)
         corrosion_site_index = corrosion_sites.index(corrosion_site) + 1
-
-        limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
-
         parameters = {
             'corrosion_site': corrosion_site_index,
         }
+        limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
 
         # Collect user input for the distance parameter
         for symbol, limit in limits.items():
@@ -51,8 +51,19 @@ class Ma2010Model(CorrosionModel):
             )
             if symbol == 'D':
                 parameters['distance'] = value
-
+                
         return parameters
+    
+    def _show_map(self, parameters) -> None:
+         # Show the selected location on a map
+        coordinates = pd.read_csv(self.COORDINATES_FILE_PATH, header=None)
+        coordinates = coordinates.iloc[parameters['corrosion_site'], 1:]
+        coordiantes = pd.DataFrame({
+            'lat': [float(coordinates.iloc[0])],
+            'lon': [float(coordinates.iloc[1])]
+        })
+        st.map(coordiantes)
+        
 
     def eval_material_loss(self, time: float) -> float:
         """Calculates the material loss over time based on the provided environmental parameters."""
