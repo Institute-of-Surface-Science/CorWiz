@@ -1,8 +1,8 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
+from typing import Dict, Tuple, Optional
 from scipy.interpolate import interp1d
-from typing import Tuple, Optional
 from .corrosion_model import CorrosionModel
 
 class ISO9223Model(CorrosionModel):
@@ -21,136 +21,106 @@ class ISO9223Model(CorrosionModel):
         'table_9224_3': '../data/tables/din-en-iso-92232012-05_tables_9224_table_3.csv'
     }
 
-    def __init__(self, parameters: Optional[dict] = None):
-        super().__init__(model_name='ISO 9223:2012 and ISO 9224:2012')
-        self.parameters = parameters if parameters else {}
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='ISO9223Model')
+        self.parameters: Dict[str, float] = {}
         self.table_2, self.table_3, self.table_b3, self.table_b4, self.table_c1, self.table_9224_3 = self._load_data()
-        self._initialize_model()
 
-    def _load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-        """Loads the relevant data tables for the ISO 9224 model."""
-        return (
-            pd.read_csv(self.DATA_FILE_PATHS['table_2'], header=None),
-            pd.read_csv(self.DATA_FILE_PATHS['table_3'], header=None),
-            pd.read_csv(self.DATA_FILE_PATHS['table_b3'], header=None),
-            pd.read_csv(self.DATA_FILE_PATHS['table_b4'], header=None),
-            pd.read_csv(self.DATA_FILE_PATHS['table_c1'], header=None),
-            pd.read_csv(self.DATA_FILE_PATHS['table_9224_3'], header=None)
-        )
+    def _load_data(self) -> Tuple[pd.DataFrame, ...]:
+        """Loads and returns all relevant data tables for the ISO 9224 model."""
+        return tuple(pd.read_csv(self.DATA_FILE_PATHS[key], header=None) for key in self.DATA_FILE_PATHS)
 
-    def _initialize_model(self) -> None:
-        """Initializes the model by setting up the parameters and selecting corrosion type."""
+    def display_parameters(self) -> None:
+        """Displays the parameter selection interface for the user."""
         with st.expander("Description Corrosion Type"):
             st.table(self.table_c1)
 
         corrosion_types = self.table_c1.iloc[1:, 1].tolist()
-        corrosion_types.append("Manually enter Cl^- and SO_2 annual deposits, relative humidity, and temperature")
+        corrosion_types.append("Manually enter Cl⁻ and SO₂ annual deposits, relative humidity, and temperature")
 
         corrosion_type = st.selectbox('Select corrosion type:', corrosion_types)
         corrosion_type_index = corrosion_types.index(corrosion_type)
 
         if corrosion_type_index < 6:
-            self._handle_predefined_corrosion_type(corrosion_type_index)
-        else:
-            self._handle_custom_corrosion_type()
+            corrosion_speed_options = ['Use lower limit', 'Use upper limit', 'Use average']
+            selected_option = st.selectbox('Select corrosion speed option:', corrosion_speed_options)
 
-        self.parameters['exponent'] = self._determine_exponent()
-
-    def _handle_predefined_corrosion_type(self, corrosion_type_index: int) -> None:
-        """Handles predefined corrosion types by setting the corrosion speed."""
-        corrosion_speed_options = ['Use lower limit', 'Use upper limit', 'Use average']
-        selected_option = st.selectbox('Select corrosion speed option:', corrosion_speed_options)
-
-        if selected_option == 'Use lower limit':
-            self.parameters['corrosion_speed'] = float(self.table_2.iloc[corrosion_type_index + 1, 2])
-        elif selected_option == 'Use upper limit':
-            self.parameters['corrosion_speed'] = float(self.table_2.iloc[corrosion_type_index + 1, 3])
-        else:  # 'Use average'
             lower_limit = float(self.table_2.iloc[corrosion_type_index + 1, 2])
             upper_limit = float(self.table_2.iloc[corrosion_type_index + 1, 3])
-            self.parameters['corrosion_speed'] = (lower_limit + upper_limit) / 2
 
-        st.write(f'Corrosion speed selected: {self.parameters["corrosion_speed"]:.2f} μm/year')
-
-    def _handle_custom_corrosion_type(self) -> None:
-        """Handles custom corrosion types by prompting the user for detailed environmental inputs."""
-        with st.expander("Typical Values:"):
-            st.table(self.table_3)
-            st.write(
-                '### Parameters used in deriving the dose-response functions, including symbol, description, interval, and unit')
-            st.table(self.table_b3)
-            st.write(r'### Classification of contamination by sulfur-containing substances, represented by $SO_2$')
-            st.table(self.table_b4)
-            st.write(r'### Classification of contamination by sulfur-containing substances, represented by $Cl^-$')
-
-        limits = {
-            'T': {'desc': 'Temperature', 'lower': -17.1, 'upper': 28.7, 'unit': '°C'},
-            'RH': {'desc': 'Relative Humidity', 'lower': 34, 'upper': 93, 'unit': '%'},
-            'Pd': {'desc': 'SO₂-Deposit', 'lower': 0.7, 'upper': 150.4, 'unit': 'mg/(m²⋅d)'},
-            'Sd': {'desc': 'Cl⁻-Deposit', 'lower': 0.4, 'upper': 760.5, 'unit': 'mg/(m²⋅d)'}
-        }
-        for symbol, limit in limits.items():
-            value = st.text_input(f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:", value=limit['lower'])
-            self.parameters[symbol] = float(value)
-
-    def _determine_exponent(self) -> float:
-        """Determines or interpolates the exponent to be used in the material loss calculation."""
-        exponent_types = ['Use DIN recommended time exponents measured from the ISO CORRAG program', 'Enter manually']
-        exponent_type = st.selectbox('Please select the time exponent', exponent_types)
-
-        if exponent_type == exponent_types[0]:
-            time = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=0.1,
-                                   key="duration_years")
-            years = np.array(self.table_9224_3.iloc[6:, 0].astype(int))
-            exponents = np.array(self.table_9224_3.iloc[6:, 1].astype(float))
-
-            if time in years:
-                return float(exponents[years == time][0])
+            if selected_option == 'Use lower limit':
+                self.parameters['corrosion_speed'] = lower_limit
+            elif selected_option == 'Use upper limit':
+                self.parameters['corrosion_speed'] = upper_limit
             else:
-                return float(np.interp(time, years, exponents))
+                self.parameters['corrosion_speed'] = (lower_limit + upper_limit) / 2
+
+            st.write(f"Corrosion speed selected: {self.parameters['corrosion_speed']:.2f} μm/year")
+        else:
+            with st.expander("Typical Values:"):
+                st.table(self.table_3)
+                st.write("### Parameters used in deriving the dose-response functions")
+                st.table(self.table_b3)
+                st.write("### Classification of contamination by sulfur-containing substances, represented by SO₂ and Cl⁻")
+                st.table(self.table_b4)
+
+            limits = {
+                'T': {'desc': 'Temperature', 'lower': -17.1, 'upper': 28.7, 'unit': '°C'},
+                'RH': {'desc': 'Relative Humidity', 'lower': 34, 'upper': 93, 'unit': '%'},
+                'Pd': {'desc': 'SO₂-Deposit', 'lower': 0.7, 'upper': 150.4, 'unit': 'mg/(m²⋅d)'},
+                'Sd': {'desc': 'Cl⁻-Deposit', 'lower': 0.4, 'upper': 760.5, 'unit': 'mg/(m²⋅d)'}
+            }
+
+            for symbol, limit in limits.items():
+                value = st.number_input(f"Enter {limit['desc']} ({symbol}) [{limit['unit']}]:",
+                                        value=limit['lower'], min_value=limit['lower'], max_value=limit['upper'])
+                self.parameters[symbol] = float(value)
+
+    def _determine_exponent(self, time: float) -> float:
+        """Determines or interpolates the time exponent for the material loss calculation."""
+        exponent_types = ['Use DIN recommended time exponents measured from the ISO CORRAG program', 'Enter manually']
+        selected_type = st.selectbox('Please select the time exponent', exponent_types)
+
+        years = self.table_9224_3.iloc[6:, 0].astype(int).values  # 'table_9224_3'
+        exponents = self.table_9224_3.iloc[6:, 1].astype(float).values
+
+        if selected_type == exponent_types[0]:
+            max_time = np.max(time) if isinstance(time, np.ndarray) else time
+
+            if max_time in years:
+                return float(exponents[years == max_time][0])
+            else:
+                return float(np.interp(max_time, years, exponents))
         else:
             return float(st.number_input('Enter exponent:', key="manual_exponent"))
 
-    def eval_material_loss(self, time: float) -> float:
+    def evaluate_material_loss(self, time: float) -> float:
         """Calculates and returns the material loss over time based on the provided parameters."""
-        # Calculate corrosion speed if not provided
+        self.parameters['exponent'] = self._determine_exponent(time)
+
         if 'corrosion_speed' in self.parameters:
             corrosion_speed = self.grams_to_um_map(self.parameters['corrosion_speed'])
             material_loss = time*corrosion_speed
         else:
             if self.parameters['T'] <= 10:
-                fst = 0.15 * (self.parameters['T'] - 10)
+                temperature_factor = 0.15 * (self.parameters['T'] - 10)
             else:
-                fst = -0.054 * (self.parameters['T'] - 10)
-            corrosion_speed = (1.77 * self.parameters['Pd'] ** 0.52 * np.exp(0.02 * self.parameters['RH'] + fst) +
-                   0.102 * self.parameters['Sd'] ** 0.62 * np.exp(
-                       0.033 * self.parameters['RH'] + 0.04 * self.parameters['T']))
-            corrosion_speed /= 1000  #Convert to grams from milli grams
-            corrosion_speed = self.grams_to_um_map(corrosion_speed)
-            material_loss = self.parameters['exponent'] * corrosion_speed * time ** (self.parameters['exponent'] - 1)
+                temperature_factor = -0.054 * (self.parameters['T'] - 10)
 
-        st.write('Corrosion speed = ' + str(corrosion_speed))
-        
-        return material_loss
-    
-    def grams_to_um_map(self, corrosion_speed):
-        '''Table 2 of DIN 9223:2012-05 document compares the corrosion speed in 
-        two units of measures, namely g/(m^2.a) to  um/a, where a is years. A 
-        linear relationship is observed between the two units of measure and utilised 
-        here for mapping corrosion speed from g/(m^2.a) to um/a'''
-        A = np.array([10, 200, 400, 650, 1500, 500])
-        B = np.array([1.3, 25, 50, 80, 200, 700])
-        interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
+            corrosion_speed = (
+                1.77 * self.parameters['Pd'] ** 0.52 * np.exp(0.02 * self.parameters['RH'] + temperature_factor) +
+                0.102 * self.parameters['Sd'] ** 0.62 * np.exp(0.033 * self.parameters['RH'] + 0.04 * self.parameters['T'])
+            )
 
-        return interp_function(corrosion_speed)
-    
-    def um_to_grams_map(self, corrosion_speed):
-        '''Table 2 of DIN 9223:2012-05 document compares the corrosion speed in 
-        two units of measures, namely g/(m^2.a) to  um/a, where a is years. A 
-        linear relationship is observed between the two units of measure and utilised 
-        here for mapping corrosion speed from um/a to g/(m^2.a)'''
-        A = np.array([1.3, 25, 50, 80, 200, 700])
-        B = np.array([10, 200, 400, 650, 1500, 500])
-        interp_function = interp1d(A, B, kind='linear', fill_value='extrapolate')
+        return self.parameters['exponent'] * corrosion_speed * time ** (self.parameters['exponent'] - 1)
 
-        return interp_function(corrosion_speed)
+    def grams_to_um_map(self, corrosion_speed: float) -> float:
+        """Maps corrosion speed from g/(m²⋅a) to μm/a."""
+        g_to_um_mapping = interp1d([10, 200, 400, 650, 1500, 500], [1.3, 25, 50, 80, 200, 700], kind='linear', fill_value='extrapolate')
+        return g_to_um_mapping(corrosion_speed)
+
+    def um_to_grams_map(self, corrosion_speed: float) -> float:
+        """Maps corrosion speed from μm/a to g/(m²⋅a)."""
+        um_to_g_mapping = interp1d([1.3, 25, 50, 80, 200, 700], [10, 200, 400, 650, 1500, 500], kind='linear', fill_value='extrapolate')
+        return um_to_g_mapping(corrosion_speed)
+

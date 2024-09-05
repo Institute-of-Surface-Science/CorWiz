@@ -1,10 +1,26 @@
-
 import numpy as np
 import streamlit as st
 import plotly.express as px
 import streamlit.components.v1 as components
+import json
+import os
 
 from models import *
+from typing import Union, List
+
+# Mapping from identifiers to their respective corrosion model classes
+corwiz_models = {
+    'model_benarie1986': Benarie1986Model,
+    'model_feliu1993': Feliu1993Model,
+    'din-corrosion-protection-model-iso-9223-compliant': ISO9223Model,
+    'model_klinesmith2007': KlineSmith2007Model,
+    'model_ma2010': Ma2010Model,
+    'model_soares1999': Soares1999Model,
+    'model_ali2020': Ali2010Model,
+    'model_garbatov2011': Garbatov2011Model,
+    'model_hicks2012': Hicks2012Model,
+    'model_kovalenko2016': Kovalenko2016Model,
+}
 
 def display_model_info(model: Model) -> None:
     """Displays the model description and notes."""
@@ -13,28 +29,10 @@ def display_model_info(model: Model) -> None:
         st.markdown("#### Model Notes: \n" + model.special_note)
 
 
-def run_model(model_identifier: str):
-    """Runs the selected model using the provided identifier."""
-    model_functions = {
-        'model_benarie1986': Benarie1986Model,
-        'model_feliu1993': Feliu1993Model,
-        'din-corrosion-protection-model-iso-9223-compliant': ISO9223Model,
-        'model_klinesmith2007': KlineSmith2007Model,
-        'model_ma2010': Ma2010Model,
-        'model_soares1999': Soares1999Model,
-        'model_ali2020': Ali2010Model,
-        'model_garbatov2011': Garbatov2011Model,
-        'model_hicks2012': Hicks2012Model,
-        'model_kovalenko2016': Kovalenko2016Model,
-    }
-
-    return model_functions[model_identifier]()
-
-
 def plot_mass_loss_over_time(model, time_range):
     """Generates and embeds a Plotly figure for mass loss over time into Streamlit."""
     t = np.linspace(0, time_range, 400)
-    D = model.eval_material_loss(t)
+    D = model.evaluate_material_loss(t)
 
     fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [um]'}, title="Mass Loss Over Time",
                   height=700)
@@ -52,7 +50,6 @@ def plot_mass_loss_over_time(model, time_range):
         scrolling=True
     )
 
-
 def display_model_view(container):
     """
     Displays the model view interface for selecting and analyzing corrosion mass loss models.
@@ -65,7 +62,7 @@ def display_model_view(container):
         '../data/kadi4mat_json/atmospheric_corrosion_models/'
     ]
 
-    models = load_models_from_directory(model_directories)
+    models = load_corrosion_models_from_directory(model_directories, corwiz_models)
 
     with container:
         st.write("---")
@@ -88,10 +85,10 @@ def display_model_view(container):
 
                 time_range = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5)
 
-                model = run_model(selected_model.kadi_identifier)
+                selected_model.display_parameters()
 
             with plot_column:
-                plot_mass_loss_over_time(model, time_range)
+                plot_mass_loss_over_time(selected_model, time_range)
 
         with description_content:
             description_expander = st.expander("**Model Description**", expanded=False)
