@@ -3,7 +3,6 @@ import numpy as np
 import streamlit as st
 import plotly.express as px
 import streamlit.components.v1 as components
-from matplotlib import pyplot as plt
 
 from models import *
 
