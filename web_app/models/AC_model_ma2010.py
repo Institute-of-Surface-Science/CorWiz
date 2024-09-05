@@ -4,7 +4,6 @@ import numpy as np
 from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 
-
 class Ma2010Model(CorrosionModel):
     """
     A corrosion model based on the study by Ma et al. (2010) which evaluates the atmospheric corrosion kinetics
@@ -17,27 +16,30 @@ class Ma2010Model(CorrosionModel):
     """
 
     DATA_FILE_PATH = '../data/tables/ma2010_table_2.csv'
+    COORDINATES_FILE_PATH = '../data/tables/ma2010_coordinates.csv'
 
-    def __init__(self, parameters: Optional[Dict[str, float]] = None):
-        super().__init__(
-            model_name='The Atmospheric Corrosion Kinetics of Low Carbon Steel in a Tropical Marine Environment')
-        self.parameters = parameters if parameters else self._get_parameters()
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Ma2010Model')
+        self.parameters: Dict[str, float] = {}
+        self.table_2 = self._load_data()
 
-    def _get_parameters(self) -> Dict[str, float]:
+    def _load_data(self) -> pd.DataFrame:
+        """Loads the relevant data table for the Ma2010 model."""
+        return pd.read_csv(self.DATA_FILE_PATH, header=None)
+
+    def display_parameters(self) -> None:
         """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
-        table_2 = pd.read_csv(self.DATA_FILE_PATH, header=None)
-
-        # Display the table and allow user to select the corrosion site
-        st.table(table_2)
-        corrosion_sites = table_2.iloc[1:, 0].tolist()
+        st.table(self.table_2)
+        corrosion_sites = self.table_2.iloc[1:, 0].tolist()
         corrosion_site = st.selectbox('Select corrosion site:', corrosion_sites)
         corrosion_site_index = corrosion_sites.index(corrosion_site) + 1
 
         limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
 
-        parameters = {
+        self.parameters = {
             'corrosion_site': corrosion_site_index,
         }
+        limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
 
         # Collect user input for the distance parameter
         for symbol, limit in limits.items():
@@ -50,11 +52,17 @@ class Ma2010Model(CorrosionModel):
                 key=f"input_{symbol}"
             )
             if symbol == 'D':
-                parameters['distance'] = value
+                self.parameters['distance'] = value
 
-        return parameters
+        # Add the selected location's coordinates to global MODEL_COORDINATES varaible
+        coordinates = pd.read_csv(self.COORDINATES_FILE_PATH, header=None)
+        coordinates = coordinates.iloc[self.parameters['corrosion_site'], 1:]
+        self.model_coordinates = pd.DataFrame({
+            'lat': [float(coordinates.iloc[0])],
+            'lon': [float(coordinates.iloc[1])]
+        })
 
-    def eval_material_loss(self, time: float) -> float:
+    def evaluate_material_loss(self, time: float) -> float:
         """Calculates the material loss over time based on the provided environmental parameters."""
 
         # Define the distance points and their corresponding log(A) and n values
@@ -86,4 +94,3 @@ class Ma2010Model(CorrosionModel):
             A, n = np.exp(log_A_values[-1]), n_values[-1]
 
         return A * time ** n
-

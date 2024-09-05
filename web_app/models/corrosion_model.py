@@ -1,39 +1,39 @@
+import os
+import json
+from typing import List, Dict, Union, Tuple, Optional, Any
 from .model import Model
-from typing import List, Union, Tuple
 
 
-class CorrosionModel:
+class CorrosionModel(Model):
     """
-    A base class for corrosion models.
+    A base class for corrosion models, inheriting from the Model class.
 
     This class serves as a template for specific corrosion models, providing basic attributes
     and methods that can be overridden by subclasses.
 
     Attributes:
-        article_identifier (str): Identifier for the article or dataset used by the model.
         model_name (str): The name of the corrosion model.
     """
 
-    def __init__(self, article_identifier: str = 'parent class', model_name: str = 'parent class'):
+    def __init__(self, json_file_path: str, model_name: str = 'parent class'):
         """
-        Initializes the base corrosion model with default or specified article identifier and model name.
+        Initializes the corrosion model with a JSON file and a specified model name.
 
         Args:
-            article_identifier (str): Identifier for the article or dataset used by the model. Defaults to 'parent class'.
+            json_file_path (str): Path to the JSON file containing model details.
             model_name (str): The name of the corrosion model. Defaults to 'parent class'.
         """
-        self.article_identifier = article_identifier
+        super().__init__(json_file_path)  # Initialize the Model base class
         self.model_name = model_name
+        self.model_coordinates = None # Initialize the coordinates associated with the model to be None
 
-    def eval_material_loss(self, *args, **kwargs):
+    def evaluate_material_loss(self, *args, **kwargs):
         """
         Placeholder method for evaluating material loss.
 
         This method should be overridden by subclasses to provide specific implementations.
         """
         raise NotImplementedError("This method should be implemented by subclasses.")
-
-
 
 
 class CorrosionProcessTypeError(Exception):
@@ -93,3 +93,50 @@ def get_corrosion_process_type(models: Union[Model, List[Model]]) -> Union[Tuple
 
     else:
         raise TypeError("Input must be a Model instance or a list of Model instances.")
+
+
+def load_corrosion_models_from_directory(directory_paths: Union[str, List[str]], model_classes: Dict[str, Any]) -> List[CorrosionModel]:
+    """Loads all corrosion models from JSON files in the specified directory or directories.
+
+    Args:
+        directory_paths (Union[str, List[str]]): A single directory path or a list of directory paths.
+        model_classes (Dict[str, Any]): A dictionary mapping model identifiers to their corresponding classes.
+
+    Returns:
+        List[CorrosionModel]: A list of CorrosionModel instances loaded from the JSON files in the specified directory or directories.
+
+    Raises:
+        ValueError: If a directory does not exist or no JSON files are found.
+    """
+    if isinstance(directory_paths, str):
+        directory_paths = [directory_paths]  # Convert to a list for uniform processing
+
+    corrosion_models = []
+    for directory_path in directory_paths:
+        if not os.path.isdir(directory_path):
+            raise ValueError(f"The specified directory does not exist: {directory_path}")
+
+        json_files = [os.path.join(directory_path, f) for f in os.listdir(directory_path) if f.endswith('.json')]
+        if not json_files:
+            raise ValueError(f"No JSON files found in the specified directory: {directory_path}")
+
+        for json_file in json_files:
+            try:
+                # Load the JSON data
+                with open(json_file, 'r', encoding='utf-8') as file:
+                    data = json.load(file)
+
+                # Determine the model identifier
+                model_identifier = data.get('identifier', '')
+
+                # Match the identifier with the corresponding class
+                if model_identifier in model_classes:
+                    corrosion_model = model_classes[model_identifier](json_file)
+                    corrosion_models.append(corrosion_model)
+                else:
+                    print(f"Warning: No matching corrosion model class for identifier '{model_identifier}' in file {json_file}")
+
+            except (ValueError, json.JSONDecodeError) as e:
+                print(f"Warning: Error processing JSON file at {json_file}: {str(e)}")
+
+    return corrosion_models

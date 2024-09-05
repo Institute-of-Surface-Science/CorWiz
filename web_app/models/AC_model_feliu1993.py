@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Tuple, Optional
+from typing import Dict, Tuple
 from .corrosion_model import CorrosionModel
 
 class Feliu1993Model(CorrosionModel):
@@ -18,12 +18,10 @@ class Feliu1993Model(CorrosionModel):
     DATA_FILE_PATH_2 = '../data/tables/feliu1993_table_2.csv'
     DATA_FILE_PATH_4 = '../data/tables/feliu1993_table_4.csv'
 
-    def __init__(self, parameters: Optional[dict] = None):
-        super().__init__(model_name='Feliu1993 Corrosion Model')
-        self.steel = "Carbon Steel"
-        self.parameters = parameters if parameters else {}
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Feliu1993Model')
+        self.parameters: Dict[str, float] = {}
         self.table_2, self.table_4 = self._load_data()
-        self._initialize_model()
 
     def _load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """Loads the relevant data tables for the Feliu1993 model."""
@@ -31,8 +29,8 @@ class Feliu1993Model(CorrosionModel):
         table_4 = pd.read_csv(self.DATA_FILE_PATH_4, header=None)
         return table_2, table_4
 
-    def _initialize_model(self) -> None:
-        """Initializes the model by setting up the parameters."""
+    def display_parameters(self) -> None:
+        """Displays the parameters selection interface for the user."""
         atmosphere_types = self.table_4.iloc[0, 1:].tolist()
         atmosphere_types.append("Enter Cl^- and SO_2 pollution annual averages")
         atmosphere = st.selectbox('Select Atmosphere:', atmosphere_types)
@@ -61,7 +59,7 @@ class Feliu1993Model(CorrosionModel):
             """
         )
 
-    def eval_material_loss(self, time: float) -> float:
+    def evaluate_material_loss(self, time: float) -> float:
         """Calculates and returns the material loss over time for the selected atmospheric condition."""
         # Calculate the annual corrosion
         if self.parameters['Binary Interaction']:
@@ -93,4 +91,3 @@ class Feliu1993Model(CorrosionModel):
         # Calculate the material loss over time
         material_loss = annual_corrosion * np.power(time, exponent)
         return material_loss
-

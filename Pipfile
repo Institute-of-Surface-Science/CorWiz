@@ -13,6 +13,8 @@ pillow = "~=10.4.0"
 streamlit-lottie = "~=0.0.5"
 streamlit_extras = "*"
 plotly ="~=5.23.0"
+scipy ="~=1.14.1"
+kaleido ="~=0.2.1"
 
 [dev-packages]
 

@@ -21,10 +21,10 @@ class Ali2010Model(CorrosionModel):
                       'table_4': '../data/tables/ali2020_table_4.csv'
     }
 
-    def __init__(self, parameters: Optional[Dict[str, float]] = None):
-        super().__init__(model_name='Empirical Prediction of Weight Change and Corrosion Rate of Low-Carbon Steel')
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Ali2010Model')
         self.table_3, self.table_4 = self._load_data()
-        self.parameters = parameters if parameters else self._get_parameters()
+        self.parameters: Dict[str, float] = {}
 
     def _load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """Loads the relevant data tables for the ISO 9224 model."""
@@ -40,9 +40,8 @@ class Ali2010Model(CorrosionModel):
             'C': {'desc': 'Concentration of NaCl', 'lower': 0.0, 'upper': 5.0, 'unit': '%w/w'},
         }
 
-        parameters = {}
         for symbol, limit in limits.items():
-            value = st.number_input(
+            self.parameters[symbol] = st.number_input(
                 f"${symbol}$ - Enter {limit['desc']} [${limit['unit']}$]:",
                 min_value=float(limit['lower']),
                 max_value=float(limit['upper']),
@@ -50,23 +49,19 @@ class Ali2010Model(CorrosionModel):
                 step=0.01,
                 key=f"input_{symbol}"
             )
-            parameters[symbol] = value
 
         # Load the data and calculate 'b'
         nacl_concs = np.array(self.table_3.iloc[1:, 0].astype(float))
         constants = np.array(self.table_3.iloc[1:, 2].astype(float))
 
-        # Interpolate or get the exact 'b' value
-        if parameters['C'] in nacl_concs:
-            parameters['b'] = constants[nacl_concs == parameters['C']][0]
+        if self.parameters['C'] in nacl_concs:
+            self.parameters['b'] = constants[nacl_concs == self.parameters['C']][0]
         else:
-            parameters['b'] = np.interp(parameters['C'], nacl_concs, constants)
+            self.parameters['b'] = np.interp(self.parameters['C'], nacl_concs, constants)
 
         st.write(r'Mass loss due to corrosion, $W_L [\mu m] = (0.00006C + 0.0008)t + b $')
 
-        return parameters
-
-    def eval_material_loss(self, time: float) -> float:
+    def evaluate_material_loss(self, time: float) -> float:
         """
         Evaluates the material loss over time based on the provided parameters.
 
