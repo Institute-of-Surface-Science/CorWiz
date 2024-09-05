@@ -77,8 +77,36 @@ class Ali2010Model(CorrosionModel):
             float: The calculated material loss.
         """
         material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time*24*365 + self.parameters['b']
-        a = self.eval_material_loss_exp(10)
+        
         return material_loss
+
+    def _bilinear_interpolation(self, x, y, values, nacl_concentration, time):
+        """Perform bilinear interpolation."""
+        x1 = np.searchsorted(nacl_concentration, x) - 1
+        x2 = x1 + 1
+        y1 = np.searchsorted(time, y) - 1
+        y2 = y1 + 1
+        
+        x1 = np.clip(x1, 0, len(nacl_concentration) - 2)
+        x2 = np.clip(x2, 1, len(nacl_concentration) - 1)
+        y1 = np.clip(y1, 0, len(time) - 2)
+        y2 = np.clip(y2, 1, len(time) - 1)
+        
+        x1_val = nacl_concentration[x1]
+        x2_val = nacl_concentration[x2]
+        y1_val = time[y1]
+        y2_val = time[y2]
+        
+        Q11 = values[y1, x1]
+        Q21 = values[y1, x2]
+        Q12 = values[y2, x1]
+        Q22 = values[y2, x2]
+        
+        return (Q11 * (x2_val - x) * (y2_val - y) +
+                Q21 * (x - x1_val) * (y2_val - y) +
+                Q12 * (x2_val - x) * (y - y1_val) +
+                Q22 * (x - x1_val) * (y - y1_val)) / ((x2_val - x1_val) * (y2_val - y1_val))
+
 
     def eval_material_loss_exp(self, time:float) -> float:
         """Evaluates the material loss over time based on the experimental data.
@@ -89,19 +117,10 @@ class Ali2010Model(CorrosionModel):
         Returns:
             float: The calculated material loss.
         """
-
-        # interp2d(NaCl concentration in %, Time in years, mass loss in mg)
-        interp_func = interp2d(self.table_4.iloc[1, 1:].astype(float), 
-                               self.table_4.iloc[2:, 0].astype(float)/24/365, 
-                               self.table_4.iloc[2:, 1:].astype(float), 
-                               kind='linear', bounds_error = False, fill_value=10000)
-
-        # interp_func2 = RegularGridInterpolator((self.table_4.iloc[2:, 0].astype(float)/24/365, 
-        #                                        self.table_4.iloc[1, 1:].astype(float)), 
-        #                                        self.table_4.iloc[2:, 1:].astype(float), 
-        #                                        bounds_error=False, fill_value=None)
-        # print('\n\n\n')
-        # print(interp_func2((2000, 6)))
-
-        return(interp_func(self.parameters['C'], time))
+    
+        return self._bilinear_interpolation(self.parameters['C'], 
+                                       time, 
+                                       self.table_4.iloc[2:, 1:].astype(float).to_numpy(), 
+                                       self.table_4.iloc[1, 1:].astype(float).to_numpy(), 
+                                       self.table_4.iloc[2:, 0].astype(float).to_numpy() / 24 / 365)
 

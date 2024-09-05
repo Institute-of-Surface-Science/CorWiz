@@ -36,14 +36,7 @@ def plot_mass_loss_over_time(model, time_range):
     """Generates and embeds a Plotly figure for mass loss over time into Streamlit."""
     t = np.linspace(0, time_range, 400)
     D = model.eval_material_loss(t)
-    D_exp = model.eval_material_loss_exp(t)
-
-    plt.scatter(t, D, c='b')
-    plt.scatter(t, D_exp, c='r')
-    plt.savefig('lol.png')
-    # plt.show()
-
-
+    
     fig = px.line(x=t, y=D, labels={'x': 'Time [years]', 'y': 'Mass loss [um]'}, title="Mass Loss Over Time",
                   height=700)
 
