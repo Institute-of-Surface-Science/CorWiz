@@ -109,7 +109,6 @@ def display_plot_html(fig):
         scrolling=True
     )
 
-
 def display_model_view(container):
     """
     Displays the model view interface for selecting and analyzing corrosion mass loss models.
