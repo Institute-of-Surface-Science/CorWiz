@@ -16,7 +16,7 @@ class KlineSmith2007Model(CorrosionModel):
         Journal of Materials in Civil Engineering, 19(2), 121-129 (2007). ASCE.
     """
 
-    DATA_FILE_PATH = '../data/tables/klinesmith2007_tables_table_2.csv'
+    DATA_FILE_PATH = '../data/tables/klinesmith2007_table_2.csv'
 
     def __init__(self, parameters: Optional[Dict[str, float]] = None):
         super().__init__(model_name='Effect of Environmental Conditions on Corrosion Rates')

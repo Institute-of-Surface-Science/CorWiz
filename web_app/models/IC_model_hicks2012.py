@@ -42,13 +42,13 @@ class Hicks2012Model(CorrosionModel):
         with st.expander("Reference Values"):
             # Display relevant data tables
             st.title('Statistical relationship between the long-term rate of steel corrosion (mm/yr) and various water quality parameters measured during 2010 at ten sites in the Duluth-Superior Harbor.')
-            st.table(pd.read_csv('../data/tables/hicks2012_tables_table_2.csv'))
+            st.table(pd.read_csv('../data/tables/hicks2012_table_2.csv'))
 
             st.title('Water quality measurements made from 9-10 August 2010 in the Duluth-Superior Harbor.')
-            st.table(pd.read_csv('../data/tables/hicks2012_tables_table_7.csv'))
+            st.table(pd.read_csv('../data/tables/hicks2012_table_7.csv'))
 
             st.title('Water quality measurements made from 26-27 July 2011 in the Duluth-Superior Harbor and three harbors on the north shore of Lake Superior.')
-            st.table(pd.read_csv('../data/tables/hicks2012_tables_table_8.csv'))
+            st.table(pd.read_csv('../data/tables/hicks2012_table_8.csv'))
 
     def eval_material_loss(self, time: float) -> float:
         """

@@ -14,7 +14,7 @@ class Kovalenko2016Model(CorrosionModel):
         Structure and Infrastructure Engineering, 13(8), 978-987 (2016). Informa UK Limited.
     """
 
-    DATA_FILE_PATH = '../data/tables/kovalenko2016_tables_table_3.csv'
+    DATA_FILE_PATH = '../data/tables/kovalenko2016_table_3.csv'
 
     def __init__(self, parameters: Optional[Dict[str, float]] = None):
         super().__init__(model_name='Long-term Immersion Corrosion of Steel in Variable Seawater Conditions')

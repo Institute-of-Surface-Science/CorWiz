@@ -17,8 +17,8 @@ class Ali2010Model(CorrosionModel):
         Heliyon, 6(9), e05050 (2020). Elsevier.
     """
 
-    DATA_FILE_PATHS = {'table_3': '../data/tables/ali2020_tables_table_3.csv',
-                      'table_4': '../data/tables/ali2020_tables_table_4.csv'
+    DATA_FILE_PATHS = {'table_3': '../data/tables/ali2020_table_3.csv',
+                      'table_4': '../data/tables/ali2020_table_4.csv'
     }
 
     def __init__(self, parameters: Optional[Dict[str, float]] = None):

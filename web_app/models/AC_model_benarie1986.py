@@ -15,7 +15,7 @@ class Benarie1986Model(CorrosionModel):
         Atmospheric Environment (1967) 20, no. 10 (1986): 1947-1958. Elsevier.
     """
 
-    DATA_FILE_PATH = '../data/tables/benarie1986_tables_table_2.csv'
+    DATA_FILE_PATH = '../data/tables/benarie1986_table_2.csv'
     DEFAULT_CORROSION_SITE_KEY = 'corrosion_site'
 
     def __init__(self, parameters: Optional[dict] = None):
