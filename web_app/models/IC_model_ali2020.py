@@ -3,6 +3,8 @@ import streamlit as st
 import numpy as np
 from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
+from typing import Tuple, Optional
+from scipy.interpolate import interp2d
 
 class Ali2010Model(CorrosionModel):
     """
@@ -15,11 +17,22 @@ class Ali2010Model(CorrosionModel):
         Heliyon, 6(9), e05050 (2020). Elsevier.
     """
 
-    DATA_FILE_PATH = '../data/tables/ali2020_tables_table_3.csv'
+    DATA_FILE_PATHS = {'table_3': '../data/tables/ali2020_tables_table_3.csv',
+                      'table_4': '../data/tables/ali2020_tables_table_4.csv'
+    }
 
     def __init__(self, parameters: Optional[Dict[str, float]] = None):
         super().__init__(model_name='Empirical Prediction of Weight Change and Corrosion Rate of Low-Carbon Steel')
+        self.table_3, self.table_4 = self._load_data()
         self.parameters = parameters if parameters else self._get_parameters()
+
+    def _load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+        """Loads the relevant data tables for the ISO 9224 model."""
+        return (
+            pd.read_csv(self.DATA_FILE_PATHS['table_3'], header=None),
+            pd.read_csv(self.DATA_FILE_PATHS['table_4'], header=None),
+        )
+
 
     def _get_parameters(self) -> Dict[str, float]:
         """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
@@ -40,9 +53,8 @@ class Ali2010Model(CorrosionModel):
             parameters[symbol] = value
 
         # Load the data and calculate 'b'
-        table_3 = pd.read_csv(self.DATA_FILE_PATH, header=None)
-        nacl_concs = np.array(table_3.iloc[1:, 0].astype(float))
-        constants = np.array(table_3.iloc[1:, 2].astype(float))
+        nacl_concs = np.array(self.table_3.iloc[1:, 0].astype(float))
+        constants = np.array(self.table_3.iloc[1:, 2].astype(float))
 
         # Interpolate or get the exact 'b' value
         if parameters['C'] in nacl_concs:
@@ -65,5 +77,23 @@ class Ali2010Model(CorrosionModel):
             float: The calculated material loss.
         """
         material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time + self.parameters['b']
+        a = self.eval_material_loss_exp(10)
         return material_loss
+
+    def eval_material_loss_exp(self, time:float) -> float:
+        """Evaluates the material loss over time based on the experimental data.
+        
+        Args:
+            time (float): The time duration in years.
+            
+        Returns:
+            float: The calculated material loss.
+        """
+
+        # interp2d(NaCl concentration in %, Time in years, mass loss in mg)
+        interp_func = interp2d(self.table_4.iloc[1, 1:].astype(float), 
+                               self.table_4.iloc[2:, 0].astype(float)/24/365, 
+                               self.table_4.iloc[2:, 1:].astype(float), kind='linear')
+
+        return(interp_func(self.parameters['C'], time))
 
