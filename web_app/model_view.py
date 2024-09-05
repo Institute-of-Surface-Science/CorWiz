@@ -21,11 +21,13 @@ corrosion_models = {
 # Global list to store models for plotting
 plot_data: List[CorrosionModel] = []
 
+
 def display_model_info(model: Model) -> None:
     """Displays the model description and notes."""
     st.markdown(model.description)
     if model.special_note:
         st.markdown(f"#### Model Notes: \n{model.special_note}")
+
 
 def display_model_view(container):
     """
@@ -94,16 +96,16 @@ def display_model_view(container):
                         fig = generate_plot(plot_data, selected_model, time_range)
 
                 with download_button:
-                        download_fig = generate_plot(plot_data, selected_model, time_range, width=1600, height=1080)
-                        buffer = io.BytesIO()
-                        download_fig.write_image(buffer, format="png")
-                        buffer.seek(0)
-                        st.download_button(
-                            label="Download plot as PNG",
-                            data=buffer,
-                            file_name="corrosion_plot.png",
-                            mime="image/png"
-                        )
+                    download_fig = generate_plot(plot_data, selected_model, time_range, width=1600, height=1080)
+                    buffer = io.BytesIO()
+                    download_fig.write_image(buffer, format="png")
+                    buffer.seek(0)
+                    st.download_button(
+                        label="Download plot as PNG",
+                        data=buffer,
+                        file_name="corrosion_plot.png",
+                        mime="image/png"
+                    )
 
             # Plot column displays the generated plot
             with plot_column:
