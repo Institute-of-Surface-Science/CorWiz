@@ -27,7 +27,6 @@ def display_model_info(model: Model) -> None:
     if model.special_note:
         st.markdown(f"#### Model Notes: \n{model.special_note}")
 
-
 def display_model_view(container):
     """
     Displays the model view interface for selecting and analyzing corrosion mass loss models.
