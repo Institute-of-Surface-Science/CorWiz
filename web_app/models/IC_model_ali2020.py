@@ -4,7 +4,7 @@ import numpy as np
 from typing import Dict, Optional
 from .corrosion_model import CorrosionModel
 from typing import Tuple, Optional
-from scipy.interpolate import interp2d
+from scipy.interpolate import interp2d, RegularGridInterpolator
 
 class Ali2010Model(CorrosionModel):
     """
@@ -76,7 +76,7 @@ class Ali2010Model(CorrosionModel):
         Returns:
             float: The calculated material loss.
         """
-        material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time + self.parameters['b']
+        material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time*24*365 + self.parameters['b']
         a = self.eval_material_loss_exp(10)
         return material_loss
 
@@ -93,7 +93,15 @@ class Ali2010Model(CorrosionModel):
         # interp2d(NaCl concentration in %, Time in years, mass loss in mg)
         interp_func = interp2d(self.table_4.iloc[1, 1:].astype(float), 
                                self.table_4.iloc[2:, 0].astype(float)/24/365, 
-                               self.table_4.iloc[2:, 1:].astype(float), kind='linear')
+                               self.table_4.iloc[2:, 1:].astype(float), 
+                               kind='linear', bounds_error = False, fill_value=10000)
+
+        # interp_func2 = RegularGridInterpolator((self.table_4.iloc[2:, 0].astype(float)/24/365, 
+        #                                        self.table_4.iloc[1, 1:].astype(float)), 
+        #                                        self.table_4.iloc[2:, 1:].astype(float), 
+        #                                        bounds_error=False, fill_value=None)
+        # print('\n\n\n')
+        # print(interp_func2((2000, 6)))
 
         return(interp_func(self.parameters['C'], time))
 
