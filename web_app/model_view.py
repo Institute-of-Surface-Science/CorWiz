@@ -87,17 +87,17 @@ def display_model_view(container):
                 with add_button:
                     if st.button("Add to Plot", key="add_plot"):
                         plot_data.append(selected_model)
-                        fig = generate_plot(plot_data, selected_model, time_range)  # Refresh the plot with added models
+                        fig = generate_plot(plot_data, selected_model, time_range)
 
                 with reset_button:
                     if st.button("Reset Plot", key="reset_plot"):
                         plot_data = []  # Reset the list of models
-                        fig = generate_plot(plot_data, selected_model, time_range)  # Show only the default plot
+                        fig = generate_plot(plot_data, selected_model, time_range)
 
                 with download_button:
-                    if fig is not None:
+                        download_fig = generate_plot(plot_data, selected_model, time_range, width=1600, height=1080)
                         buffer = io.BytesIO()
-                        fig.write_image(buffer, format="png")
+                        download_fig.write_image(buffer, format="png")
                         buffer.seek(0)
                         st.download_button(
                             label="Download plot as PNG",
