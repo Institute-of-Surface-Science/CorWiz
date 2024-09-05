@@ -34,7 +34,7 @@ class Ali2010Model(CorrosionModel):
         )
 
 
-    def _get_parameters(self) -> Dict[str, float]:
+    def display_parameters(self) -> Dict[str, float]:
         """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
         limits = {
             'C': {'desc': 'Concentration of NaCl', 'lower': 0.0, 'upper': 5.0, 'unit': '%w/w'},
