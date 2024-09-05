@@ -60,7 +60,7 @@ def setup_footer(footer_container):
                     url="https://www.helmholtz-metadaten.de",
                     img_src="./app/static/logos/hmc.png",
                     width="100%",
-                    alt_text="Logo of the Helmholtz Metadata Colaboration www.helmholtz-metadaten.de",
+                    alt_text="Logo of the Helmholtz Metadata Collaboration www.helmholtz-metadaten.de",
                 )
 
             with logo_nfdi4ing:
