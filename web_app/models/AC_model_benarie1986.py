@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Optional
+from typing import Dict
 from .corrosion_model import CorrosionModel
 
 
@@ -19,14 +19,17 @@ class Benarie1986Model(CorrosionModel):
     COORDINATES_FILE_PATH = '../data/tables/benarie1986_coordinates.csv'
     DEFAULT_CORROSION_SITE_KEY = 'corrosion_site'
 
-    def __init__(self, parameters: Optional[dict] = None):
-        super().__init__(model_name='Benarie1986 Corrosion Model')
-        self.parameters = parameters if parameters else {}
-        self.table_2 = pd.read_csv(self.DATA_FILE_PATH, header=None)
-        self._initialize_model()
+    def __init__(self, json_file_path: str):
+        super().__init__(json_file_path=json_file_path, model_name='Benarie1986Model')
+        self.parameters: Dict[str, float] = {}
+        self.table_2 = self._load_data()
 
-    def _initialize_model(self) -> None:
-        """Initializes the model by selecting a corrosion site and displaying site information."""
+    def _load_data(self) -> pd.DataFrame:
+        """Loads the relevant data for the model."""
+        return pd.read_csv(self.DATA_FILE_PATH, header=None)
+
+    def display_parameters(self) -> None:
+        """Displays the parameters selection interface for the user."""
         corrosion_sites = self.table_2.iloc[1:, 0]
         selected_site = st.selectbox('Select corrosion site:', corrosion_sites)
         corrosion_site_index = corrosion_sites.tolist().index(selected_site) + 1
@@ -62,17 +65,7 @@ class Benarie1986Model(CorrosionModel):
             """
         )
 
-    def _show_map(self, parameters) -> None:
-         # Show the selected location on a map
-        coordinates = pd.read_csv(self.COORDINATES_FILE_PATH, header=None)
-        coordinates = coordinates.iloc[parameters['corrosion_site'], 1:]
-        coordiantes = pd.DataFrame({
-            'lat': [float(coordinates.iloc[0])],
-            'lon': [float(coordinates.iloc[1])]
-        })
-        st.map(coordiantes)
-
-    def eval_material_loss(self, time: float) -> np.ndarray:
+    def evaluate_material_loss(self, time: float) -> np.ndarray:
         """
         Calculates and returns the material loss over time for the selected corrosion site.
 

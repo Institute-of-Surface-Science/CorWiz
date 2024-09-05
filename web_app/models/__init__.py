@@ -9,4 +9,4 @@ from .IC_model_garbatov2011 import Garbatov2011Model
 from .IC_model_hicks2012 import Hicks2012Model
 from .IC_model_kovalenko2016 import Kovalenko2016Model
 from .model import load_models_from_directory, Model
-from .corrosion_model import get_corrosion_process_type, CorrosionProcessTypeError
+from .corrosion_model import get_corrosion_process_type, CorrosionProcessTypeError, CorrosionModel, load_corrosion_models_from_directory
