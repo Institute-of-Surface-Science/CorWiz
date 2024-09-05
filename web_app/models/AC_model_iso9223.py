@@ -99,7 +99,8 @@ class ISO9223Model(CorrosionModel):
         self.parameters['exponent'] = self._determine_exponent(time)
 
         if 'corrosion_speed' in self.parameters:
-            corrosion_speed = self.parameters['corrosion_speed']
+            corrosion_speed = self.grams_to_um_map(self.parameters['corrosion_speed'])
+            material_loss = time*corrosion_speed
         else:
             if self.parameters['T'] <= 10:
                 temperature_factor = 0.15 * (self.parameters['T'] - 10)

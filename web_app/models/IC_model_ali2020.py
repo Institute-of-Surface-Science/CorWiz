@@ -63,5 +63,5 @@ class Ali2010Model(CorrosionModel):
         Returns:
             float: The calculated material loss.
         """
-        material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time + self.parameters['b']
+        material_loss = (0.00006 * self.parameters['C'] + 0.0008) * (time*365*24) + self.parameters['b']
         return material_loss
