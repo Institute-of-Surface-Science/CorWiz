@@ -24,6 +24,7 @@ class ISO9223Model(CorrosionModel):
     def __init__(self, json_file_path: str):
         super().__init__(json_file_path=json_file_path, model_name='ISO9223Model')
         self.parameters: Dict[str, float] = {}
+        self.use_tabulated_exponent: bool = False  # Track whether to use tabulated exponents
         self.table_2, self.table_3, self.table_b3, self.table_b4, self.table_c1, self.table_9224_3 = self._load_data()
 
     def _load_data(self) -> Tuple[pd.DataFrame, ...]:
@@ -76,27 +77,34 @@ class ISO9223Model(CorrosionModel):
                                         value=limit['lower'], min_value=limit['lower'], max_value=limit['upper'])
                 self.parameters[symbol] = float(value)
 
-    def _determine_exponent(self, time: float) -> float:
-        """Determines or interpolates the time exponent for the material loss calculation."""
+        # Determine whether to use tabulated exponents or manual input
         exponent_types = ['Use DIN recommended time exponents measured from the ISO CORRAG program', 'Enter manually']
         selected_type = st.selectbox('Please select the time exponent', exponent_types)
 
+        if selected_type == exponent_types[0]:
+            self.use_tabulated_exponent = True
+        else:
+            self.use_tabulated_exponent = False
+            self.parameters['exponent'] = st.number_input('Enter exponent:', key="manual_exponent")
+
+    def _determine_tabulated_exponent(self, time: float) -> float:
+        """Determines the tabulated exponent based on the provided time."""
         years = self.table_9224_3.iloc[6:, 0].astype(int).values  # 'table_9224_3'
         exponents = self.table_9224_3.iloc[6:, 1].astype(float).values
 
-        if selected_type == exponent_types[0]:
-            max_time = np.max(time) if isinstance(time, np.ndarray) else time
+        max_time = np.max(time) if isinstance(time, np.ndarray) else time
 
-            if max_time in years:
-                return float(exponents[years == max_time][0])
-            else:
-                return float(np.interp(max_time, years, exponents))
+        if max_time in years:
+            return float(exponents[years == max_time][0])
         else:
-            return float(st.number_input('Enter exponent:', key="manual_exponent"))
+            return float(np.interp(max_time, years, exponents))
 
     def evaluate_material_loss(self, time: float) -> float:
         """Calculates and returns the material loss over time based on the provided parameters."""
-        self.parameters['exponent'] = self._determine_exponent(time)
+
+        # Re-determine the exponent if using tabulated values and the time has changed
+        if self.use_tabulated_exponent:
+            self.parameters['exponent'] = self._determine_tabulated_exponent(time)
 
         if 'corrosion_speed' in self.parameters:
             corrosion_speed = self.grams_to_um_map(self.parameters['corrosion_speed'])
@@ -123,4 +131,3 @@ class ISO9223Model(CorrosionModel):
         """Maps corrosion speed from μm/a to g/(m²⋅a)."""
         um_to_g_mapping = interp1d([1.3, 25, 50, 80, 200, 700], [10, 200, 400, 650, 1500, 500], kind='linear', fill_value='extrapolate')
         return um_to_g_mapping(corrosion_speed)
-

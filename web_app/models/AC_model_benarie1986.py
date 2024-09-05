@@ -19,7 +19,7 @@ class Benarie1986Model(CorrosionModel):
     DEFAULT_CORROSION_SITE_KEY = 'corrosion_site'
 
     def __init__(self, json_file_path: str):
-        super().__init__(json_file_path=json_file_path, model_name='Feliu1993Model')
+        super().__init__(json_file_path=json_file_path, model_name='Benarie1986Model')
         self.parameters: Dict[str, float] = {}
         self.table_2 = self._load_data()
 
