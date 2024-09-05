@@ -16,6 +16,7 @@ class Ma2010Model(CorrosionModel):
     """
 
     DATA_FILE_PATH = '../data/tables/ma2010_tables_table_2.csv'
+    COORDINATES_FILE_PATH = '../data/tables/ma2010_coordinates.csv'
 
     def __init__(self, json_file_path: str):
         super().__init__(json_file_path=json_file_path, model_name='Ma2010Model')
@@ -38,6 +39,7 @@ class Ma2010Model(CorrosionModel):
         self.parameters = {
             'corrosion_site': corrosion_site_index,
         }
+        limits = {'D': {'desc': 'Distance', 'lower': 25, 'upper': 375, 'unit': 'm'}}
 
         # Collect user input for the distance parameter
         for symbol, limit in limits.items():
@@ -51,6 +53,14 @@ class Ma2010Model(CorrosionModel):
             )
             if symbol == 'D':
                 self.parameters['distance'] = value
+
+        # Add the selected location's coordinates to global MODEL_COORDINATES varaible
+        coordinates = pd.read_csv(self.COORDINATES_FILE_PATH, header=None)
+        coordinates = coordinates.iloc[self.parameters['corrosion_site'], 1:]
+        self.model_coordinates = pd.DataFrame({
+            'lat': [float(coordinates.iloc[0])],
+            'lon': [float(coordinates.iloc[1])]
+        })
 
     def evaluate_material_loss(self, time: float) -> float:
         """Calculates the material loss over time based on the provided environmental parameters."""

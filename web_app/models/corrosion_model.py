@@ -25,6 +25,7 @@ class CorrosionModel(Model):
         """
         super().__init__(json_file_path)  # Initialize the Model base class
         self.model_name = model_name
+        self.model_coordinates = None # Initialize the coordinates associated with the model to be None
 
     def evaluate_material_loss(self, *args, **kwargs):
         """
