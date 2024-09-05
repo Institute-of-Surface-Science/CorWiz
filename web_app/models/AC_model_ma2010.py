@@ -54,6 +54,14 @@ class Ma2010Model(CorrosionModel):
             if symbol == 'D':
                 self.parameters['distance'] = value
 
+        
+        coordinates = pd.read_csv(self.COORDINATES_FILE_PATH, header=None)
+        coordinates = coordinates.iloc[self.parameters['corrosion_site'], 1:]
+        self.MODEL_COORDINATES = pd.DataFrame({
+            'lat': [float(coordinates.iloc[0])],
+            'lon': [float(coordinates.iloc[1])]
+        })
+
     def evaluate_material_loss(self, time: float) -> float:
         """Calculates the material loss over time based on the provided environmental parameters."""
 

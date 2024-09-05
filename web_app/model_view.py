@@ -158,7 +158,7 @@ def display_model_view(container):
                 selected_model.display_parameters()
 
                 # Display the location associated with the model on the map 
-                if selected_model.MODEL_COORDINATES != None:
+                if selected_model.MODEL_COORDINATES is not None:
                     st.map(selected_model.MODEL_COORDINATES)
 
                 # Create two columns for buttons to be side by side
