@@ -79,7 +79,12 @@ def display_model_view(container):
                 # Display the selected model's parameters
                 selected_model.display_parameters()
 
-                # Generate default plot without requiring user input
+                # Display the location associated with the model on the map 
+                if selected_model.model_coordinates is not None:
+                    st.map(selected_model.model_coordinates)
+
+                # Create two columns for buttons to be side by side
+                add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 3])
                 fig = generate_plot(plot_data, selected_model, time_range)
 
                 # Add, reset, and download buttons
