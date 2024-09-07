@@ -18,9 +18,6 @@ corrosion_models = {
     'model_kovalenko2016': Kovalenko2016Model,
 }
 
-# Global list to store models for plotting
-plot_data: List[CorrosionModel] = []
-
 
 def display_model_info(model: Model) -> None:
     """Displays the model description and notes."""
@@ -42,7 +39,10 @@ def display_model_view(container):
     ]
     models = load_corrosion_models_from_directory(model_directories, corrosion_models)
 
-    global plot_data
+    # Initialize plot_data in session state if it doesn't exist
+    if 'plot_data' not in st.session_state:
+        st.session_state.plot_data = []
+
     fig = None
 
     with container:
@@ -79,29 +79,29 @@ def display_model_view(container):
                 # Display the selected model's parameters
                 selected_model.display_parameters()
 
-                # Display the location associated with the model on the map 
+                # Display the location associated with the model on the map
                 if selected_model.model_coordinates is not None:
                     st.map(selected_model.model_coordinates)
 
                 # Create two columns for buttons to be side by side
                 add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 3])
-                fig = generate_plot(plot_data, selected_model, time_range)
+                fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
 
                 # Add, reset, and download buttons
                 add_button, reset_button, download_button, _ = st.columns([1, 1, 1, 3])
 
                 with add_button:
                     if st.button("Add to Plot", key="add_plot"):
-                        plot_data.append(selected_model)
-                        fig = generate_plot(plot_data, selected_model, time_range)
+                        st.session_state.plot_data.append(selected_model)
+                        fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
 
                 with reset_button:
                     if st.button("Reset Plot", key="reset_plot"):
-                        plot_data = []  # Reset the list of models
-                        fig = generate_plot(plot_data, selected_model, time_range)
+                        st.session_state.plot_data = []  # Reset the list of models
+                        fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
 
                 with download_button:
-                    download_fig = generate_plot(plot_data, selected_model, time_range, width=1600, height=1080)
+                    download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range, width=1600, height=1080)
                     buffer = io.BytesIO()
                     download_fig.write_image(buffer, format="png")
                     buffer.seek(0)
