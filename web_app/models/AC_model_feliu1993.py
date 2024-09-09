@@ -15,8 +15,8 @@ class Feliu1993Model(CorrosionModel):
         Corrosion Science, 34(3), 403-414 (1993). Elsevier.
     """
 
-    DATA_FILE_PATH_2 = '../data/tables/feliu1993_tables_table_2.csv'
-    DATA_FILE_PATH_4 = '../data/tables/feliu1993_tables_table_4.csv'
+    DATA_FILE_PATH_2 = '../data/tables/feliu1993_table_2.csv'
+    DATA_FILE_PATH_4 = '../data/tables/feliu1993_table_4.csv'
 
     def __init__(self, json_file_path: str):
         super().__init__(json_file_path=json_file_path, model_name='Feliu1993Model')

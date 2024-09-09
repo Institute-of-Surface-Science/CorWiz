@@ -15,7 +15,7 @@ class Ma2010Model(CorrosionModel):
         Corrosion Science, 52(5), 1796-1800 (2010). Elsevier.
     """
 
-    DATA_FILE_PATH = '../data/tables/ma2010_tables_table_2.csv'
+    DATA_FILE_PATH = '../data/tables/ma2010_table_2.csv'
     COORDINATES_FILE_PATH = '../data/tables/ma2010_coordinates.csv'
 
     def __init__(self, json_file_path: str):

@@ -13,12 +13,12 @@ class ISO9223Model(CorrosionModel):
     """
 
     DATA_FILE_PATHS = {
-        'table_2': '../data/tables/din-en-iso-92232012-05_tables_table_2.csv',
-        'table_3': '../data/tables/din-en-iso-92232012-05_tables_table_3.csv',
-        'table_b3': '../data/tables/din-en-iso-92232012-05_tables_table_B.3.csv',
-        'table_b4': '../data/tables/din-en-iso-92232012-05_tables_table_B.4.csv',
-        'table_c1': '../data/tables/din-en-iso-92232012-05_tables_table_C.1.csv',
-        'table_9224_3': '../data/tables/din-en-iso-92232012-05_tables_9224_table_3.csv'
+        'table_2': '../data/tables/din-en-iso-92232012-05_table_2.csv',
+        'table_3': '../data/tables/din-en-iso-92232012-05_table_3.csv',
+        'table_b3': '../data/tables/din-en-iso-92232012-05_table_B.3.csv',
+        'table_b4': '../data/tables/din-en-iso-92232012-05_table_B.4.csv',
+        'table_c1': '../data/tables/din-en-iso-92232012-05_table_C.1.csv',
+        'table_9224_3': '../data/tables/din-en-iso-92232012-05_9224_table_3.csv'
     }
 
     def __init__(self, json_file_path: str):

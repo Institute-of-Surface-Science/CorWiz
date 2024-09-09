@@ -15,7 +15,7 @@ corwiz_models = {
     'model_klinesmith2007': KlineSmith2007Model,
     'model_ma2010': Ma2010Model,
     'model_soares1999': Soares1999Model,
-    'model_ali2020': Ali2010Model,
+    'model_ali2020': Ali2020Model,
     'model_garbatov2011': Garbatov2011Model,
     'model_hicks2012': Hicks2012Model,
     'model_kovalenko2016': Kovalenko2016Model,
@@ -109,6 +109,7 @@ def display_plot_html(fig):
         scrolling=True
     )
 
+
 def display_model_view(container):
     """
     Displays the model view interface for selecting and analyzing corrosion mass loss models.
@@ -157,7 +158,7 @@ def display_model_view(container):
                 # Display parameters and compute corrosion speed and exponent using the selected time
                 selected_model.display_parameters()
 
-                # Display the location associated with the model on the map 
+                # Display the location associated with the model on the map
                 if selected_model.model_coordinates is not None:
                     st.map(selected_model.model_coordinates)
 

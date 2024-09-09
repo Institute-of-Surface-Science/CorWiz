@@ -14,7 +14,7 @@ class Kovalenko2016Model(CorrosionModel):
         Structure and Infrastructure Engineering, 13(8), 978-987 (2016). Informa UK Limited.
     """
 
-    DATA_FILE_PATH = '../data/tables/kovalenko2016_tables_table_3.csv'
+    DATA_FILE_PATH = '../data/tables/kovalenko2016_table_3.csv'
 
     def __init__(self, json_file_path: str):
         super().__init__(json_file_path=json_file_path, model_name='Kovalenko2016Model')

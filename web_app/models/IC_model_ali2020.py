@@ -1,10 +1,10 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Optional
+from typing import Dict
 from .corrosion_model import CorrosionModel
 
-class Ali2010Model(CorrosionModel):
+class Ali2020Model(CorrosionModel):
     """
     A corrosion model based on the study by Ali and Fulazzaky (2020) which predicts the weight change
     and corrosion rate of low-carbon steel.
@@ -15,19 +15,23 @@ class Ali2010Model(CorrosionModel):
         Heliyon, 6(9), e05050 (2020). Elsevier.
     """
 
-    DATA_FILE_PATH = '../data/tables/ali2020_tables_table_3.csv'
+    DATA_FILE_PATHS = {'table_3': '../data/tables/ali2020_table_3.csv',
+    }
 
     def __init__(self, json_file_path: str):
         super().__init__(json_file_path=json_file_path, model_name='Ali2010Model')
-        self.parameters: Dict[str, float] = {}
         self.table_3 = self._load_data()
+        self.parameters: Dict[str, float] = {}
 
     def _load_data(self) -> pd.DataFrame:
-        """Loads the relevant data table for the Ali2010 model."""
-        return pd.read_csv(self.DATA_FILE_PATH, header=None)
+        """Loads the relevant data tables for the Ali2020 model."""
+        return (
+            pd.read_csv(self.DATA_FILE_PATHS['table_3'], header=None)
+        )
 
-    def display_parameters(self) -> None:
-        """Prompts the user to input values for all parameters and calculates the parameter 'b'."""
+
+    def display_parameters(self) -> Dict[str, float]:
+        """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
         limits = {
             'C': {'desc': 'Concentration of NaCl', 'lower': 0.0, 'upper': 5.0, 'unit': '%w/w'},
         }
@@ -42,7 +46,7 @@ class Ali2010Model(CorrosionModel):
                 key=f"input_{symbol}"
             )
 
-        # Interpolate or get the exact 'b' value based on the user input for 'C'
+        # Load the data and calculate 'b'
         nacl_concs = np.array(self.table_3.iloc[1:, 0].astype(float))
         constants = np.array(self.table_3.iloc[1:, 2].astype(float))
 
@@ -63,5 +67,7 @@ class Ali2010Model(CorrosionModel):
         Returns:
             float: The calculated material loss.
         """
-        material_loss = (0.00006 * self.parameters['C'] + 0.0008) * (time*365*24) + self.parameters['b']
+        material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time*24*365 + self.parameters['b']
+        
         return material_loss
+
