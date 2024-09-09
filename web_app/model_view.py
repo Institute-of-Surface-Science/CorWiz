@@ -44,7 +44,7 @@ def display_model_view(page_container):
         '../data/kadi4mat_json/immersion_corrosion_measurements/',
     ]
 
-    measurements = load_corrosion_measurements_from_directory(measurement_directories)
+    measurements = load_measurements_from_directory(measurement_directories)
 
     # Initialize plot_data in session state if it doesn't exist
     if 'plot_data' not in st.session_state:
@@ -104,7 +104,25 @@ def display_model_view(page_container):
                         add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 3])
                         fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
                 with measurement_tab:
-                    st.markdown("## Work in progress")
+                    with measurement_tab:
+                        st.markdown("## Select a Measurement")
+
+                        # Create a selectbox with the names of all available measurements
+                        measurement_names = [f"{measurement.name} ({measurement.kadi_identifier})" for measurement in
+                                             measurements]
+                        selected_measurement_name = st.selectbox("Select a measurement", measurement_names)
+
+                        # Find the selected measurement based on the selected name
+                        selected_measurement = next(
+                            (measurement for measurement in measurements if
+                             f"{measurement.name} ({measurement.kadi_identifier})" == selected_measurement_name),
+                            None
+                        )
+
+                        # Display the description of the selected measurement
+                        if selected_measurement:
+                            st.markdown(f"### {selected_measurement.name}")
+                            st.markdown(f"**Description**: {selected_measurement.description}")
 
                 with wizard_tab:
                     st.markdown("## Work in progress")

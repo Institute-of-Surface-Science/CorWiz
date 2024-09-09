@@ -1,12 +1,15 @@
 import os
 import json
 from typing import List, Dict, Any, Optional, Union
+from datetime import datetime
+
+from .creator import Creator
+from .file import File
 
 
 class Measurement:
     """Class representing the details of a measurement extracted from a JSON file."""
 
-    # Constants for JSON keys
     KEY_TITLE = 'title'
     KEY_IDENTIFIER = 'identifier'
     KEY_DESCRIPTION = 'description'
@@ -24,10 +27,13 @@ class Measurement:
         self.kadi_identifier: str = ''
         self.description: str = ''
         self.special_note: Optional[str] = None
-        self.parameters: str = ''
-        self.article_identifier: str = ''
+        self.parameters: List[Dict[str, Any]] = []  # Parameters as a list of dictionaries
+        self.files: List[File] = []
         self.tags: List[str] = []
-        self.files: List[str] = []
+        self.created_at: Optional[datetime] = None
+        self.creator: Optional[Creator] = None
+        self.last_modified: Optional[datetime] = None
+        self.record_to: Dict[str, Any] = {}  # Record_to stored as a dictionary
 
         self._load_and_extract_details()
 
@@ -50,23 +56,48 @@ class Measurement:
         self.kadi_identifier = data.get(self.KEY_IDENTIFIER, '')
         self.description = data.get(self.KEY_DESCRIPTION, '')
         self.special_note = data.get(self.KEY_SPECIAL_NOTES)
-        self.article_identifier = data.get(self.KEY_LINKS, [{}])[0].get(self.KEY_RECORD_TO, {}).get(self.KEY_IDENTIFIER, '')
-
-        extras = data.get(self.KEY_EXTRAS, [])
-        self.parameters = next((item['value'] for item in extras if item.get('key') == self.KEY_PARAMETERS), '')
+        self.created_at = datetime.fromisoformat(data.get('created_at'))
+        self.creator = Creator(**data['creator'])
+        self.last_modified = datetime.fromisoformat(data.get('last_modified'))
         self.tags = data.get(self.KEY_TAGS, [])
-        self.files = data.get(self.KEY_FILES, [])
+
+        # Extract files and convert them into File objects
+        self.files = [File(**file_data) for file_data in data.get(self.KEY_FILES, [])]
+
+        # Extract parameters from the extras section
+        for extra in data.get(self.KEY_EXTRAS, []):
+            if extra.get('key') == self.KEY_PARAMETERS:
+                self.parameters = extra.get('value', [])
+
+        # Extract record_to information from links
+        if data.get(self.KEY_LINKS):
+            link = data[self.KEY_LINKS][0].get(self.KEY_RECORD_TO)
+            if link:
+                self.record_to = {
+                    "identifier": link.get('identifier', ''),
+                    "title": link.get('title', ''),
+                    "doi": next((item['value'] for item in link.get('extras', []) if item.get('key') == 'doi'), ''),
+                    "journal_name": next(
+                        (item['value'] for item in link.get('extras', []) if item.get('key') == 'journalName'), '')
+                }
 
     def display_details(self) -> None:
         """Prints the measurement details."""
         print(f"Name: {self.name}")
         print(f"Kadi Identifier: {self.kadi_identifier}")
         print(f"Description: {self.description}")
-        if self.special_note:
-            print(f"Special Note: {self.special_note}")
-        print(f"Parameters: {self.parameters}")
-        print(f"Article Identifier: {self.article_identifier}")
+        print(f"Special Note: {self.special_note}")
+        print(f"Created At: {self.created_at}")
+        print(f"Creator: {self.creator}")
+        print(f"Last Modified: {self.last_modified}")
         print(f"Tags: {', '.join(self.tags)}")
+        print("Parameters:")
+        for param in self.parameters:
+            print(f"  - {param}")
+        print("Files:")
+        for file in self.files:
+            print(f"  - {file}")
+        print(f"Record To: {self.record_to}")
 
 
 def load_measurements_from_directory(directory_paths: Union[str, List[str]]) -> List[Measurement]:
@@ -101,4 +132,3 @@ def load_measurements_from_directory(directory_paths: Union[str, List[str]]) -> 
                 print(f"Warning: {e}")
 
     return measurements
-
