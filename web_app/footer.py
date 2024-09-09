@@ -14,17 +14,16 @@ def add_footer():
 
 def setup_footer(footer_container):
     with footer_container:
-        left_column, middle_column, right_column = st.columns((0.75, 2.5, 1))
+        left_column, middle_column, right_column = st.columns((1, 0.5, 1), vertical_alignment="center")
         with left_column:
-            # optimized for 16:10
-            empty_box_left, left_button_col, right_button_col, empty_box_right = st.columns((0.05, 1.5, 1.9, 1.25))
+            empty_box_left, left_button_col, right_button_col, empty_box_right = st.columns((0.05, 2.0, 2.0, 1.0))
 
 
             with left_button_col:
                 st.markdown(
                     """
                     <div style='display: flex; align-items: center; justify-content: center; height: 100%; padding: 10px 0;'>
-                        <a href='/Imprint' target='_self' style='display: flex; align-items: center; justify-content: center;'>
+                        <a href='/Imprint' target='_self' style='display: flex; align-items: center; justify-content: center; min-width: 150px;'>
                             <img src='./app/static/buttons/imprint.png' alt='Imprint' style='width: auto; height: 50px;'>
                         </a>
                     </div>
@@ -32,17 +31,17 @@ def setup_footer(footer_container):
                     unsafe_allow_html=True
                 )
 
-            with right_button_col:
-                st.markdown(
-                    """
-                    <div style='display: flex; align-items: center; justify-content: center; height: 100%; padding: 10px 0;'>
-                        <a href='/Data_protection' target='_self' style='display: flex; align-items: center; justify-content: center;'>
-                            <img src='./app/static/buttons/data_protection.png' alt='Data Protection' style='width: auto; height: 50px;'>
-                        </a>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+                with right_button_col:
+                    st.markdown(
+                        """
+                        <div style='display: flex; align-items: center; justify-content: center; height: 100%; padding: 10px 0;'>
+                            <a href='/Data_protection' target='_self' style='display: flex; align-items: center; justify-content: center; min-width: 150px;'>
+                                <img src='./app/static/buttons/data_protection.png' alt='Data Protection' style='width: auto; height: 50px;'>
+                            </a>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
 
         with right_column:
             logo_hereon, logo_hmc, logo_nfdi4ing = st.columns((1, 1, 1))
@@ -60,7 +59,7 @@ def setup_footer(footer_container):
                     url="https://www.helmholtz-metadaten.de",
                     img_src="./app/static/logos/hmc.png",
                     width="100%",
-                    alt_text="Logo of the Helmholtz Metadata Colaboration www.helmholtz-metadaten.de",
+                    alt_text="Logo of the Helmholtz Metadata Collaboration www.helmholtz-metadaten.de",
                 )
 
             with logo_nfdi4ing:

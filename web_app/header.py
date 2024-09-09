@@ -10,6 +10,20 @@ def add_header():
 
     header_container = st.container()
     setup_header(header_container)
+    github_url = "https://github.com/Institute-of-Surface-Science/CorWiz"
+
+    # Add the GitHub logo and link to the sidebar
+    with st.sidebar:
+        st.markdown(
+            f"""
+            <div style='display: flex; justify-content: center;'>
+                <a href="{github_url}" target="_blank">
+                    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="40" alt="GitHub Repo">
+                </a>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 
 def setup_header(header_container):
