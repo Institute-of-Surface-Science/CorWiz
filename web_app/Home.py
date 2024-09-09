@@ -8,4 +8,5 @@ add_header()
 
 model_view_container = st.container()
 display_model_view(model_view_container)
+
 add_footer()
