@@ -67,8 +67,6 @@ def get_corrosion_process_type(measurements: Union[Measurement, List[Measurement
         """Helper function to determine the corrosion process type for a single measurement."""
         for tag in measurement.tags:
             words = tag.split()
-            print('\n\n\n')
-            print(words)
             # The tag must have exactly three words, with the last two being "corrosion" and "measurement"
             if len(words) == 3 and words[-2] == "corrosion" and words[-1] == "measurement":
                 process_type = words[0] + " corrosion"  # Extract and format the process type
