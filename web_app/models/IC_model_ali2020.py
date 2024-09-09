@@ -6,7 +6,7 @@ from .corrosion_model import CorrosionModel
 from typing import Tuple, Optional
 from scipy.interpolate import interp2d, RegularGridInterpolator
 
-class Ali2010Model(CorrosionModel):
+class Ali2020Model(CorrosionModel):
     """
     A corrosion model based on the study by Ali and Fulazzaky (2020) which predicts the weight change
     and corrosion rate of low-carbon steel.
@@ -25,10 +25,10 @@ class Ali2010Model(CorrosionModel):
         self.table_3 = self._load_data()
         self.parameters: Dict[str, float] = {}
 
-    def _load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-        """Loads the relevant data tables for the ISO 9224 model."""
+    def _load_data(self) -> pd.DataFrame:
+        """Loads the relevant data tables for the Ali2020 model."""
         return (
-            pd.read_csv(self.DATA_FILE_PATHS['table_3'], header=None),
+            pd.read_csv(self.DATA_FILE_PATHS['table_3'], header=None)
         )
 
 

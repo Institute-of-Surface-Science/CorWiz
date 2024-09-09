@@ -1,0 +1,154 @@
+{
+  "created_at": "2024-09-06T08:48:59.434562+00:00",
+  "creator": {
+    "displayname": "aravinth_ravikumar",
+    "id": 5,
+    "orcid": null
+  },
+  "description": "Holds the experimental data associated with the article Ali2020 for plotting. The weight loss is recorded for different NaCl concentrations for different exporesure time.",
+  "extras": [
+    {
+      "key": "Parameters",
+      "type": "dict",
+      "value": [
+        {
+          "key": "NaCl Concentration",
+          "type": "float",
+          "unit": "(%w)(w)^{-1}",
+          "value": null
+        },
+        {
+          "key": "Time",
+          "type": "float",
+          "unit": "(Hours)",
+          "value": null
+        },
+        {
+          "key": "Weight loss",
+          "type": "float",
+          "unit": "(mg)",
+          "value": null
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "checksum": "cddca058d4d07194b1bdab4063f4c48d",
+      "created_at": "2024-09-06T09:14:39.989235+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "description": "",
+      "id": "0eb69d97-e9f3-48e4-bd62-fe244bffddf4",
+      "last_modified": "2024-09-06T09:14:40.028466+00:00",
+      "magic_mimetype": "text/plain",
+      "mimetype": "text/csv",
+      "name": "ali2020_table_3.csv",
+      "size": 170
+    },
+    {
+      "checksum": "1362c6af4e03a473deb9ec9ccd2ed3d3",
+      "created_at": "2024-09-06T08:49:05.451094+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "description": "",
+      "id": "afd1cda4-beaa-420e-a75e-17dcf1adfd10",
+      "last_modified": "2024-09-06T08:49:05.506866+00:00",
+      "magic_mimetype": "text/plain",
+      "mimetype": "text/csv",
+      "name": "ali2020_table_4.csv",
+      "size": 275
+    }
+  ],
+  "id": 233,
+  "identifier": "exp_data_ali2020",
+  "last_modified": "2024-09-09T07:54:09.268516+00:00",
+  "license": null,
+  "links": [
+    {
+      "created_at": "2024-09-06T08:52:18.879579+00:00",
+      "creator": {
+        "displayname": "aravinth_ravikumar",
+        "id": 5,
+        "orcid": null
+      },
+      "id": 194,
+      "last_modified": "2024-09-06T08:52:18.879584+00:00",
+      "name": "publication",
+      "record_to": {
+        "created_at": "2024-08-08T08:07:59.210171+00:00",
+        "creator": {
+          "displayname": "aravinth_ravikumar",
+          "id": 5,
+          "orcid": null
+        },
+        "description": "",
+        "extras": [
+          {
+            "description": "Date of the creation of document. Can be identical to the date of the creation of the record if no better date is known.",
+            "key": "creationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2024-08-08T14:32:40.211347+00:00"
+          },
+          {
+            "description": "Language of the document.",
+            "key": "language",
+            "type": "str",
+            "validation": {
+              "required": true
+            },
+            "value": "english"
+          },
+          {
+            "key": "publicationDate",
+            "type": "date",
+            "validation": {
+              "required": true
+            },
+            "value": "2020-01-01T00:00:00+00:00"
+          },
+          {
+            "key": "doi",
+            "type": "str",
+            "value": "10.1016/j.heliyon.2020.e05050"
+          },
+          {
+            "key": "pages",
+            "type": "str",
+            "value": "e05050"
+          },
+          {
+            "key": "journalName",
+            "type": "str",
+            "value": "Heliyon"
+          }
+        ],
+        "id": 203,
+        "identifier": "ali2020",
+        "last_modified": "2024-09-06T08:52:18.907476+00:00",
+        "license": null,
+        "tags": [],
+        "title": "The empirical prediction of weight change and corrosion rate of low-carbon steel",
+        "type": "publication"
+      },
+      "term": null
+    }
+  ],
+  "tags": [
+    "corwiz",
+    "experimental data",
+    "immersion corrosion",
+    "immersion corrosion measurement"
+  ],
+  "title": "Experimental Data Ali2020",
+  "type": "experimental data"
+}
