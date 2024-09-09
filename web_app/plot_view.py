@@ -1,4 +1,5 @@
 import plotly.express as px
+import plotly.graph_objects as go
 import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
@@ -9,6 +10,7 @@ def generate_plot(
     models: List[CorrosionModel],
     current_model: CorrosionModel,
     time_range: float,
+    measurements: Optional[List[dict]] = None,  # Add measurements as an optional parameter
     x_axis_label: Optional[str] = 'Time [years]',
     y_axis_label: Optional[str] = 'Mass loss [μm]',
     resolution: Optional[int] = 400,
@@ -16,12 +18,16 @@ def generate_plot(
     width: Optional[int] = None
 ):
     """
-    Generates and returns a Plotly Express figure for mass loss over time, with optional axis labels, resolution, and dimensions.
+    Generates and returns a Plotly figure for mass loss over time, with optional axis labels, resolution, and dimensions.
+    Models are plotted as line plots, and measurements are plotted as scatter points.
 
     Args:
         models (List[CorrosionModel]): List of corrosion models to be plotted.
         current_model (CorrosionModel): The currently selected model to plot.
         time_range (float): The time range (years) for which to evaluate material loss.
+        measurements (Optional[List[dict]]): Optional list of measurements, where each item is a dict with keys:
+                                             'name' (str) for the measurement name, and 'data' (np.ndarray) for the data matrix.
+                                             Each matrix is expected to have two columns: time and mass loss.
         x_axis_label (Optional[str]): Custom label for the x-axis. Defaults to 'Time [years]'.
         y_axis_label (Optional[str]): Custom label for the y-axis. Defaults to 'Mass loss [μm]'.
         resolution (Optional[int]): The number of points used to plot the curve. Higher values give smoother plots. Defaults to 400.
@@ -33,27 +39,35 @@ def generate_plot(
     """
     t = np.linspace(0, time_range, resolution)
 
-    # Initialize a list for plotting
-    plot_data = []
+    # Initialize the plotly figure with lines for the models
+    fig = go.Figure()
 
-    # Plot the current model's data first
+    # Plot the current model's data as a line
     current_model_loss = current_model.evaluate_material_loss(t)
-    current_model_df = pd.DataFrame(
-        {'Time': t, 'Mass Loss': current_model_loss, 'Model': f"{current_model.model_name} (live)"})
-    plot_data.append(current_model_df)
+    fig.add_trace(go.Scatter(x=t, y=current_model_loss, mode='lines', name=f"{current_model.model_name} (live)"))
 
     # Collect all y-values to check for max/min difference for log scaling
     all_y_values = [current_model_loss]
 
-    # Plot the additional models
+    # Plot the additional models as lines
     for i, model in enumerate(models, start=1):
         model_loss = model.evaluate_material_loss(t)
-        model_df = pd.DataFrame({'Time': t, 'Mass Loss': model_loss, 'Model': f"{model.model_name} ({i})"})
-        plot_data.append(model_df)
+        fig.add_trace(go.Scatter(x=t, y=model_loss, mode='lines', name=f"{model.model_name} ({i})"))
         all_y_values.append(model_loss)
 
-    # Combine all data into a single DataFrame
-    plot_df = pd.concat(plot_data)
+    # If measurements are provided, plot them as scatter points
+    if measurements:
+        for measurement in measurements:
+            measurement_name = measurement['name']
+            measurement_data = measurement['data']  # Expecting a 2D array with time and mass loss
+            fig.add_trace(go.Scatter(
+                x=measurement_data[:, 0],
+                y=measurement_data[:, 1],
+                mode='markers',
+                name=measurement_name,  # Use the measurement name as the label
+                marker=dict(symbol='circle', size=8)
+            ))
+            all_y_values.append(measurement_data[:, 1])
 
     # Flatten the list of y-values to check the ratio between max/min values
     all_y_values_flat = np.concatenate(all_y_values)
@@ -69,24 +83,17 @@ def generate_plot(
     else:
         yaxis_type = "linear"
 
-    px.defaults.template = "plotly_white"
-
-    # Plot using Plotly Express and use 'Model' for distinct colors and labels
-    fig = px.line(
-        plot_df,
-        x='Time',
-        y='Mass Loss',
-        color='Model',  # Use 'Model' for coloring and labeling the lines
-        labels={'Time': x_axis_label, 'Mass Loss': y_axis_label},
-        title="Mass Loss Over Time",
-        height=height,
-        width=width  # Allow width to be set dynamically
-    )
-
+    # Update layout for the figure
     fig.update_layout(
         yaxis_type=yaxis_type,
+        xaxis_title=x_axis_label,
+        yaxis_title=y_axis_label,
+        title="Mass Loss Over Time",
+        height=height,
+        width=width,
         showlegend=True,
-        legend_title="Models"
+        legend_title="Models and Measurements",
+        template="plotly_white"
     )
 
     return fig
