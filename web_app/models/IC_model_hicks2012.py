@@ -16,9 +16,9 @@ class Hicks2012Model(CorrosionModel):
     """
 
     DATA_FILE_PATHS = {
-        'table_2': '../data/tables/hicks2012_tables_table_2.csv',
-        'table_7': '../data/tables/hicks2012_tables_table_7.csv',
-        'table_8': '../data/tables/hicks2012_tables_table_8.csv'
+        'table_2': '../data/tables/hicks2012_table_2.csv',
+        'table_7': '../data/tables/hicks2012_table_7.csv',
+        'table_8': '../data/tables/hicks2012_table_8.csv'
     }
 
     def __init__(self, json_file_path: str):

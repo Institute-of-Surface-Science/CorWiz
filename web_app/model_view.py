@@ -12,7 +12,7 @@ corrosion_models = {
     'model_klinesmith2007': KlineSmith2007Model,
     'model_ma2010': Ma2010Model,
     'model_soares1999': Soares1999Model,
-    'model_ali2020': Ali2010Model,
+    'model_ali2020': Ali2020Model,
     'model_garbatov2011': Garbatov2011Model,
     'model_hicks2012': Hicks2012Model,
     'model_kovalenko2016': Kovalenko2016Model,
@@ -24,6 +24,7 @@ def display_model_info(model: Model) -> None:
     st.markdown(model.description)
     if model.special_note:
         st.markdown(f"#### Model Notes: \n{model.special_note}")
+
 
 
 def display_model_view(container):
