@@ -1,10 +1,8 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-from typing import Dict, Optional
+from typing import Dict
 from .corrosion_model import CorrosionModel
-from typing import Tuple, Optional
-from scipy.interpolate import interp2d, RegularGridInterpolator
 
 class Ali2020Model(CorrosionModel):
     """
