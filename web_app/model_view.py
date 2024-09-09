@@ -43,7 +43,6 @@ def display_model_view(page_container):
     measurement_directories = [
         '../data/kadi4mat_json/immersion_corrosion_measurements/',
     ]
-
     measurements = load_measurements_from_directory(measurement_directories)
 
     # Initialize plot_data in session state if it doesn't exist
@@ -53,7 +52,6 @@ def display_model_view(page_container):
     fig = None
 
     with page_container:
-
         st.write("---")
         st.header("Corrosion Mass Loss Models")
 
@@ -63,86 +61,54 @@ def display_model_view(page_container):
 
         with main_content:
             # Separate columns for plot and selection
-            plot_column, selection_column = st.columns((1, 1))
+            plot_column, selection_column = st.columns((6, 4))
 
             with selection_column:
-                selection_top, selection_bottom = st.container(), st.container()
+                model_tab, measurement_tab, wizard_tab = st.tabs(["Model Selection :books:", "Measurements :lab_coat:", "Wizard :sparkles:"])
 
-                with selection_top:
-                    model_tab, measurement_tab, wizard_tab = st.tabs(["Model Selection", "Measurements", "Wizard"])
+                # Model Selection Tab
+                with model_tab:
+                    # Selection for corrosion type
+                    corrosion_types = sorted({process_type for _, process_type in model_process_pairs})
+                    selected_corrosion_type = st.selectbox('**Corrosion Type**', corrosion_types, key="corrosion_type")
 
-                    with model_tab:
-                        # Selection for corrosion type
-                        corrosion_types = sorted({process_type for _, process_type in model_process_pairs})
-                        selected_corrosion_type = st.selectbox('**Corrosion Type**', corrosion_types,
-                                                               key="corrosion_type")
+                    # Filter models based on the selected corrosion type
+                    filtered_models = [
+                        model for model, process_type in model_process_pairs if process_type == selected_corrosion_type
+                    ]
+                    selected_model = st.selectbox(
+                        '**Model**', filtered_models,
+                        format_func=lambda model: f"{model.name} ({model.kadi_identifier})",
+                        key="model_select"
+                    )
 
-                        # Filter models based on the selected corrosion type
-                        filtered_models = [
-                            model for model, process_type in model_process_pairs if
-                            process_type == selected_corrosion_type
-                        ]
-                        selected_model = st.selectbox(
-                            '**Model**', filtered_models,
-                            format_func=lambda model: f"{model.name} ({model.kadi_identifier})",
-                            key="model_select"
-                        )
+                    # Input for time range (duration in years)
+                    time_range = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5,
+                                                 key="time_range")
 
-                        # Input for time range (duration in years)
-                        time_range = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0,
-                                                     step=2.5,
-                                                     key="time_range")
+                    # Display the selected model's parameters
+                    selected_model.display_parameters()
 
-                        # Display the selected model's parameters
-                        selected_model.display_parameters()
+                    # Display the location associated with the model on the map
+                    if selected_model.model_coordinates is not None:
+                        st.map(selected_model.model_coordinates)
 
-                        # Display the location associated with the model on the map
-                        if selected_model.model_coordinates is not None:
-                            st.map(selected_model.model_coordinates)
-
-                        # Create two columns for buttons to be side by side
-                        add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 3])
-                        fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
-                with measurement_tab:
-                    with measurement_tab:
-                        st.markdown("## Select a Measurement")
-
-                        # Create a selectbox with the names of all available measurements
-                        measurement_names = [f"{measurement.name} ({measurement.kadi_identifier})" for measurement in
-                                             measurements]
-                        selected_measurement_name = st.selectbox("Select a measurement", measurement_names)
-
-                        # Find the selected measurement based on the selected name
-                        selected_measurement = next(
-                            (measurement for measurement in measurements if
-                             f"{measurement.name} ({measurement.kadi_identifier})" == selected_measurement_name),
-                            None
-                        )
-
-                        # Display the description of the selected measurement
-                        if selected_measurement:
-                            st.markdown(f"### {selected_measurement.name}")
-                            st.markdown(f"**Description**: {selected_measurement.description}")
-
-                with wizard_tab:
-                    st.markdown("## Work in progress")
-
-                with selection_bottom:
-                    # Add, reset, and download buttons
-                    add_button, reset_button, download_button, _ = st.columns([1, 1, 1, 3])
+                    # Create three columns for buttons to be side by side
+                    add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 1])
+                    fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
 
                     with add_button:
-                        if st.button("Add to Plot", key="add_plot"):
+                        if st.button("Add Model to Plot", key="add_model_plot"):
                             st.session_state.plot_data.append(selected_model)
                             fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
 
                     with reset_button:
-                        if st.button("Reset Plot", key="reset_plot"):
-                            st.session_state.plot_data = []  # Reset the list of models
+                        if st.button("Reset Plot", key="reset_model_plot"):
+                            st.session_state.plot_data = []  # Reset the list of models or measurements
                             fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
 
                     with download_button:
-                        download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range, width=1600,
+                        download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range, width=1920,
                                                      height=1080)
                         buffer = io.BytesIO()
                         download_fig.write_image(buffer, format="png")
@@ -151,7 +117,87 @@ def display_model_view(page_container):
                             label="Download plot as PNG",
                             data=buffer,
                             file_name="corrosion_plot.png",
-                            mime="image/png"
+                            mime="image/png",
+                            key="model_download"
+                        )
+
+                # Measurement Tab
+                with measurement_tab:
+                    st.markdown("## Select a Measurement")
+
+                    # Create a selectbox with the names of all available measurements
+                    measurement_names = [f"{measurement.name} ({measurement.kadi_identifier})" for measurement in
+                                         measurements]
+                    selected_measurement_name = st.selectbox("Select a measurement", measurement_names)
+
+                    # Find the selected measurement based on the selected name
+                    selected_measurement = next(
+                        (measurement for measurement in measurements if
+                         f"{measurement.name} ({measurement.kadi_identifier})" == selected_measurement_name),
+                        None
+                    )
+
+                    # Display the description of the selected measurement
+                    if selected_measurement:
+                        st.markdown(f"### {selected_measurement.name}")
+                        st.markdown(f"**Description**: {selected_measurement.description}")
+
+                        # Add to plot logic for measurement selection
+                        add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 1])
+
+                        with add_button:
+                            if st.button("Add Measurement to Plot", key="add_measurement_plot"):
+                                st.session_state.plot_data.append(selected_measurement)
+                                fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
+
+                        with reset_button:
+                            if st.button("Reset Plot", key="reset_measurement_plot"):
+                                st.session_state.plot_data = []  # Reset the list of models or measurements
+                                fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
+
+                        with download_button:
+                            download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range,
+                                                         width=1920, height=1080)
+                            buffer = io.BytesIO()
+                            download_fig.write_image(buffer, format="png")
+                            buffer.seek(0)
+                            st.download_button(
+                                label="Download plot as PNG",
+                                data=buffer,
+                                file_name="corrosion_plot.png",
+                                mime="image/png",
+                                key="measurement_download"
+                            )
+
+                # Wizard Tab
+                with wizard_tab:
+                    st.markdown("## Wizard - Work in progress")
+
+                    # Wizard-specific logic can go here
+                    add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 1])
+
+                    with add_button:
+                        if st.button("Add Wizard Result to Plot", key="add_wizard_plot"):
+                            # Wizard-specific logic for adding to the plot
+                            st.markdown("Wizard logic goes here")
+
+                    with reset_button:
+                        if st.button("Reset Plot", key="reset_wizard_plot"):
+                            st.session_state.plot_data = []  # Reset the list of models or measurements
+                            fig = generate_plot(st.session_state.plot_data)
+
+                    with download_button:
+                        download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range, width=1920,
+                                                     height=1080)
+                        buffer = io.BytesIO()
+                        download_fig.write_image(buffer, format="png")
+                        buffer.seek(0)
+                        st.download_button(
+                            label="Download plot as PNG",
+                            data=buffer,
+                            file_name="corrosion_plot.png",
+                            mime="image/png",
+                            key="wizard_download"
                         )
 
             # Plot column displays the generated plot
@@ -170,3 +216,4 @@ def display_model_view(page_container):
                         st.markdown(f"**{formula['key']}**: {formula['value']}")
                 elif isinstance(selected_model.formula, str):
                     st.markdown(selected_model.formula)
+
