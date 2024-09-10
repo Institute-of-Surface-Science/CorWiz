@@ -93,4 +93,4 @@ class Ma2010Model(CorrosionModel):
         elif self.parameters['distance'] == distances[-1]:
             A, n = np.exp(log_A_values[-1]), n_values[-1]
 
-        return A * time ** n
+        return A * time ** n, "Time [years]", "Mass loss [μm]"

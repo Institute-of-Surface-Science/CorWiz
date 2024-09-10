@@ -76,4 +76,4 @@ class KlineSmith2007Model(CorrosionModel):
             (np.exp(coeffs['J'] * (self.parameters['T'] + coeffs['T0'])))
         )
 
-        return material_loss
+        return material_loss, "Time [years]", "Mass loss [μm]"

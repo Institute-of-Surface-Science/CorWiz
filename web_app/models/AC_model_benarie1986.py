@@ -82,4 +82,4 @@ class Benarie1986Model(CorrosionModel):
         site_index = self.parameters[self.DEFAULT_CORROSION_SITE_KEY]
         A = float(self.table_2.iloc[site_index, 1])
         n = float(self.table_2.iloc[site_index, 2])
-        return A * time ** n
+        return A * time ** n, "Time [years]", "Mass loss [μm]"

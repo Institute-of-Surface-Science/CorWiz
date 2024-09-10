@@ -51,4 +51,4 @@ class Soares1999Model(CorrosionModel):
         material_loss[mask] = self.parameters['d_inf'] * (
             1 - np.exp(-(time[mask] - self.parameters['t_c']) / self.parameters['t_t'])
         )
-        return material_loss
+        return material_loss, "Time [years]", "Mass loss [μm]"

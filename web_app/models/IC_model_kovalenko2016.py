@@ -54,4 +54,4 @@ class Kovalenko2016Model(CorrosionModel):
         Returns:
             float: The calculated material loss.
         """
-        return self.parameters['c_s'] + time * self.parameters['r_s']
+        return self.parameters['c_s'] + time * self.parameters['r_s'], "Time [years]", "Mass loss [μm]"
