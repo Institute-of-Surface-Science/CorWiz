@@ -64,7 +64,10 @@ def generate_plot(
             measurement_data = measurement.get_measurement_data_for_plot()
             if measurement_data:
                 for data in measurement_data:
-                    measurement_name = data['name']
+                    # Adjust the measurement name by splitting on '_', taking the last part, and appending '(Exp.)'
+                    measurement_name = data['name'].split('_')[-1] + " (Exp.)"
+
+                    # Retrieve the axis labels
                     measurement_x_axis_label = data.get('x_axis_label', 'Time [hours]')
                     measurement_y_axis_label = data.get('y_axis_label', 'Mass loss [mg]')
                     measurement_data_matrix = data['data']
@@ -76,7 +79,7 @@ def generate_plot(
 
                     # Add the measurement to the axis mapping
                     add_to_axis_mapping(
-                        measurement_data_matrix[:, 0],  # X values (time, now in years)
+                        measurement_data_matrix[:, 0],  # X values (time, now in years if converted)
                         measurement_data_matrix[:, 1],  # Y values (mass loss)
                         measurement_x_axis_label,
                         measurement_y_axis_label,
