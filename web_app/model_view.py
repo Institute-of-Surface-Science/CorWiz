@@ -27,6 +27,25 @@ def display_model_info(model: Model) -> None:
         st.markdown(f"#### Model Notes: \n{model.special_note}")
 
 
+def reset_plot(selected_model, time_range):
+    # Reset the list of models or measurements
+    st.session_state.plot_data = []
+    return generate_plot(st.session_state.plot_data, selected_model, time_range)
+
+def download_plot(selected_model, time_range, key):
+    download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range, width=1920,
+                                 height=1080)
+    buffer = io.BytesIO()
+    download_fig.write_image(buffer, format="png")
+    buffer.seek(0)
+    st.download_button(
+        label="Download plot as PNG",
+        data=buffer,
+        file_name="corrosion_plot.png",
+        mime="image/png",
+        key=key
+    )
+
 def display_model_view(page_container):
     """
     Displays the model view interface for selecting and analyzing corrosion mass loss models.
@@ -104,23 +123,10 @@ def display_model_view(page_container):
 
                     with reset_button:
                         if st.button("Reset Plot", key="reset_model_plot"):
-                            st.session_state.plot_data = []  # Reset the list of models or measurements
-                            fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
+                            fig = reset_plot(selected_model, time_range)
 
                     with download_button:
-                        download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range, width=1920,
-                                                     height=1080)
-                        buffer = io.BytesIO()
-                        download_fig.write_image(buffer, format="png")
-                        buffer.seek(0)
-                        st.download_button(
-                            label="Download plot as PNG",
-                            data=buffer,
-                            file_name="corrosion_plot.png",
-                            mime="image/png",
-                            key="model_download"
-                        )
-
+                        download_plot(selected_model, time_range, "model_download")
                 # Measurement Tab
                 with measurement_tab:
                     st.markdown("## Select a Measurement")
@@ -152,22 +158,10 @@ def display_model_view(page_container):
 
                         with reset_button:
                             if st.button("Reset Plot", key="reset_measurement_plot"):
-                                st.session_state.plot_data = []  # Reset the list of models or measurements
-                                fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
+                                fig = reset_plot(selected_model, time_range)
 
                         with download_button:
-                            download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range,
-                                                         width=1920, height=1080)
-                            buffer = io.BytesIO()
-                            download_fig.write_image(buffer, format="png")
-                            buffer.seek(0)
-                            st.download_button(
-                                label="Download plot as PNG",
-                                data=buffer,
-                                file_name="corrosion_plot.png",
-                                mime="image/png",
-                                key="measurement_download"
-                            )
+                            download_plot(selected_model, time_range, "measurement_download")
 
                 # Wizard Tab
                 with wizard_tab:
@@ -183,22 +177,10 @@ def display_model_view(page_container):
 
                     with reset_button:
                         if st.button("Reset Plot", key="reset_wizard_plot"):
-                            st.session_state.plot_data = []  # Reset the list of models or measurements
-                            fig = generate_plot(st.session_state.plot_data)
+                            fig = reset_plot(selected_model, time_range)
 
                     with download_button:
-                        download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range, width=1920,
-                                                     height=1080)
-                        buffer = io.BytesIO()
-                        download_fig.write_image(buffer, format="png")
-                        buffer.seek(0)
-                        st.download_button(
-                            label="Download plot as PNG",
-                            data=buffer,
-                            file_name="corrosion_plot.png",
-                            mime="image/png",
-                            key="wizard_download"
-                        )
+                        download_plot(selected_model, time_range, "wizard_download")
 
             # Plot column displays the generated plot
             with plot_column:
