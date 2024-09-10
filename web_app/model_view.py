@@ -110,7 +110,7 @@ def display_model_view(page_container):
                     )
 
                     # Input for time range (duration in years)
-                    time_range = st.number_input('Enter duration [years]:', min_value=2.5, max_value=100.0, step=2.5,
+                    time_range = st.number_input('Enter duration [years]:', min_value=1.0, max_value=100.0, step=1.0,
                                                  key="time_range")
 
                     # Display the selected model's parameters
