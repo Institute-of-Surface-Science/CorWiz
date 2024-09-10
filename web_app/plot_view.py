@@ -4,12 +4,13 @@ import numpy as np
 import streamlit.components.v1 as components
 from typing import List, Optional, Dict
 from models import CorrosionModel
+from measurements import *
 
 def generate_plot(
     models: List[CorrosionModel],
-    current_model: CorrosionModel,
+    current_model: Optional[CorrosionModel],
     time_range: float,
-    measurements: Optional[List[dict]] = None,
+    measurements: Optional[List[Measurement]] = None,  # Expecting a list of Measurement instances
     resolution: Optional[int] = 400,
     height: Optional[int] = 700,
     width: Optional[int] = None
@@ -20,11 +21,9 @@ def generate_plot(
 
     Args:
         models (List[CorrosionModel]): List of corrosion models to be plotted.
-        current_model (CorrosionModel): The currently selected model to plot.
+        current_model (Optional[CorrosionModel]): The currently selected model to plot.
         time_range (float): The time range (years) for which to evaluate material loss.
-        measurements (Optional[List[dict]]): Optional list of measurements, where each item is a dict with keys:
-                                             'name' (str) for the measurement name, and 'data' (np.ndarray) for the data matrix.
-                                             Each matrix is expected to have two columns: time and mass loss.
+        measurements (Optional[List[Measurement]]): Optional list of Measurement instances to be plotted.
         resolution (Optional[int]): The number of points used to plot the curve. Higher values give smoother plots. Defaults to 400.
         height (Optional[int]): Custom height of the plot. Defaults to 700.
         width (Optional[int]): Custom width of the plot. Defaults to None (auto).
@@ -49,26 +48,41 @@ def generate_plot(
         mode = 'lines' if plot_type == 'lines' else 'markers'
         axis_mapping[key]["traces"].append(go.Scatter(x=x_data, y=y_data, mode=mode, name=label))
 
-    # Evaluate the current model and get its data and axis labels
-    current_model_loss, x_axis_label, y_axis_label = current_model.evaluate_material_loss(t)
-
-    # Add the current model to the axis mapping
-    add_to_axis_mapping(t, current_model_loss, x_axis_label, y_axis_label, f"{current_model.model_name} (live)")
+    # Plot the current model's data if available
+    if current_model:
+        current_model_loss, x_axis_label, y_axis_label = current_model.evaluate_material_loss(t)
+        add_to_axis_mapping(t, current_model_loss, x_axis_label, y_axis_label, f"{current_model.model_name} (live)")
 
     # Add additional models to the axis mapping
     for i, model in enumerate(models, start=1):
         model_loss, model_x_axis_label, model_y_axis_label = model.evaluate_material_loss(t)
         add_to_axis_mapping(t, model_loss, model_x_axis_label, model_y_axis_label, f"{model.model_name} ({i})")
 
-    # Add measurements to the axis mapping
+    # Process each Measurement instance
     if measurements:
         for measurement in measurements:
-            measurement_name = measurement['name']
-            measurement_data = measurement['data']
-            measurement_x_axis_label = measurement.get('x_axis_label', 'Time [years]')
-            measurement_y_axis_label = measurement.get('y_axis_label', 'Mass loss [mg]')
-            add_to_axis_mapping(measurement_data[:, 0], measurement_data[:, 1], measurement_x_axis_label,
-                                measurement_y_axis_label, measurement_name, plot_type='markers')
+            measurement_data = measurement.get_measurement_data_for_plot()
+            if measurement_data:
+                for data in measurement_data:
+                    measurement_name = data['name']
+                    measurement_x_axis_label = data.get('x_axis_label', 'Time [hours]')
+                    measurement_y_axis_label = data.get('y_axis_label', 'Mass loss [mg]')
+                    measurement_data_matrix = data['data']
+
+                    # Convert time from hours to years if needed
+                    if measurement_x_axis_label == 'Time [hours]':
+                        measurement_data_matrix[:, 0] = measurement_data_matrix[:, 0] / 8760  # Convert hours to years
+                        measurement_x_axis_label = 'Time [years]'  # Update the x-axis label
+
+                    # Add the measurement to the axis mapping
+                    add_to_axis_mapping(
+                        measurement_data_matrix[:, 0],  # X values (time, now in years)
+                        measurement_data_matrix[:, 1],  # Y values (mass loss)
+                        measurement_x_axis_label,
+                        measurement_y_axis_label,
+                        measurement_name,
+                        plot_type='markers'
+                    )
 
     # Create subplots based on the number of unique axis pairs
     num_subplots = len(axis_mapping)
@@ -100,6 +114,7 @@ def generate_plot(
     )
 
     return fig
+
 
 
 def display_plot_html(fig):

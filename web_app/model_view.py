@@ -30,11 +30,14 @@ def display_model_info(model: Model) -> None:
 def reset_plot(selected_model, time_range):
     # Reset the list of models or measurements
     st.session_state.plot_data = []
-    return generate_plot(st.session_state.plot_data, selected_model, time_range)
+    st.session_state.measurement_data = []
+    return generate_plot(st.session_state.plot_data, selected_model, time_range,
+                         measurements=st.session_state.measurement_data)
+
 
 def download_plot(selected_model, time_range, key):
     download_fig = generate_plot(st.session_state.plot_data, selected_model, time_range, width=1920,
-                                 height=1080)
+                                 height=1080, measurements=st.session_state.measurement_data)
     buffer = io.BytesIO()
     download_fig.write_image(buffer, format="png")
     buffer.seek(0)
@@ -45,6 +48,7 @@ def download_plot(selected_model, time_range, key):
         mime="image/png",
         key=key
     )
+
 
 def display_model_view(page_container):
     """
@@ -68,6 +72,9 @@ def display_model_view(page_container):
     if 'plot_data' not in st.session_state:
         st.session_state.plot_data = []
 
+    if 'measurement_data' not in st.session_state:
+        st.session_state.measurement_data = []
+
     fig = None
 
     with page_container:
@@ -83,7 +90,8 @@ def display_model_view(page_container):
             plot_column, selection_column = st.columns((6, 4))
 
             with selection_column:
-                model_tab, measurement_tab, wizard_tab = st.tabs(["Model Selection :books:", "Measurements :lab_coat:", "Wizard :sparkles:"])
+                model_tab, measurement_tab, wizard_tab = st.tabs(
+                    ["Model Selection :books:", "Measurements :lab_coat:", "Wizard :sparkles:"])
 
                 # Model Selection Tab
                 with model_tab:
@@ -114,12 +122,14 @@ def display_model_view(page_container):
 
                     # Create three columns for buttons to be side by side
                     add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 1])
-                    fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
+                    fig = generate_plot(st.session_state.plot_data, selected_model, time_range,
+                                        measurements=st.session_state.measurement_data)
 
                     with add_button:
                         if st.button("Add Model to Plot", key="add_model_plot"):
                             st.session_state.plot_data.append(selected_model)
-                            fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
+                            fig = generate_plot(st.session_state.plot_data, selected_model, time_range,
+                                                measurements=st.session_state.measurement_data)
 
                     with reset_button:
                         if st.button("Reset Plot", key="reset_model_plot"):
@@ -153,8 +163,9 @@ def display_model_view(page_container):
 
                         with add_button:
                             if st.button("Add Measurement to Plot", key="add_measurement_plot"):
-                                st.session_state.plot_data.append(selected_measurement)
-                                fig = generate_plot(st.session_state.plot_data, selected_model, time_range)
+                                st.session_state.measurement_data.append(selected_measurement)
+                                fig = generate_plot(st.session_state.plot_data, selected_model, time_range,
+                                                    measurements=st.session_state.measurement_data)
 
                         with reset_button:
                             if st.button("Reset Plot", key="reset_measurement_plot"):
@@ -198,4 +209,3 @@ def display_model_view(page_container):
                         st.markdown(f"**{formula['key']}**: {formula['value']}")
                 elif isinstance(selected_model.formula, str):
                     st.markdown(selected_model.formula)
-
