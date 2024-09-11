@@ -69,5 +69,5 @@ class Ali2020Model(CorrosionModel):
         """
         material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time*24*365 + self.parameters['b']
         
-        return material_loss
+        return material_loss, "Time [years]", "Mass loss [mg]"
 

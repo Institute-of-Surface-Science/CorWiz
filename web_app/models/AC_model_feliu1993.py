@@ -90,4 +90,4 @@ class Feliu1993Model(CorrosionModel):
 
         # Calculate the material loss over time
         material_loss = annual_corrosion * np.power(time, exponent)
-        return material_loss
+        return material_loss, "Time [years]", "Mass loss [μm]"

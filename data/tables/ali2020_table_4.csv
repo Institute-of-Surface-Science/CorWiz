@@ -1,5 +1,5 @@
-t (h),W_(L)(mg),,,,
-%NaCl,0,2,3,4,5
+time,Weightloss_0%_Nacl,Weightloss_2%_Nacl,Weightloss_3%_Nacl,Weightloss_4%_Nacl,Weightloss_5%_Nacl
+Units:h, mg, mg, mg, mg, mg
 240,0.216,0.248,0.293,0.318,0.343
 480,0.32,0.426,0.446,0.449,0.569
 720,0.475,0.563,0.646,0.662,0.766

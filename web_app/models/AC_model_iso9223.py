@@ -120,7 +120,7 @@ class ISO9223Model(CorrosionModel):
                 0.102 * self.parameters['Sd'] ** 0.62 * np.exp(0.033 * self.parameters['RH'] + 0.04 * self.parameters['T'])
             )
 
-        return self.parameters['exponent'] * corrosion_speed * time ** (self.parameters['exponent'] - 1)
+        return self.parameters['exponent'] * corrosion_speed * time ** (self.parameters['exponent'] - 1), "Time [years]", "Mass loss [μm]"
 
     def grams_to_um_map(self, corrosion_speed: float) -> float:
         """Maps corrosion speed from g/(m²⋅a) to μm/a."""

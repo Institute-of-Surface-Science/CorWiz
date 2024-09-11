@@ -41,5 +41,8 @@ header {visibility: hidden;}
 }
 
 div[data-testid="stExpander"] details summary p{
-    font-size: 2rem;
+    font-size: 1.5rem;
+}
+.stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
+    font-size:1.5rem;
 }
