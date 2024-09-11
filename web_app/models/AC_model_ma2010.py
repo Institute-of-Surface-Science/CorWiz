@@ -86,7 +86,7 @@ class Ma2010Model(CorrosionModel):
                 n = n_values[i] + (n_values[i + 1] - n_values[i]) * \
                     (self.parameters['distance'] - distances[i]) / (distances[i + 1] - distances[i])
                 A = np.exp(log_A)
-                return A * time ** n
+                return A * time ** n, "Time [years]", "Mass loss [μm]"
 
         if self.parameters['distance'] == distances[0]:
             A, n = np.exp(log_A_values[0]), n_values[0]
