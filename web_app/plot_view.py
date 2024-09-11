@@ -65,7 +65,7 @@ def generate_plot(
             if measurement_data:
                 for data in measurement_data:
                     # Adjust the measurement name by splitting on '_', taking the last part, and appending '(Exp.)'
-                    measurement_name = data['name'].split('_')[-1] + " (Exp.)"
+                    measurement_name = data['name'].split('_')[-2] + data['name'].split('_')[-1] + " (Exp.)"
 
                     # Retrieve the axis labels
                     measurement_x_axis_label = data.get('x_axis_label', 'Time [hours]')
