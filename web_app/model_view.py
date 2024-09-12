@@ -1,5 +1,6 @@
 import streamlit as st
 import io
+import pandas as pd
 from models import *
 from measurements import *
 from typing import List
@@ -105,7 +106,7 @@ def display_model_view(page_container):
                     ]
                     selected_model = st.selectbox(
                         '**Model**', filtered_models,
-                        format_func=lambda model: f"{model.name} ({model.kadi_identifier})",
+                        format_func=lambda model: f"{model.name} (" + model.kadi_identifier.split("_")[-1] + ")",
                         key="model_select"
                     )
 
@@ -174,20 +175,43 @@ def display_model_view(page_container):
                         with download_button:
                             download_plot(selected_model, time_range, "measurement_download")
 
-                # Wizard Tab
                 with wizard_tab:
-                    st.markdown("## Wizard - Work in progress")
+                    material = st.selectbox('Select Material', ['Mild Steel'], key="wiz_material_select")
+                    has_coating = st.checkbox('Coating Applied', key="coating_checkbox")
 
-                    # Wizard-specific logic can go here
+                    # Dynamically filter the list of models based on the checkbox state
+                    if has_coating:
+                        available_models = [model for model in models if model.kadi_identifier == 'model_soares1999']
+                    else:
+                        available_models = models
+
+                    # Prepare data for displaying as a table
+                    if available_models:
+                        model_data = {
+                            'Model Name': [model.name for model in available_models],
+                            'Identifier': [model.kadi_identifier.split("_")[-1] for model in available_models]
+                        }
+
+                        # Convert the dictionary into a DataFrame
+                        model_df = pd.DataFrame(model_data)
+
+                        # Display the DataFrame as a table in Streamlit
+                        st.markdown("### Available Models:")
+                        st.table(model_df)
+                    else:
+                        st.markdown("No models available")
+
+                    # Display buttons to add the model to the plot or reset
                     add_button, reset_button, download_button, empty = st.columns([1, 1, 1, 1])
 
                     with add_button:
-                        if st.button("Add Wizard Result to Plot", key="add_wizard_plot"):
-                            # Wizard-specific logic for adding to the plot
-                            st.markdown("Wizard logic goes here")
+                        if st.button("Add Model to Plot", key="wizard_add_model"):
+                            st.session_state.plot_data.append(selected_model)
+                            fig = generate_plot(st.session_state.plot_data, selected_model, time_range,
+                                                measurements=st.session_state.measurement_data)
 
                     with reset_button:
-                        if st.button("Reset Plot", key="reset_wizard_plot"):
+                        if st.button("Reset Plot", key="wizard_reset_plot"):
                             fig = reset_plot(selected_model, time_range)
 
                     with download_button:
