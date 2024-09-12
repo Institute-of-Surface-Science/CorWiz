@@ -113,7 +113,12 @@ def generate_plot(
         title="Mass Loss Over Time {CorWiz}",
         showlegend=True,  # Ensure the legend is shown
         template="plotly_white",
-        legend_title="Models and Measurements"
+        legend_title="Models and Measurements",
+        legend=dict(orientation="h",  # Horizontal orientation
+                    yanchor="bottom",  # Anchor the legend to the bottom
+                    y=-0.2,  # Move it below the plot (adjust as needed)
+                    xanchor="center",  # Center the legend horizontally
+                    x=0.5)  # Horizontal center alignment
     )
 
     return fig
