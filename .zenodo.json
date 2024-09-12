@@ -1,0 +1,25 @@
+{
+    "description": "Corrosion Knowledge Wizard",
+    "license": "MIT",
+    "title": "CorWiz",
+    "upload_type": "software",
+    "creators": [
+        {
+            "affiliation": "Institute of Surface Science, Helmholtz-Zentrum hereon, Germany",
+            "name": "Berger, Sven",
+            "orcid": "0000-0001-6083-7038"
+        },
+        {
+            "affiliation": "Institute of Surface Science, Helmholtz-Zentrum hereon, Germany",
+            "name": "Ravikumar, Aravinth",
+            "orcid": "0000-0003-3003-2700"
+        },
+        {
+            "affiliation": "Institute of Surface Science, Helmholtz-Zentrum hereon, Germany",
+            "name": "Hoeche, Daniel",
+            "orcid": "0000-0002-7719-6684"
+        },
+
+    ],
+    "access_right": "open"
+}
