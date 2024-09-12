@@ -34,12 +34,7 @@ D-20095 Hamburg
 Tel.: +49 (0)40 226 338-424  
 Fax: +49 (0)40 226 338-163
 
-### The company is represented by the Managing Directors
-Prof. Dr. Matthias Rehahn  
-(Scientific Director)  
-Telefon: +49 (0)41 52 87-1666  
-Telefax: +49 (0)41 52 87-1723
-
+### The company is represented by the Managing Director
 Elisabeth Gerndt  
 (Administrative Director)  
 Tel.: +49 (0)41 52 87-1669  
