@@ -106,7 +106,7 @@ def display_model_view(page_container):
                     ]
                     selected_model = st.selectbox(
                         '**Model**', filtered_models,
-                        format_func=lambda model: f"{model.name} ({model.kadi_identifier.split("_")[-1]})",
+                        format_func=lambda model: f"{model.name} (" + model.kadi_identifier.split("_")[-1] + ")",
                         key="model_select"
                     )
 
