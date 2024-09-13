@@ -97,7 +97,7 @@ with bottom_container:
                 # Display the content of the markdown file
                 st.markdown(cv)
     with cite_column:
-        # TODO: create Zenodo DOI
         st.markdown("## Cite Us")
+        st.markdown("Please cite the DOI: 10.5281/zenodo.13753842")
 
 add_footer()
