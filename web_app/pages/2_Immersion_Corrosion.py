@@ -17,35 +17,35 @@ with text_column:
 
         The mechanism behind immersion corrosion is a complex sequence of electrochemical reactions:
 
-        1. **Formation of an Electrochemical Cell**: When a metal is immersed in a corrosive solution, it acts as an anode while the surrounding solution functions as the cathode, forming an electrochemical cell[2].
+        1. **Formation of an Electrochemical Cell**: When a metal is immersed in a corrosive solution, it acts as an anode while the surrounding solution functions as the cathode, forming an electrochemical cell[2][4][5].
 
-        2. **Anodic and Cathodic Reactions**: At the anodic sites, the metal undergoes oxidation, releasing electrons and forming metal ions. Simultaneously, at the cathodic sites, reactions such as the reduction of dissolved oxygen or hydrogen ions occur, consuming the electrons released by the anodic process[2].
+        2. **Anodic and Cathodic Reactions**: At the anodic sites, the metal undergoes oxidation, releasing electrons and forming metal ions. Simultaneously, at the cathodic sites, reactions such as the reduction of dissolved oxygen or hydrogen ions occur, consuming the electrons released by the anodic process[2][4][5].
 
-        3. **Formation of Corrosion Products**: The metal ions produced at the anode can react with other species in the solution, like hydroxide ions or dissolved oxygen, to form **insoluble corrosion products**. These products often deposit on the metal surface, potentially affecting further corrosion processes[2].
+        3. **Formation of Corrosion Products**: The metal ions produced at the anode can react with other species in the solution, like hydroxide ions or dissolved oxygen, to form **insoluble corrosion products**. These products often deposit on the metal surface, potentially affecting further corrosion processes[2][4].
 
         ### Factors Influencing Immersion Corrosion
 
         The rate and severity of immersion corrosion are influenced by several factors:
 
-        1. **Composition of the Corrosive Solution**: The **pH, temperature,** and the presence of dissolved ions or gases in the solution can significantly affect the corrosion rate[2].
+        1. **Composition of the Corrosive Solution**: The **pH, temperature,** and the presence of dissolved ions or gases in the solution can significantly affect the corrosion rate[2][4].
 
-        2. **Velocity of the Solution**: Higher solution velocities can increase the rate of mass transfer, leading to higher corrosion rates due to enhanced exposure to reactive species[2].
+        2. **Velocity of the Solution**: Higher solution velocities can increase the rate of mass transfer, leading to higher corrosion rates due to enhanced exposure to reactive species[2][4].
 
-        3. **Surface Characteristics of the Metal**: The **roughness, presence of defects,** and microstructure of the metal surface play crucial roles in how the corrosion process develops[2].
+        3. **Surface Characteristics of the Metal**: The **roughness, presence of defects,** and microstructure of the metal surface play crucial roles in how the corrosion process develops[2][5].
 
-        4. **Galvanic Effects**: When dissimilar metals are in contact within the corrosive solution, **galvanic corrosion** can occur, accelerating the corrosion of the less noble metal[2].
+        4. **Galvanic Effects**: When dissimilar metals are in contact within the corrosive solution, **galvanic corrosion** can occur, accelerating the corrosion of the less noble metal[2][5].
 
         ### Mitigating Immersion Corrosion
 
         Effective mitigation strategies are essential to prolong the lifespan of metals exposed to immersion environments. Common methods include:
 
-        1. **Material Selection**: Opting for **corrosion-resistant materials**, such as stainless steels or titanium alloys, can greatly improve resistance to immersion corrosion[1][3].
+        1. **Material Selection**: Opting for **corrosion-resistant materials**, such as stainless steels or titanium alloys, can greatly improve resistance to immersion corrosion[1][3][4].
 
-        2. **Coatings and Linings**: Applying protective **coatings or linings** to the metal surface creates a barrier between the metal and the corrosive solution, thus preventing direct contact and subsequent corrosion[3].
+        2. **Coatings and Linings**: Applying protective **coatings or linings** to the metal surface creates a barrier between the metal and the corrosive solution, thus preventing direct contact and subsequent corrosion[3][6].
 
-        3. **Cathodic Protection**: By making the metal structure the cathode in an electrochemical cell, this technique prevents the anodic dissolution of the metal, effectively mitigating corrosion[3].
+        3. **Cathodic Protection**: By making the metal structure the cathode in an electrochemical cell, this technique prevents the anodic dissolution of the metal, effectively mitigating corrosion[3][5].
 
-        4. **Inhibitors**: Adding **corrosion inhibitors** to the solution can slow down the corrosion process by forming a protective film on the metal surface[3].
+        4. **Inhibitors**: Adding **corrosion inhibitors** to the solution can slow down the corrosion process by forming a protective film on the metal surface[3][6].
 
         ### Conclusion
 
@@ -65,10 +65,10 @@ with text_column:
 
 with image_column:
 
-    st.image('static/images/Metal-corrosion-in-underwater-cultural-heritage-Source-Pixabay-2016_W640.jpg', caption="Image obtained from [7]", use_column_width=True)
-    st.image('static/images/nterlink-between-natural-and-cultural-heritage-underwater-Source-Pixabay-2017_W640.jpg', caption="Image obtained from [7]", use_column_width=True)
-    st.image('static/images/Underwater-cultural-heritage-as-part-of-tourism-and-the-diving-industry-Source-Pixabay_W640.jpg', caption="Image obtained from [7]", use_column_width=True)
-    st.image('static/images/A-set-of-acquired-underwater-images-of-different-corrosion-patterens-arranged-per-degree_W640.jpg', caption="Image obtained from [8]", use_column_width=True)
+    st.image('static/images/Metal-corrosion-in-underwater-cultural-heritage-Source-Pixabay-2016_W640.jpg', caption="Image obtained from [7]", use_column_width=True) # incorrect attribution in source paper!
+    st.image('static/images/nterlink-between-natural-and-cultural-heritage-underwater-Source-Pixabay-2017_W640.jpg', caption="Image obtained from [7]", use_column_width=True) # incorrect attribution in source paper!
+    st.image('static/images/Underwater-cultural-heritage-as-part-of-tourism-and-the-diving-industry-Source-Pixabay_W640.jpg', caption="Image obtained from [7]", use_column_width=True) # incorrect attribution in source paper!
+    st.image('static/images/A-set-of-acquired-underwater-images-of-different-corrosion-patterens-arranged-per-degree_W640.jpg', caption="Image obtained from [8]", use_column_width=True)  # correct citation
 
 
 add_footer()
