@@ -13,7 +13,8 @@ def generate_plot(
     measurements: Optional[List[Measurement]] = None,  # Expecting a list of Measurement instances
     resolution: Optional[int] = 400,
     height: Optional[int] = 700,
-    width: Optional[int] = None
+    width: Optional[int] = None,
+    conversion_factor: Optional[float] = -1.0
 ):
     """
     Generates and returns a Plotly figure with subplots for different y-axis labels (units) for mass loss over time.
@@ -27,6 +28,7 @@ def generate_plot(
         resolution (Optional[int]): The number of points used to plot the curve. Higher values give smoother plots. Defaults to 400.
         height (Optional[int]): Custom height of the plot. Defaults to 700.
         width (Optional[int]): Custom width of the plot. Defaults to None (auto).
+        conversion_factor (Optional[float]): Factor to convert thickness to mass. Defaults to -1.0.
 
     Returns:
         plotly.graph_objects.Figure: The generated plot with multiple subplots when axis labels differ.
@@ -51,7 +53,11 @@ def generate_plot(
     # Plot the current model's data if available
     if current_model:
         current_model_loss, x_axis_label, y_axis_label = current_model.evaluate_material_loss(t)
-        add_to_axis_mapping(t, current_model_loss, x_axis_label, y_axis_label, f"{current_model.model_name} (live)")
+        if current_model.massloss_is_thickness() and conversion_factor > 0:
+            current_model_loss = current_model_loss * conversion_factor
+            add_to_axis_mapping(t, current_model_loss, x_axis_label, 'Mass loss [kg]', f"{current_model.model_name} (live)")
+        else:
+            add_to_axis_mapping(t, current_model_loss, x_axis_label, y_axis_label, f"{current_model.model_name} (live)")
 
     # Add additional models to the axis mapping
     for i, model in enumerate(models, start=1):
