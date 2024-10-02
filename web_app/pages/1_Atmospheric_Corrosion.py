@@ -50,16 +50,14 @@ with text_column:
         [3] https://www.dreiym.com/2023/01/25/atmospheric-corrosion-what-it-is-and-how-to-mitigate-it/  
         [4] https://www.sciencedirect.com/science/article/pii/S2352492823010851  
         [5] https://www.corrosionpedia.com/2/1525/corrosion/system-dependent-corrosion-in-piping-systems  
-        [6] https://link.springer.com/chapter/10.1007/978-3-319-97625-9_12  
-        [7] https://www.azom.com/article.aspx?ArticleID=97  
-        [8] https://www.corrosionpedia.com/2/1525/corrosion/system-dependent-corrosion-in-piping-systems
+        [6] https://www.azom.com/article.aspx?ArticleID=97
+        [7] https://www.worldpipelines.com/business-news/13012017/sulzer-comments-on-corrosion-and-erosion/
     """)
 
 with image_column:
-    st.image('static/images/Atmospheric-corrosion-14_W640.jpg', caption="Image obtained from [5]", use_column_width=True)
-    st.image('static/images/Crevice-corrosion-17_W640.jpg', caption="Image obtained from [6]", use_column_width=True)
-    st.image('static/images/Erosion-corrosion-21_W640.jpg', caption="Image obtained from [7]", use_column_width=True)
-    st.image('static/images/Pitting-corrosion-18_W640.jpg', caption="Image obtained from [8]", use_column_width=True)
+    st.image('static/images/Atmospheric-corrosion-14_W640.jpg', caption="Image obtained from [5]", use_column_width=True) # correct citation
+    st.image('static/images/Pitting-corrosion-18_W640.jpg', caption="Image obtained from [6]", use_column_width=True) # correct citation
+    st.image('static/images/Erosion-corrosion-21_W640.jpg', caption="Image obtained from [7]", use_column_width=True) # correct citation
 
 
 add_footer()
