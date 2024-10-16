@@ -4,6 +4,7 @@ import numpy as np
 from typing import Dict
 from .corrosion_model import CorrosionModel
 
+
 class Ali2020Model(CorrosionModel):
     """
     A corrosion model based on the study by Ali and Fulazzaky (2020) which predicts the weight change
@@ -16,7 +17,7 @@ class Ali2020Model(CorrosionModel):
     """
 
     DATA_FILE_PATHS = {'table_3': '../data/tables/ali2020_table_3.csv',
-    }
+                       }
 
     def __init__(self, json_file_path: str):
         super().__init__(json_file_path=json_file_path, model_name='Ali2010Model')
@@ -28,7 +29,6 @@ class Ali2020Model(CorrosionModel):
         return (
             pd.read_csv(self.DATA_FILE_PATHS['table_3'], header=None)
         )
-
 
     def display_parameters(self) -> Dict[str, float]:
         """Prompts the user to input values for all parameters and returns a dictionary of the parameters."""
@@ -67,7 +67,9 @@ class Ali2020Model(CorrosionModel):
         Returns:
             float: The calculated material loss.
         """
-        material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time*24*365 + self.parameters['b']
-        
+        material_loss = (0.00006 * self.parameters['C'] + 0.0008) * time * 24 * 365 + self.parameters['b']
+
         return material_loss, "Time [years]", "Mass loss [mg]"
 
+    def massloss_is_thickness(self):
+        return False

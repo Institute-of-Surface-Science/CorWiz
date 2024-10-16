@@ -76,8 +76,18 @@ def display_model_selection_tab(models, model_process_types):
         'Enter duration [years]:', min_value=1.0, max_value=100.0, step=1.0, key="time_range"
     )
 
+    conversion_factor = -1.0
+    if st.session_state.selected_model.massloss_is_thickness():
+        convert = st.checkbox("Convert thickness to mass", value=False)
+        if convert:
+            surface_area = st.number_input('Enter surface area [m^2]', min_value=0.01, max_value=100000.0, step=0.01, key="surface_area")
+            density = st.number_input('Enter density [kg/m^3]', min_value=100.0, max_value=10000.0, step=0.1, key="mat_density")
+            conversion_factor = surface_area * density
+
+    # display the model parameters
     st.session_state.selected_model.display_parameters()
 
+    # If coordinates are available show a map
     if st.session_state.selected_model.model_coordinates is not None:
         st.map(st.session_state.selected_model.model_coordinates)
 
@@ -86,7 +96,8 @@ def display_model_selection_tab(models, model_process_types):
         st.session_state.plot_data,
         st.session_state.selected_model,
         st.session_state.time_range,
-        measurements=st.session_state.measurement_data
+        measurements=st.session_state.measurement_data,
+        conversion_factor=conversion_factor
     )
 
     with add_col:
