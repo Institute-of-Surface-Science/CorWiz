@@ -35,6 +35,8 @@ class CorrosionModel(Model):
         """
         raise NotImplementedError("This method should be implemented by subclasses.")
 
+    def massloss_is_thickness(self):
+        return True
 
 class CorrosionProcessTypeError(Exception):
     """Custom exception for invalid corrosion process type."""
